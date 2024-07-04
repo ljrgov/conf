@@ -1,6 +1,3 @@
-# 排除 v1-dy.ixigua.com 的证书验证，直连该域名
-DOMAIN-SUFFIX,v1-dy.ixigua.com,DIRECT
-
 # NTP
 AND,((DEST-PORT,123),(PROTOCOL,UDP))
 
