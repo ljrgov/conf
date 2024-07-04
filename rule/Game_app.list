@@ -1,4 +1,5 @@
-#mobile legends
+#mobile legends=============
+# Mobile Legends 相关域名
 DOMAIN-SUFFIX,aihelp.net
 DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN-SUFFIX,bytegsdk.com
@@ -6,13 +7,18 @@ DOMAIN,analytics.adjust.net.in
 DOMAIN,analytics.adjust.world
 DOMAIN-SUFFIX,adjust.com
 DOMAIN-SUFFIX,i.ytimg.com
-DOMAIN-SUFFIX,hotmail.com
 DOMAIN-SUFFIX,microsoftonline.com
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
-#port rules
+# 其他可能相关的域名
+DOMAIN-SUFFIX,gameanalytics.com
+DOMAIN-SUFFIX,gamezop.com
+DOMAIN-SUFFIX,moonton.com
+DOMAIN-SUFFIX,tiltingpoint.com
+DOMAIN-SUFFIX,supercell.com
+# Port 规则
 DEST-PORT,30190
 DEST-PORT,30001
 DEST-PORT,30102
 DEST-PORT,30021
-
+#=======================
