@@ -1,11 +1,14 @@
-#!name=功能｜DNS
-#!desc=1.域名按所属DNS进行分流解析\n2.路由器地址使用系统DNS进行解析\n3.特殊地址使用规范DNS进行解析\nFork @VirgilClyne
+#!name=DNS enhanced
+#!desc=1.域名按所属DNS进行分流解析 2.路由器地址使用系统DNS进行解析 3.特殊地址使用规范DNS进行解析
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne/GetSomeFries/wiki/🌐-DNS
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
 #!category=🧰功能模块
 
 [General]
 # ---(DNS 服务器)---
 # > 通过代理请求使用本地DNS映射结果
-use-local-host-item-for-proxy = false
+use-local-host-item-for-proxy = true
 
 # > 加密DNS服务器
 # 使加密DNS请求通过代理策略执行
@@ -52,6 +55,18 @@ alt8-mtalk.google.com = 3.3.3.3 // Firebase Cloud Messaging
 # dl.l.google.com = 180.163.151.161 // Google CDN
 
 # --- CUSTOM DNS ---
+# > Modify Contents
+blog.google = server:119.29.29.29 // Google Blog
+googletraveladservices.com = server:119.29.29.29 // Google Flights
+dl.google.com = server:119.29.29.29 // Google Download
+dl.l.google.com = server:119.29.29.29 // Google Download
+clientservices.googleapis.com = server:119.29.29.29 // Google Chrome
+update.googleapis.com = server:119.29.29.29 // Google Update
+translate.googleapis.com = server:119.29.29.29 // Google Translate
+fonts.googleapis.com = server:119.29.29.29 // Google Fonts
+fonts.gstatic.com = server:119.29.29.29 // Google Fonts
+stun.l.google.com = server:syslib // Google STUN
+stun?.l.google.com = server:syslib // Google STUN
 
 # > Router Admin Panel
 *.id.ui.direct = server:syslib // Ubiquiti Unifi Network App
@@ -86,6 +101,50 @@ hiwifi.com = server:syslib // 极路由 HiWiFi Router
 peiluyou.com = server:syslib // 迅雷路由
 _hotspot_.m2m = server:syslib // M2M routers at MiFi Hotspot
 hotspot.cslwifi.com = server:syslib // csl Wi-Fi
+
+# > Apple
+# refer: https://support.apple.com/zh-cn/HT210060
+networking.apple = server:https://doh.dns.apple.com/dns-query // Apple
+# *.apple.com = server:https://doh.dns.apple.com/dns-query // Apple.com
+*.icloud.com = server:https://doh.dns.apple.com/dns-query // iCloud.com
+
+# > Alphabet
+# refer: https://developers.google.com/speed/public-dns/docs/doh?hl=zh-cn
+# *.google = server:https://dns.google/dns-query // Google
+# *.google.com = server:https://dns.google/dns-query // Google
+# *.google.com.?? = server:https://dns.google/dns-query // Google
+# *.goog = server:https://dns.google/dns-query // Google sites
+# *.gstatic.com = server:https://dns.google/dns-query // Google 静态资源
+# *.ggpht.com = server:https://dns.google/dns-query // Google Photos
+# *.googleusercontent.com = server:https://dns.google/dns-query // Google 用户上传数据
+# *.googleapis.com = server:https://dns.google/dns-query // Google APIs
+# *.1e100.net = server:https://dns.google/dns-query // Google backbone
+# *.youtube = server:https://dns.google/dns-query // Youtube sites
+# *.youtube.com = server:https://dns.google/dns-query // Youtube
+# *.ytimg.com = server:https://dns.google/dns-query // Youtube 图片
+# *.googlevideo.com = server:https://dns.google/dns-query // Youtube Video
+# *.gvt?.com = server:https://dns.google/dns-query // Google Video Thumbnails
+# *.recaptcha.net = server:https://dns.google/dns-query // reCaptcha
+# *.gmail.com = server:https://dns.google/dns-query // Gmail
+# *.googlesource.com = server:https://dns.google/dns-query // Google Source
+# *.googleadservices.com = server:https://dns.google/dns-query // Google AD Services
+# *.doubleclick.net = server:https://dns.google/dns-query // DoubleClick
+# *.adsense.com = server:https://dns.google/dns-query // AdSense
+# *.adsensecustomsearchads.com = server:https://dns.google/dns-query // AdSense Custom Search Ads
+# *.adsenseformobileapps.com = server:https://dns.google/dns-query // AdSense for mobile apps
+# *.gle = server:https://dns.google/dns-query // Google shortened URLs
+# goo.gl = server:https://dns.google/dns-query // Google URL Shortener
+
+# > Cloudflare
+# refer: https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/
+# *.cloudflare.com = server:https://cloudflare-dns.com/dns-query // Cloudflare
+# *.cloudflarestream.com = server:https://cloudflare-dns.com/dns-query // Cloudflare Stream
+# *.cloudflareclient.com = server:https://cloudflare-dns.com/dns-query // Cloudflare Client
+# *.cloudflareinsights.com = server:https://cloudflare-dns.com/dns-query // Cloudflare Web Analytics
+# *.every1dns.net = server:https://cloudflare-dns.com/dns-query // Cloudflare 1.1.1.1
+# *.cloudflaressl.com = server:https://cloudflare-dns.com/dns-query // Cloudflare SSL Certificate
+# *.cloudflare-dns.com = server:https://cloudflare-dns.com/dns-query // Cloudflare DNS
+# *.workers.dev = server:https://cloudflare-dns.com/dns-query // CloudFlare Workers
 
 # > 阿里巴巴
 # refer: https://www.alidns.com
@@ -128,6 +187,124 @@ tb.cn = server:quic://dns.alidns.com // 淘宝短网址
 *.alipayobjects.com = server:quic://dns.alidns.com // 支付宝 静态资源
 *.alipay-eco.com = server:quic://dns.alidns.com // 支付宝 开放技术生态体系
 
+# > 腾讯
+# refer: https://www.dnspod.cn/products/publicdns
+*.tencent.com = server:https://doh.pub/dns-query // 腾讯
+*.qcloud.com = server:https://doh.pub/dns-query // 腾讯云
+*.qcloudcdn.cn = server:https://doh.pub/dns-query // 腾讯云CDN
+*.qcloudcdn.com = server:https://doh.pub/dns-query // 腾讯云CDN
+*.qcloudcos.com = server:https://doh.pub/dns-query // 腾讯云对象储存
+*.qcloudimg.com = server:https://doh.pub/dns-query // 腾讯云静态资源
+*.qcloudcjgj.com = server:https://doh.pub/dns-query // 腾讯云超级管家
+*.qcloudwzgj.com = server:https://doh.pub/dns-query // 腾讯云网站管家
+*.qcloudzygj.com = server:https://doh.pub/dns-query // 腾讯云主页管家
+*.myqcloud.com = server:https://doh.pub/dns-query // 腾讯开放云
+*.tencent-cloud.net = server:https://doh.pub/dns-query // 腾讯云
+*.tencentcloud-aiot.com = server:https://doh.pub/dns-query // 腾讯云aiot解决方案
+*.tencentcloudapi.com = server:https://doh.pub/dns-query // 腾讯云API
+*.tencentcloudcr.com = server:https://doh.pub/dns-query // 腾讯云容器镜像服务TCR
+*.tencentcloudmarket.com = server:https://doh.pub/dns-query // 腾讯云云市场
+*.qq.com = server:https://doh.pub/dns-query // QQ
+*.qlogo.cn = server:https://doh.pub/dns-query // 腾讯头像
+*.qpic.cn = server:https://doh.pub/dns-query // 腾讯图片
+*.weixin.qq.com = server:https://doh.pub/dns-query // 微信
+*.wx.qq.com = server:https://doh.pub/dns-query // 微信
+*.weixin.com = server:https://doh.pub/dns-query // 微信
+*.weixinbridge.com = server:https://doh.pub/dns-query // 微信公众平台
+*.wechat.com = server:https://doh.pub/dns-query // WeChat
+*.servicewechat.com = server:https://doh.pub/dns-query // 微信小程序
+*.weiyun.com = server:https://doh.pub/dns-query // 微云
+*.gtimg.cn = server:https://doh.pub/dns-query // 腾讯 图片 静态资源
+*.idqqimg.com = server:https://doh.pub/dns-query // 腾讯 图片 静态资源
+*.cdn-go.cn = server:https://doh.pub/dns-query // 腾讯 静态资源 CDN
+*.smtcdns.com = server:https://doh.pub/dns-query // 腾讯云 智能云解析DNS
+*.smtcdns.net = server:https://doh.pub/dns-query // 腾讯云 智能云解析DNS
+url.cn = server:https://doh.pub/dns-query // 腾讯短网址
+
+# > 百度
+# refer: https://dudns.baidu.com/support/localdns/Address/index.html
+*.baidu = server:180.76.76.76 // 百度
+*.baidu.com = server:180.76.76.76 // 百度
+*.bdimg.com = server:180.76.76.76 // 百度 静态资源
+*.bdstatic.com = server:180.76.76.76 // 百度 静态资源
+*.baidupcs.* = server:180.76.76.76 // 百度网盘
+*.baiduyuncdn.* = server:180.76.76.76 // 百度云CDN
+*.baiduyundns.* = server:180.76.76.76 // 百度云DNS
+*.bdydns.* = server:180.76.76.76 // 百度云 DNS
+*.bdycdn.* = server:180.76.76.76 // 百度云 CDN
+*.bdysite.com = server:180.76.76.76 // 百度云 域名
+*.bdysites.com = server:180.76.76.76 // 百度云 域名
+*.baidubce.* = server:180.76.76.76 // 百度智能云
+*.bcedns.* = server:180.76.76.76 // 百度智能云 DNS
+*.bcebos.com = server:180.76.76.76 // 百度智能云 对象存储BOS
+*.bcevod.com = server:180.76.76.76 // 百度智能云 播放器服务
+*.bceimg.com = server:180.76.76.76 // 百度智能云 图片服务
+*.bcehost.com = server:180.76.76.76 // 百度智能云 主机
+*.bcehosts.com = server:180.76.76.76 // 百度智能云 主机
+dwz.cn = server:180.76.76.76 // 百度短网址
+
+# > 360
+# refer: https://sdns.360.net/dnsPublic.html#course
+*.360.cn = server:https://doh.360.cn/dns-query // 360安全中心
+*.360safe.com = server:https://doh.360.cn/dns-query // 360安全卫士
+*.360kuai.com = server:https://doh.360.cn/dns-query // 360快资讯
+*.so.com = server:https://doh.360.cn/dns-query // 360搜索
+*.360webcache.com = server:https://doh.360.cn/dns-query // 360网页快照服务
+*.qihuapi.com = server:https://doh.360.cn/dns-query // 奇虎api
+*.qhimg.com = server:https://doh.360.cn/dns-query // 360图床
+*.qhimgs.com = server:https://doh.360.cn/dns-query // 360图床
+*.qhimgs?.com = server:https://doh.360.cn/dns-query // 360图床
+*.qhmsg.com = server:https://doh.360.cn/dns-query // 360
+*.qhres.com = server:https://doh.360.cn/dns-query // 奇虎静态资源
+*.qhres?.com = server:https://doh.360.cn/dns-query // 奇虎静态资源
+*.dhrest.com = server:https://doh.360.cn/dns-query // 导航静态文件
+*.qhupdate.com = server:https://doh.360.cn/dns-query // 360
+*.yunpan.cn = server:https://doh.360.cn/dns-query // 360安全云盘
+*.yunpan.com.cn = server:https://doh.360.cn/dns-query // 360安全云盘
+*.yunpan.com = server:https://doh.360.cn/dns-query // 360安全云盘
+urlqh.cn = server:https://doh.360.cn/dns-query // 360短网址
+
+# > Bytedance
+# refer: https://www.volcengine.com/docs/6758/179060
+*.amemv.com = server:180.184.1.1 // 艾特迷
+*.bdxiguaimg.com = server:180.184.1.1 // 西瓜 图片服务
+*.bdxiguastatic.com = server:180.184.1.1 // 西瓜 静态资源
+*.byted-static.com = server:180.184.1.1 // 字节跳动 UNPKG
+*.bytedance.* = server:180.184.1.1 // 字节跳动
+*.bytedns.net = server:180.184.1.1 // 字节跳动 DNS
+*.bytednsdoc.com = server:180.184.1.1 // 字节跳动 CDN 文件存储
+*.bytegoofy.com = server:180.184.1.1 // 字节跳动 Goofy
+*.byteimg.com = server:180.184.1.1 // 字节跳动 图片服务
+*.bytescm.com = server:180.184.1.1 // 字节跳动 SCM
+*.bytetos.com = server:180.184.1.1 // 字节跳动 TOS
+*.bytexservice.com = server:180.184.1.1 // 飞书企业服务平台
+*.douyin.com = server:180.184.1.1 // 抖音
+*.douyinpic.com = server:180.184.1.1 // 抖音 静态资源
+*.douyinstatic.com = server:180.184.1.1 // 抖音 静态资源
+*.douyinvod.com = server:180.184.1.1 // 抖音 静态资源
+*.feelgood.cn = server:180.184.1.1 // FeelGood平台
+*.feiliao.com = server:180.184.1.1 // 飞聊官网
+*.gifshow.com = server:180.184.1.1 // 快手
+*.huoshan.com = server:180.184.1.1 // 火山网
+*.huoshanzhibo.com = server:180.184.1.1 // 火山直播
+*.ibytedapm.com = server:180.184.1.1 // 抖音 dapm
+*.iesdouyin.com = server:180.184.1.1 // 抖音 CDN
+*.ixigua.com = server:180.184.1.1 // 西瓜视频
+*.kspkg.com = server:180.184.1.1 // 快手
+*.pstatp.com = server:180.184.1.1 // 抖音 静态资源
+*.snssdk.com = server:180.184.1.1 // 今日头条
+*.toutiao.com = server:180.184.1.1 // 今日头条
+*.toutiao13.com = server:180.184.1.1 // 今日头条
+*.toutiao???.??? = server:180.184.1.1 // 今日头条 静态资源
+*.toutiaocloud.cn = server:180.184.1.1 // 头条云
+*.toutiaocloud.com = server:180.184.1.1 // 头条云
+*.toutiaopage.com = server:180.184.1.1 // 今日头条 建站
+*.wukong.com = server:180.184.1.1 // 悟空
+*.zijieapi.com = server:180.184.1.1 // 字节跳动 API
+*.zijieimg.com = server:180.184.1.1 // 字节跳动 图片服务
+*.zjbyte.com = server:180.184.1.1 // 今日头条 网页版
+*.zjcdn.com = server:180.184.1.1 // 字节跳动 CDN
+
 # > BiliBili
 upos-sz-mirrorali.bilivideo.com = server:quic://dns.alidns.com // BiliBili upos视频服务器（阿里云）
 upos-sz-mirrorali?.bilivideo.com = server:quic://dns.alidns.com // BiliBili upos视频服务器（阿里云）
@@ -138,3 +315,43 @@ upos-sz-mirrorcos?.bilivideo.com = server:https://doh.pub/dns-query // BiliBili 
 upos-sz-mirrorcos??.bilivideo.com = server:https://doh.pub/dns-query // BiliBili upos视频服务器（腾讯云）
 upos-sz-upcdnbd??.bilivideo.com = server:180.76.76.76 // BiliBili upos视频服务器（百度云）
 upos-sz-upcdntx.bilivideo.com = server:https://doh.pub/dns-query // BiliBili upos视频服务器（腾讯云）
+
+# > 🇨🇳 CHN
+# CNNIC SDNS
+# *.gov.cn = server:1.2.4.8 // 中国政府网
+# *.政务 = server:1.2.4.8 // 中国政府网
+
+# > 🇭🇰 HKG
+# PCCW Enterprises Limited
+# *.pccw.com = server:dns1.pccw.com // 电讯盈科
+# *.1010.com.hk = server:dns1.pccw.com // 1O1O
+# *.hkcsl.com = server:dns1.pccw.com // csl.
+# *.theclub.com.hk = server:dns1.pccw.com // The CLUB by HKT
+# *.now.com = server:dns2.pccw.com // now.com
+# *.nowe.com = server:dns2.pccw.com // Now E
+# *.now-tv.com = server:dns2.pccw.com // Now TV
+# *.moov.hk = server:dns3.pccw.com // MOOV
+# *.viu.com = server:dns3.pccw.com // viu
+# *.viu.tv = server:dns3.pccw.com // viu tv
+# Hong Kong Cable Television Limited
+# *.hkcable.com.hk = server:dns1.hkcable.com.hk // Hong Kong Cable Television Limited
+# *.i-cable.com = server:dns2.hkcable.com.hk // i-CABLE
+# *.cabletv.com.hk = server:dns2.hkcable.com.hk // CABLE TV Service
+# KDDI Hong Kong Limited
+# *.hk.kddi.com = server:apple.kdd.net.hk // KDDI Hong Kong
+
+# > 🇹🇼 TWN
+# 中华电信
+*.cht.com.tw = server:https://dns.hinet.net/dns-query // 中华电信
+*.hinet.net = server:https://dns.hinet.net/dns-query // 中华电信HiNet
+*.emome.net = server:https://dns.hinet.net/dns-query // 中华电信emome
+# So-net
+# so-net.net.tw = server:ns1.so-net.net.tw // So-net Entertainment Taiwan
+# so-net.tw = server:ns1.so-net.net.tw // So-net Entertainment Taiwan
+# Taiwan Network Information Center
+*.tw = server:https://dns.twnic.tw/dns-query // TWNIC DNS
+*.taipei = server:https://dns.twnic.tw/dns-query // TWNIC DNS
+
+# > 🇺🇸 USA
+# Hurricane Electric
+*.he.net = server:https://ordns.he.net/dns-query // HE.net
