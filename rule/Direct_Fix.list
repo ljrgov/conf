@@ -1,29 +1,38 @@
 # 排除 v1-dy.ixigua.com 的证书验证，直连该域名
 DOMAIN-SUFFIX,v1-dy.ixigua.com,DIRECT
-# 规则修正
-# > NTP
+
+# NTP
 AND,((DEST-PORT,123),(PROTOCOL,UDP))
-# > VPS SSH
+
+# VPS SSH
 DEST-PORT,22
-# > IPv4/IPv6 Test
+
+# IPv4/IPv6 Test
 DOMAIN-SUFFIX,test-ipv6.com
-# > Goodnotes
+
+# Goodnotes
 DOMAIN,api.goodnotescloud.com
 DOMAIN-SUFFIX,goodnotesapp.com.cn
-# > subhd.tv
+
+# subhd.tv
 DOMAIN-SUFFIX,subhd.tv
-# > pianyuan.org
+
+# pianyuan.org
 DOMAIN-SUFFIX,pianyuan.org
-# > Fileball
+
+# Fileball
 DOMAIN-SUFFIX,fileball.app
-# > Direct+
+
+# Direct+
 DOMAIN,app.adjust.com
 DOMAIN,app.appsflyer.com
 DOMAIN,bdtj.tagtic.cn
-# > Alibaba
+
+# Alibaba
 DOMAIN,log.mmstat.com
 DOMAIN,sycm.mmstat.com
-# ---(Alphabet)---
+
+# Alphabet (Google相关)
 DOMAIN-SUFFIX,blog.google
 DOMAIN,clientservices.googleapis.com
 DOMAIN,update.googleapis.com
@@ -31,9 +40,11 @@ DOMAIN,dl.google.com
 DOMAIN,dl.l.google.com
 DOMAIN,redirector.gvt1.com
 DOMAIN,update.googleapis.com
-# > Google Flights
+
+# Google Flights
 DOMAIN-SUFFIX,googletraveladservices.com
-# > Firebase Cloud Messaging
+
+# Firebase Cloud Messaging
 DOMAIN,mtalk.google.com
 DOMAIN,alt1-mtalk.google.com
 DOMAIN,alt2-mtalk.google.com
@@ -43,14 +54,16 @@ DOMAIN,alt5-mtalk.google.com
 DOMAIN,alt6-mtalk.google.com
 DOMAIN,alt7-mtalk.google.com
 DOMAIN,alt8-mtalk.google.com
-# ------
-# > Tencent
+
+# Tencent
 DOMAIN,fairplay.l.qq.com
 DOMAIN,livew.l.qq.com
 DOMAIN,vd.l.qq.com
 DOMAIN,vi.l.qq.com
-# > Strava
+
+# Strava
 DOMAIN,analytics.strava.com
-# > Umeng
+
+# Umeng
 DOMAIN,msg.umeng.com
 DOMAIN,msg.umengcloud.com
