@@ -11,31 +11,8 @@ DOMAIN-SUFFIX,microsoftonline.com
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
 #port rules
-DEST-PORT,30190,游戏模式
-DEST-PORT,30001,游戏模式
-DEST-PORT,30102,游戏模式
-DEST-PORT,30021,游戏模式
+DEST-PORT,30190
+DEST-PORT,30001
+DEST-PORT,30102
+DEST-PORT,30021
 
-
-#模拟城市（直连）
-DOMAIN-SUFFIX,glulive.com
-DOMAIN-SUFFIX,helpshift.com
-DOMAIN-SUFFIX,simcitybuildit.com
-DOMAIN-SUFFIX,singular.net
-DOMAIN-SUFFIX,unity3d.com
-DOMAIN,cdn.simcitybuildit.com
-DOMAIN-SUFFIX,eamobile.com
-DOMAIN,stake.com
-DOMAIN,igamegod.app
-DOMAIN-SUFFIX,anzu-us.com
-DOMAIN-SUFFIX,gluops.com
-DOMAIN-SUFFIX,iosgods.com
-DOMAIN-SUFFIX,anzu.io
-DOMAIN-SUFFIX,ea.com
-DOMAIN,onclickperformance.com
-DOMAIN,cacheintum.com
-DOMAIN-SUFFIX,jalosoul.com
-DOMAIN-SUFFIX,mintegral.net
-DOMAIN-SUFFIX,trustworthyanchor.com
-DOMAIN,cdn-creatives-cf-prd.acquire.unity3dusercontent.com
-DOMAIN-SUFFIX,aditms.me
