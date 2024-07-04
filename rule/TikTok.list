@@ -1,11 +1,4 @@
 # TikTok
-#包含自己添加的
-#DOMAIN-SUFFIX,roovza-inapps.appsflyersdk.com
-#DOMAIN-KEYWORD,tiktokcdn.com
-#DOMAIN-KEYWORD,*pull-*.tiktokcdn.com
-#DOMAIN-SUFFIX,appsflyersdk.com
-#此处为自行添加****
-##
 DOMAIN,api.snapkit.com
 DOMAIN,cocacola.co.jp
 DOMAIN,courses.snapsolve.com
