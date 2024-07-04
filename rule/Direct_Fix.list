@@ -1,3 +1,6 @@
+#微信
+DOMAIN-SUFFIX,weixin.qq.com
+
 # NTP
 AND,((DEST-PORT,123),(PROTOCOL,UDP))
 
