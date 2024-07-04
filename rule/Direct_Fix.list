@@ -1,6 +1,6 @@
 #微信
 DOMAIN-SUFFIX,weixin.qq.com
-
+DOMAIN-SUFFIX,qpic.cn
 # NTP
 AND,((DEST-PORT,123),(PROTOCOL,UDP))
 
