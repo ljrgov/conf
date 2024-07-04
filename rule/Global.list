@@ -6,9 +6,6 @@ DOMAIN-SUFFIX,kuromisubs.shop
 DOMAIN-SUFFIX,kuromis.com
 DOMAIN,api.huacloud.xyz
 DOMAIN,api-huacloud.com
-# 国外/Proxy
-# 代理列表
-# MyList && Other
 DOMAIN-SUFFIX,1password.com
 DOMAIN-SUFFIX,adguard.org
 DOMAIN-SUFFIX,bit.no.com
