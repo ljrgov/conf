@@ -1,16 +1,22 @@
-# 内容：Microsoft
-#copilot
+# Microsoft 可以直连的域名
+DOMAIN-SUFFIX,aspnetcdn.com
+DOMAIN-SUFFIX,assets-yammer.com
+DOMAIN-SUFFIX,edgesuite.net
+DOMAIN-SUFFIX,gfx.ms
+DOMAIN-SUFFIX,lync.com
+DOMAIN-SUFFIX,onedrive.live.com
+DOMAIN-SUFFIX,sharepoint.com
+DOMAIN-SUFFIX,sharepointonline.com
+DOMAIN-SUFFIX,sfx.ms
+DOMAIN-SUFFIX,spoprod-a.akamaihd.net
 
-# 数量：79条
-DOMAIN-KEYWORD,1drv
+# Microsoft 需要代理访问的域名
 DOMAIN-KEYWORD,microsoft
 DOMAIN-SUFFIX,aadrm.com
 DOMAIN-SUFFIX,acompli.com
 DOMAIN-SUFFIX,acompli.net
 DOMAIN-SUFFIX,aka.ms
 DOMAIN-SUFFIX,akadns.net
-DOMAIN-SUFFIX,aspnetcdn.com
-DOMAIN-SUFFIX,assets-yammer.com
 DOMAIN-SUFFIX,azure.com
 DOMAIN-SUFFIX,azure.net
 DOMAIN-SUFFIX,azureedge.net
@@ -21,12 +27,9 @@ DOMAIN-SUFFIX,bing.net
 DOMAIN-SUFFIX,bingapis.com
 DOMAIN-SUFFIX,cloudapp.net
 DOMAIN-SUFFIX,cloudappsecurity.com
-DOMAIN-SUFFIX,edgesuite.net
-DOMAIN-SUFFIX,gfx.ms
 DOMAIN-SUFFIX,hotmail.com
 DOMAIN-SUFFIX,live.com
 DOMAIN-SUFFIX,live.net
-DOMAIN-SUFFIX,lync.com
 DOMAIN-SUFFIX,msappproxy.net
 DOMAIN-SUFFIX,msauth.net
 DOMAIN-SUFFIX,msauthimages.net
@@ -81,8 +84,8 @@ DOMAIN-SUFFIX,windowsupdate.com
 DOMAIN-SUFFIX,wunderlist.com
 DOMAIN-SUFFIX,yammer.com
 DOMAIN-SUFFIX,yammerusercontent.com
-# 内容：OneDrive
-# 数量：18条
+
+# OneDrive 需要代理访问的域名
 USER-AGENT,OneDrive*
 USER-AGENT,OneDriveiOSApp*
 PROCESS-NAME,OneDrive
@@ -95,8 +98,6 @@ DOMAIN-SUFFIX,oneclient.sfx.ms
 DOMAIN-SUFFIX,onedrive.com
 DOMAIN-SUFFIX,onedrive.live.com
 DOMAIN-SUFFIX,photos.live.com
-DOMAIN-SUFFIX,sharepoint.com
-DOMAIN-SUFFIX,sharepointonline.com
 DOMAIN-SUFFIX,skydrive.wns.windows.com
 DOMAIN-SUFFIX,spoprod-a.akamaihd.net
 DOMAIN-SUFFIX,storage.live.com
