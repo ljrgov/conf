@@ -14,6 +14,7 @@ DOMAIN-SUFFIX,oaistatic.com
 DOMAIN-SUFFIX,oaiusercontent.com
 DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,api.revenuecat.com
+
 # Gemini
 DOMAIN,bard.google.com
 DOMAIN,gemini.google.com
@@ -23,14 +24,17 @@ DOMAIN,aida.googleapis.com
 DOMAIN,aistudio.google.com
 DOMAIN,alkalimakersuite-pa.clients6.google.com
 DOMAIN,makersuite.google.com
+
 # Claude
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
-IP-CIDR, 160.79.104.0/23, no-resolve
-IP-CIDR6, 2607:6bc0::/48, no-resolve
+IP-CIDR,160.79.104.0/23,no-resolve
+IP-CIDR6,2607:6bc0::/48,no-resolve
+
 # JetBrains AI
 DOMAIN-SUFFIX,grazie.ai
 DOMAIN-SUFFIX,grazie.aws.intellij.net
+
 # Meta
 DOMAIN,imagine.meta.com
 DOMAIN-SUFFIX,meta.ai
