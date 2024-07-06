@@ -3,7 +3,7 @@
 #!system=ios
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
-#!arguments=#############################, url1:机场1订阅base64编码, title1:机场1名字, icon1:tornado, color1:#DF4688, ################################, url2:机场2订阅base64编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
+#!arguments=url1:机场1订阅base64编码, title1:机场1名字, icon1:tornado, color1:#DF4688, url2:机场2订阅base64编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
 #!arguments-desc=- URL：订阅链接：base64编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标，可以自定义; \n- color：HTML颜色代码;  \n- base64编码网址：urlencoder.org
 
 [Panel]
