@@ -1,11 +1,7 @@
 #包含全部国外网站
 #漏网之鱼，自行添加
-DOMAIN-SUFFIX,nssurge.com
 DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN-SUFFIX,kuromisubs.shop
-DOMAIN-SUFFIX,kuromis.com
-DOMAIN,api.huacloud.xyz
-DOMAIN,api-huacloud.com
 DOMAIN-SUFFIX,1password.com
 DOMAIN-SUFFIX,adguard.org
 DOMAIN-SUFFIX,bit.no.com
