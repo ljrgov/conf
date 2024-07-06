@@ -1,11 +1,11 @@
 name: Convert Surge Rules to Clash
 
-# 当 push 操作发生在 conf/rule/surge/ 目录下时触发该工作流
+# 当 push 操作发生在 conf/rule/surge/ 目录下时触发该工作流;
 on:
   push:
     paths:
       - 'conf/rule/surge/**'
-
+      
 jobs:
   convert:
     runs-on: ubuntu-latest
