@@ -41,7 +41,7 @@ payload:
       - "com.google.ios.youtube*"
 
 rules:
-  - PAYLOAD, google_ips, google
-  - PAYLOAD, google_domains, google
-  - PAYLOAD, youtube_domains, youtube
-  - PAYLOAD, youtube_user_agents, youtube
+  - PAYLOAD, google_ips
+  - PAYLOAD, google_domains
+  - PAYLOAD, youtube_domains
+  - PAYLOAD, youtube_user_agents
