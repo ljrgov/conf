@@ -3,7 +3,7 @@ name: Convert Surge Rules to Clash
 on:
   push:
     paths:
-      - 'conf/rule/surge/**/*.list'  # 触发条件：监听 Surge 规则文件的变动
+      - 'conf/rule/surge/*.list'  # 触发条件：监听 Surge 规则文件的变动
 
 jobs:
   convert:
