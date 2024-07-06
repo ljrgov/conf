@@ -4,7 +4,7 @@
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
 #!arguments=url:机场1订阅base64编码, title:机场1名字, 机场1图标:tornado, 机场1图标颜色:#DF4688, url:机场2订阅base64编码, title:机场2名字, 机场2图标:waveform, 机场2图标颜色:#EF6D20
-#!arguments-desc=订阅链接：编码后的订阅链接 \n 机场名字：机场的名称或自定义 \n 图标：自定义图标 \n 颜色：自定义颜色
+#!arguments-desc=订阅链接：编码后的订阅链接 \n 机场名字：机场的名称或自定义 \n 图标：自定义图标 \n 颜色：HTML颜色代码 \n base64编码网址：urlencoder.org
 
 [Panel]
 Sub-info = script-name=1号机场,update-interval=7200
