@@ -1,38 +1,43 @@
-import os
-import sys
+name: Convert Surge Rules to Clash
 
-def convert_surge_to_clash(surge_rules_path, clash_rules_path):
-    # Ensure the output directory exists
-    if not os.path.exists(clash_rules_path):
-        os.makedirs(clash_rules_path)
-    
-    for filename in os.listdir(surge_rules_path):
-        if filename.endswith('.txt'):
-            surge_file_path = os.path.join(surge_rules_path, filename)
-            clash_file_path = os.path.join(clash_rules_path, filename)
+# 当 push 操作发生在 conf/rule/surge/ 目录下时触发该工作流
+on:
+  push:
+    paths:
+      - 'conf/rule/surge/**'
 
-            with open(surge_file_path, 'r', encoding='utf-8') as surge_file:
-                rules = surge_file.readlines()
-            
-            clash_rules = []
-            for rule in rules:
-                if 'USER-AGENT' in rule:
-                    # Comment out USER-AGENT rules if conversion is not possible
-                    clash_rules.append(f'# {rule}')
-                else:
-                    # Copy other rules directly (modify this as per your needs)
-                    clash_rules.append(rule)
-            
-            with open(clash_file_path, 'w', encoding='utf-8') as clash_file:
-                clash_file.writelines(clash_rules)
-    
-    print(f'Converted rules from {surge_rules_path} to {clash_rules_path}')
+jobs:
+  convert:
+    runs-on: ubuntu-latest
 
-if __name__ == "__main__":
-    surge_rules_path = sys.argv[1]
-    clash_rules_path = sys.argv[2]
-    convert_surge_to_clash(surge_rules_path, clash_rules_path)
+    steps:
+    # 第一步：检出仓库代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
+    # 第二步：获取变更的文件列表
+    - name: Get changed files
+      id: changes
+      run: |
+        # 使用 git diff 命令获取变更的文件，并输出为一个 GitHub Actions 变量
+        echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
 
+    # 第三步：运行转换脚本，将 Surge 规则转换为 Clash 规则
+    - name: Convert Surge rules to Clash
+      run: python .github/scripts/convert_surge_to_clash.py "${{ steps.changes.outputs.files }}"
 
-
+    # 第四步：将转换后的文件提交并推送到仓库
+    - name: Commit and push changes
+      run: |
+        # 配置 Git 用户信息
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        # 添加转换后的文件到 Git 暂存区
+        git add conf/rule/clash/*
+        # 提交更改
+        git commit -m 'Convert Surge rules to Clash rules'
+        # 推送到远程仓库
+        git push
+      env:
+        # 使用 GitHub 提供的 GITHUB_TOKEN 进行身份验证
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
