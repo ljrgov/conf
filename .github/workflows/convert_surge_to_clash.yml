@@ -3,34 +3,30 @@ name: Convert Surge Rules to Clash
 on:
   push:
     paths:
-      - 'conf/rule/surge/**/*.list'  # 触发条件：监听 Surge 规则文件的变动
+      - 'conf/rule/surge/**'
 
 jobs:
   convert:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository  # 步骤一：检出仓库内容
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Convert Surge rules to Clash  # 步骤二：转换 Surge 规则到 Clash 格式
+      - name: Get changed files
+        id: changes
         run: |
-          mkdir -p ./conf/rule/clash  # 创建存放 Clash 规则的目录
-          for file in ./conf/rule/surge/*.list; do  # 遍历 Surge 规则文件
-            filename=$(basename -- "$file")  # 获取文件名
-            filename="${filename%.*}"  # 去除扩展名
-            # 使用 sed 命令进行文本替换和格式转换，将 Surge 规则转换为 Clash 格式
-            sed -e 's/^DOMAIN-SUFFIX,\([^,]*\),DIRECT$/DOMAIN-SUFFIX,\1,Proxy/' \
-                -e 's/^DOMAIN-KEYWORD,\([^,]*\),DIRECT$/DOMAIN-KEYWORD,\1,Proxy/' \
-                -e 's/^IP-CIDR,\([^,]*\),DIRECT$/IP-CIDR,\1,Proxy/' \
-                "$file" > "./conf/rule/clash/${filename}.txt"
-            echo "Converted ${filename}.list to Clash format."  # 输出转换成功信息
-          done
+          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
 
-      - name: Commit and push changes  # 步骤三：提交和推送修改
+      - name: Convert Surge rules to Clash
+        run: python .github/scripts/convert_surge_to_clash.py "${{ steps.changes.outputs.files }}"
+
+      - name: Commit and push changes
         run: |
-          git config --local user.email "actions@github.com"  # 设置提交时的邮箱
-          git config --local user.name "GitHub Actions"  # 设置提交时的用户名
-          git add ./conf/rule/clash/*.txt  # 添加转换后的 Clash 规则文件
-          git commit -m "Automatically converted Surge rules to Clash format"  # 提交信息
-          git push  # 推送修改到远程仓库
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add conf/rule/clash/*
+          git commit -m 'Convert Surge rules to Clash rules'
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
