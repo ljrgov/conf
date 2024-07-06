@@ -51,4 +51,3 @@ for surge_file in surge_rule_files:
     save_clash_rules(clash_rules, clash_file_path)
 
 print("转换完成！")
-
