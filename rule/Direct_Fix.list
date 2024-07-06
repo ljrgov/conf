@@ -1,5 +1,9 @@
 #微信
 DOMAIN-SUFFIX,weixin.qq.com
+DOMAIN-SUFFIX,crisp.chat
+DOMAIN-SUFFIX,qq.com
+DOMAIN-SUFFIX,52ppt.com
+DOMAIN-SUFFIX,pptbz.com
 DOMAIN-SUFFIX,qpic.cn
 # NTP
 AND,((DEST-PORT,123),(PROTOCOL,UDP))
