@@ -13,24 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3  # 使用最新的 v3 版本
-
-      - name: Set up Python
-        uses: actions/setup-python@v4  # 使用最新的 v4 版本
+      - name: Convert Surge Rules to Clash Verge
+        uses: ./.github/actions/convert-surge-to-clash
         with:
-          python-version: '3.x'
-
-      - name: Run conversion script
-        run: |
-          python3 conf/script/convert_surge_to_clash.py
-
-      - name: Commit files
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add conf/rule/clash/
-          git commit -m 'Automated conversion of Surge rules to Clash Verge'
-          git push
+          surge_rules_path: conf/rule/surge/
+          clash_rules_path: conf/rule/clash/
 
 
