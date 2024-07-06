@@ -4,13 +4,13 @@
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
 #!arguments=url1:机场1订阅base64编码, title1:机场1名字, icon1:tornado, color1:#DF4688, url2:机场2订阅base64编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
-#!arguments-desc=- URL：订阅链接：base64编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标，可以自定义; \n- color：HTML颜色代码;  \n- base64编码网址：urlencoder.org
+#!arguments-desc=- URL：订阅链接：base64编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标，可以自定义; \n- color：HTML颜色代码; \n- base64编码网址：urlencoder.org
 
 [Panel]
 Sub-info = script-name=1号机场,update-interval=43200
 Sub-info = script-name=2号机场,update-interval=43200
 
 [Script]
-1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="{"url1":"{{{机场1订阅链接}}}","title1":"{{{机场1名字}}}","icon":"{{{机场1图标}}}","color":"{{{机场1颜色}}}","reset_day":"自动生成"}"
+1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url1}}}&title={{{title1}}}&icon={{{icon1}}}&color={{{color1}}}&reset_day=自动生成"
 
-2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="{"url":"{{{机场2订阅链接}}}","title":"{{{机场2名字}}}","icon":"{{{机场2图标}}}","color":"{{{机场2颜色}}}","reset_day":"自动生成"}"
+2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url2}}}&title={{{title2}}}&icon={{{icon2}}}&color={{{color2}}}&reset_day=自动生成"
