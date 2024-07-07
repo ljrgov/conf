@@ -7,11 +7,13 @@
 
 (async () => {
   let args = getArgs();
-  
-  if (!args.url) return $done(); // 如果没有传递 URL 参数，则直接结束
+  if (!args.url) {
+    console.log("没有提供订阅链接");
+    return $done();
+  }
 
   let info = await getDataInfo(args.url);
-  
+
   // 如果没有信息，则直接结束
   if (!info) return $done();
 
