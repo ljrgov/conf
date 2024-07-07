@@ -5,20 +5,13 @@
 **********/
 
 (async () => {
-  let args = getArgs();
-  
-  // 新增：判断是否启用该机场
-  if (args.enable === "false") {
-    return $done(); // 如果不启用，则直接结束
-  }
+  let info = await getDataInfo();
 
-  let info = await getDataInfo(args.url);
-  
   // 如果没有信息，则直接结束
   if (!info) return $done();
 
-  let resetDayLeft = getRemainingDays(parseInt(args["reset_day"]));
-  let expireDaysLeft = getExpireDaysLeft(args.expire || info.expire);
+  let resetDayLeft = getRemainingDays(info.reset_day);
+  let expireDaysLeft = getExpireDaysLeft(info.expire);
 
   let used = info.download + info.upload;
   let total = info.total;
@@ -39,31 +32,55 @@
     
     // 到期时间（日期）显示
     if (expireDaysLeft) {
-      content.push(`到期：${formatTime(args.expire || info.expire)}`);
+      content.push(`到期：${formatTime(info.expire)}`);
     }
   }
 
   $done({
-    title: `${args.title}`,
+    title: info.title,
     content: content.join("\n"),
-    icon: args.icon || "tornado",
-    "icon-color": args.color || "#DF4688",
+    icon: info.icon || "tornado",
+    "icon-color": info.color || "#DF4688",
   });
 })();
 
-function getArgs() {
-  return Object.fromEntries(
-    $argument
-      .split("&")
-      .map((item) => item.split("="))
-      .map(([k, v]) => [k, decodeURIComponent(v)])
-  );
+async function getDataInfo() {
+  let args = $argument.split("&").reduce((obj, item) => {
+    let [key, value] = item.split("=");
+    obj[key] = decodeURIComponent(value);
+    return obj;
+  }, {});
+
+  if (!args.url) {
+    console.log("未提供订阅链接");
+    return null;
+  }
+
+  const [err, data] = await getUserInfo(args.url)
+    .then((data) => [null, data])
+    .catch((err) => [err, null]);
+
+  if (err) {
+    console.log(err);
+    return null;
+  }
+
+  return {
+    title: args.title || "未命名",
+    icon: args.icon || "tornado",
+    color: args.color || "#DF4688",
+    reset_day: parseInt(args.reset_day) || 1,
+    expire: args.expire || null,
+    download: parseFloat(data.match(/download=([\d.]+)/)[1]),
+    upload: parseFloat(data.match(/upload=([\d.]+)/)[1]),
+    total: parseFloat(data.match(/total=([\d.]+)/)[1])
+  };
 }
 
 function getUserInfo(url) {
   let request = { headers: { "User-Agent": "Quantumult%20X" }, url };
   return new Promise((resolve, reject) =>
-    $httpClient.get(request, (err, resp) => {
+    $httpClient.get(request, (err, resp, data) => {
       if (err != null) {
         reject(err);
         return;
@@ -72,30 +89,8 @@ function getUserInfo(url) {
         reject(resp.status);
         return;
       }
-      let header = Object.keys(resp.headers).find((key) => key.toLowerCase() === "subscription-userinfo");
-      if (header) {
-        resolve(resp.headers[header]);
-        return;
-      }
-      reject("链接响应头不带有流量信息");
+      resolve(data);
     })
-  );
-}
-
-async function getDataInfo(url) {
-  const [err, data] = await getUserInfo(url)
-    .then((data) => [null, data])
-    .catch((err) => [err, null]);
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  return Object.fromEntries(
-    data
-      .match(/\w+=[\d.eE+-]+/g)
-      .map((item) => item.split("="))
-      .map(([k, v]) => [k, Number(v)])
   );
 }
 
