@@ -6,6 +6,12 @@
 
 (async () => {
   let args = getArgs();
+  
+  // 新增：判断是否启用该机场
+  if (args.enabled === "false") {
+    return $done(); // 如果不启用，则直接结束
+  }
+
   let info = await getDataInfo(args.url);
   
   // 如果没有信息，则直接结束
