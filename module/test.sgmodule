@@ -14,6 +14,6 @@
 
 
 [Script]
-{{{comment1}}}1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url1}}}&title={{{title1}}}&icon={{{icon1}}}&color={{{color1}}}"
+1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url1}}}&title={{{title1}}}&icon={{{icon1}}}&color={{{color1}}}"
 
-{{{comment1}}}2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url2}}}&title={{{title2}}}&icon={{{icon2}}}&color={{{color2}}}"
+2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/cc63/Surge/main/Module/Panel/Sub-info/Moore/Sub-info.js,script-update-interval=86400,argument="url={{{url2}}}&title={{{title2}}}&icon={{{icon2}}}&color={{{color2}}}"
