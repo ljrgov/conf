@@ -4,7 +4,7 @@
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
 #!arguments=url1:机场1订阅url编码, title1:机场1名字, icon1:tornado, color1:#DF4688, url2:机场2订阅url编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
-#!arguments-desc=- URL：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- 快捷指令或url编码网址：urlencoder.org \n- color：黑色#000000 红色#FF0000 绿色#00FF00 蓝色#0000FF 黄色#FFFF00 青色#00FFFF 洋红#FF00FF 灰色#808080 银色#C0C0C0 紫色#800080 橙色#FFA500 棕色#A52A2A 粉红色#FFC0CB 橄榄色#808000 浅绿色#90EE90 浅灰色#D3D3D3 浅蓝色#ADD8E6 金色#FFD700 紫罗兰#EE82EE 薰衣草#E6E6FA 天蓝色#87CEEB 森林绿#228B22 巧克力色#D2691E 印度红#CD5C5C 番茄色#FF6347 玫瑰棕色#BC8F8F 柠檬黄#FFFACD 海蓝色#4682B4 石板灰#708090 棕褐色#D2B48C 紫红色#8B008B 珊瑚色#FF7F50 浅珊瑚色#F08080 深青色#008B8B 深金色#B8860B 深蓝色#00008B 深绿色#006400 深橙色#FF8C00 深紫色#9400D3 深红色#8B0000 深灰色#A9A9A9
+#!arguments-desc=- URL：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- 快捷指令或url编码网址：urlencoder.org \n- color：颜色代码参考^_^ \n黑色#000000  红色#FF0000  绿色#00FF00 \n蓝色#0000FF  黄色#FFFF00  青色#00FFFF \n洋红#FF00FF  灰色#808080  银色#C0C0C0 \n紫色#800080  橙色#FFA500  棕色#A52A2A \n粉红色#FFC0CB  橄榄色#808000  浅绿色#90EE90 \n浅灰色#D3D3D3  浅蓝色#ADD8E6  金色#FFD700 \n紫罗兰#EE82EE  薰衣草#E6E6FA  天蓝色#87CEEB \n森林绿#228B22  巧克力色#D2691E  印度红#CD5C5C \n番茄色#FF6347  玫瑰棕色#BC8F8F  柠檬黄#FFFACD \n海蓝色#4682B4  石板灰#708090  棕褐色#D2B48C \n紫红色#8B008B  珊瑚色#FF7F50  浅珊瑚色#F08080 \n深青色#008B8B  深金色#B8860B  深蓝色#00008B \n深绿色#006400  深橙色#FF8C00  深紫色#9400D3 \n深红色#8B0000  深灰色#A9A9A9
 
 [Panel]
 Sub-info = script-name=1号机场,update-interval=43200
