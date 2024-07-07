@@ -4,14 +4,19 @@
 * 新增清除参数缓存功能： 每次运行脚本时，会重新解析 $argument，确保获取的参数是最新的，这相当于清除了参数缓存
 **********/
 
-(async () => {
-  let info = await getDataInfo();
 
+(async () => {
+  let args = getArgs();
+  
+  if (!args.url) return $done(); // 如果没有传递 URL 参数，则直接结束
+
+  let info = await getDataInfo(args.url);
+  
   // 如果没有信息，则直接结束
   if (!info) return $done();
 
-  let resetDayLeft = getRemainingDays(info.reset_day);
-  let expireDaysLeft = getExpireDaysLeft(info.expire);
+  let resetDayLeft = getRemainingDays(parseInt(args["reset_day"]));
+  let expireDaysLeft = getExpireDaysLeft(args.expire || info.expire);
 
   let used = info.download + info.upload;
   let total = info.total;
@@ -32,55 +37,31 @@
     
     // 到期时间（日期）显示
     if (expireDaysLeft) {
-      content.push(`到期：${formatTime(info.expire)}`);
+      content.push(`到期：${formatTime(args.expire || info.expire)}`);
     }
   }
 
   $done({
-    title: info.title,
+    title: `${args.title}`,
     content: content.join("\n"),
-    icon: info.icon || "tornado",
-    "icon-color": info.color || "#DF4688",
+    icon: args.icon || "tornado",
+    "icon-color": args.color || "#DF4688",
   });
 })();
 
-async function getDataInfo() {
-  let args = $argument.split("&").reduce((obj, item) => {
-    let [key, value] = item.split("=");
-    obj[key] = decodeURIComponent(value);
-    return obj;
-  }, {});
-
-  if (!args.url) {
-    console.log("未提供订阅链接");
-    return null;
-  }
-
-  const [err, data] = await getUserInfo(args.url)
-    .then((data) => [null, data])
-    .catch((err) => [err, null]);
-
-  if (err) {
-    console.log(err);
-    return null;
-  }
-
-  return {
-    title: args.title || "未命名",
-    icon: args.icon || "tornado",
-    color: args.color || "#DF4688",
-    reset_day: parseInt(args.reset_day) || 1,
-    expire: args.expire || null,
-    download: parseFloat(data.match(/download=([\d.]+)/)[1]),
-    upload: parseFloat(data.match(/upload=([\d.]+)/)[1]),
-    total: parseFloat(data.match(/total=([\d.]+)/)[1])
-  };
+function getArgs() {
+  return Object.fromEntries(
+    $argument
+      .split("&")
+      .map((item) => item.split("="))
+      .map(([k, v]) => [k, decodeURIComponent(v)])
+  );
 }
 
 function getUserInfo(url) {
   let request = { headers: { "User-Agent": "Quantumult%20X" }, url };
   return new Promise((resolve, reject) =>
-    $httpClient.get(request, (err, resp, data) => {
+    $httpClient.get(request, (err, resp) => {
       if (err != null) {
         reject(err);
         return;
@@ -89,8 +70,30 @@ function getUserInfo(url) {
         reject(resp.status);
         return;
       }
-      resolve(data);
+      let header = Object.keys(resp.headers).find((key) => key.toLowerCase() === "subscription-userinfo");
+      if (header) {
+        resolve(resp.headers[header]);
+        return;
+      }
+      reject("链接响应头不带有流量信息");
     })
+  );
+}
+
+async function getDataInfo(url) {
+  const [err, data] = await getUserInfo(url)
+    .then((data) => [null, data])
+    .catch((err) => [err, null]);
+  if (err) {
+    console.log(err);
+    return;
+  }
+
+  return Object.fromEntries(
+    data
+      .match(/\w+=[\d.eE+-]+/g)
+      .map((item) => item.split("="))
+      .map(([k, v]) => [k, Number(v)])
   );
 }
 
