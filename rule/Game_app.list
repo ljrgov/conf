@@ -1,9 +1,9 @@
 #mobile legends=============
 # Mobile Legends 相关域名
 #此条ip检测
-DOMAIN,report.ml.youngjoygame.com,台湾节点
-DOMAIN,newlogin.ml.youngjoygame.com,
 DOMAIN,ip.ml.youngjoygame.com,台湾节点
+DOMAIN,newlogin.ml.youngjoygame.com,台湾节点
+DOMAIN,report.ml.youngjoygame.com,台湾节点
 DEST-PORT,30021
 ###
 DOMAIN-SUFFIX,aihelp.net
