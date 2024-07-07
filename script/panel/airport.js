@@ -8,7 +8,7 @@
   let args = getArgs();
   
   // 新增：判断是否启用该机场
-  if (args.enabled === "false") {
+  if (args.enable === "false") {
     return $done(); // 如果不启用，则直接结束
   }
 
