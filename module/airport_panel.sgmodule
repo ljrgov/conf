@@ -4,7 +4,7 @@
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
 #!arguments=url1:机场1订阅url编码, title1:机场1名字, icon1:tornado, color1:#DF4688, url2:机场2订阅url编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
-#!arguments-desc=- URL：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- 快捷指令或url编码网址：urlencoder.org \n- color：颜色代码参考^_^ 石榴红#C0392B   孔雀绿#16A085   紫水晶#9B59B6   橙玫瑰#F39C12   墨绿#1F618D   琥珀#FFBF00   靛青#2980B9   银蓝#5DADE2   赤金#E74C3C   橄榄青#556B2F   玫瑰金#B76E79   深宝石蓝#0E4D92  铜黄#B87333   孔雀蓝#005E7D   绯红#A61C3C   橄榄木#808000   藏青#4A4E4D   紫罗兰红#C21E56   琥珀褐#6C2E1F   珍珠灰#EAEAEA
+#!arguments-desc=- URL：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- 快捷指令或url编码网址：urlencoder.org \n- color：颜色代码参考^_^ \n- 石榴红#C0392B  孔雀绿#16A085  紫水晶#9B59B6  \n-橙玫瑰#F39C12  墨绿#1F618D  琥珀#FFBF00  \n-靛青#2980B9  银蓝#5DADE2  赤金#E74C3C   \n-橄榄青#556B2F  玫瑰金#B76E79  深宝石蓝#0E4D92  \n-铜黄#B87333  孔雀蓝#005E7D  绯红#A61C3C   \n-橄榄木#808000  藏青#4A4E4D  紫罗兰红#C21E56   \n-琥珀褐#6C2E1F   珍珠灰#EAEAEA
 
 [Panel]
 Sub-info = script-name=1号机场,update-interval=43200
