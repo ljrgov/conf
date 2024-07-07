@@ -1,19 +1,12 @@
 /**********
-* 机场订阅信息获取
 * 作者：cc63&ChatGPT
-* 新增清除参数缓存功能： 每次运行脚本时，会重新解析 $argument，确保获取的参数是最新的，这相当于清除了参数缓存
+* 更新时间：2024年1月20日
 **********/
-
 
 (async () => {
   let args = getArgs();
-  if (!args.url) {
-    console.log("没有提供订阅链接");
-    return $done();
-  }
-
   let info = await getDataInfo(args.url);
-
+  
   // 如果没有信息，则直接结束
   if (!info) return $done();
 
