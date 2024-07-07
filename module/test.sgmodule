@@ -8,9 +8,9 @@
 
 
 [Panel]
-{{{comment1}}}Sub-info = script-name=1号机场,update-interval=43200
+{{{comment1}}}Sub-info = script-name=1号机场,update-interval=7200
 
-{{{comment2}}}Sub-info = script-name=2号机场,update-interval=43200
+{{{comment2}}}Sub-info = script-name=2号机场,update-interval=7200
 
 
 [Script]
