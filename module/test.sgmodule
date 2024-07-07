@@ -3,14 +3,17 @@
 #!system=ios
 #!category=📕面板模块
 #!author=cc63,基于此作者修改
-#!arguments=enable1:true, url1:机场1订阅url编码, title1:机场1名字, icon1:tornado, color1:#DF4688, enable2:true, url2:机场2订阅url编码, title2:机场2名字, icon2:waveform, color2:#EF6D20
-#!arguments-desc=- URL：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- url编码：网址urlencoder.org 或通过快捷指令 \n- color：颜色代码参考^_^ \n石榴红#C0392B  孔雀绿#16A085  紫水晶#9B59B6  \n橙玫瑰#F39C12  墨绿色#1F618D  琥珀色#FFBF00  \n靛青色#2980B9  银蓝色#5DADE2  赤金色#E74C3C   \n橄榄青#556B2F  玫瑰金#B76E79  深宝蓝#0E4D92  \n铜黄色#B87333  孔雀蓝#005E7D  绯红色#A61C3C   \n橄榄木#808000  藏青色#4A4E4D  紫罗兰#C21E56   \n琥珀褐#6C2E1F   珍珠灰#EAEAEA  蔚蓝色#1E90FF \n青柠色#7FFF00  浅粉色#FFB6C1  淡青色#00CED1 \n淡黄色#FFFFE0  水鸭色#00CED1  淡蓝色#ADD8E6  \n苹果绿#8DB600  金菊色#DAA520  甜豆色#DAA520 \n丁香色#DAA520
+#!arguments=url1:机场1订阅url编码, title1:机场1名字, icon1:tornado, color1:#DF4688, 注释1:,url2:机场2订阅url编码, title2:机场2名字, icon2:waveform, color2:#EF6D20, 注释2:
+#!arguments-desc=- 关于注释：留空 或 # ；默认留空，输入#会隐藏显示，此条机场信息查询不可以，留空可恢复 \n-url：订阅链接：url编码后的订阅链接; \n- title：机场的名称; \n- icon：面板处显示的图标,sf symbols复制图标名粘贴; \n- url编码：网址urlencoder.org 或通过快捷指令 \n- color：颜色代码参考^_^ \n石榴红#C0392B  孔雀绿#16A085  紫水晶#9B59B6  \n橙玫瑰#F39C12  墨绿色#1F618D  琥珀色#FFBF00  \n靛青色#2980B9  银蓝色#5DADE2  赤金色#E74C3C   \n橄榄青#556B2F  玫瑰金#B76E79  深宝蓝#0E4D92  \n铜黄色#B87333  孔雀蓝#005E7D  绯红色#A61C3C   \n橄榄木#808000  藏青色#4A4E4D  紫罗兰#C21E56   \n琥珀褐#6C2E1F   珍珠灰#EAEAEA  蔚蓝色#1E90FF \n青柠色#7FFF00  浅粉色#FFB6C1  淡青色#00CED1 \n淡黄色#FFFFE0  水鸭色#00CED1  淡蓝色#ADD8E6  \n苹果绿#8DB600  金菊色#DAA520  甜豆色#DAA520 \n丁香色#DAA520
+
 
 [Panel]
-{{{Annotate1}}} Sub-info = url1=机场1订阅url编码, title1=机场1名字, icon1=tornado, color1=#DF4688
-{{{Annotate2}}} Sub-info = url2=机场2订阅url编码, title2=机场2名字, icon2=waveform, color2=#EF6D20
+{{{注释1}}}Sub-info = script-name=1号机场,update-interval=43200
+
+{{{注释2}}}Sub-info = script-name=2号机场,update-interval=43200
+
 
 [Script]
-{{{Annotate1}}} 1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/ljrgov/conf/main/script/panel/airport.js,script-update-interval=86400,argument="url={{{url1}}}&title={{{title1}}}&icon={{{icon1}}}&color={{{color1}}}"
+{{{注释1}}}1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/ljrgov/conf/main/script/panel/airport.js,script-update-interval=86400,argument="url={{{url1}}}&title={{{title1}}}&icon={{{icon1}}}&color={{{color1}}}"
 
-{{{Annotate1}}} 2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/ljrgov/conf/main/script/panel/airport.js,script-update-interval=86400,argument="url={{{url2}}}&title={{{title2}}}&icon={{{icon2}}}&color={{{color2}}}"
+{{{注释2}}}2号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/ljrgov/conf/main/script/panel/airport.js,script-update-interval=86400,argument="url={{{url2}}}&title={{{title2}}}&icon={{{icon2}}}&color={{{color2}}}"
