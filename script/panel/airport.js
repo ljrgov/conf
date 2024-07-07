@@ -10,7 +10,7 @@
   // 如果没有信息，则直接结束
   if (!info) return $done();
 
-  let resetDayLeft = getRemainingDays(parseInt(args.reset_day));
+  let resetDayLeft = getRemainingDays(parseInt(args["reset_day"]));
   let expireDaysLeft = getExpireDaysLeft(args.expire || info.expire);
 
   let used = info.download + info.upload;
