@@ -22,5 +22,4 @@ DOMAIN-SUFFIX,supercell.com
 DEST-PORT,30190
 DEST-PORT,30001
 DEST-PORT,30102
-DEST-PORT,30021
 #=======================
