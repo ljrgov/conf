@@ -1,7 +1,9 @@
 #mobile legends=============
 # Mobile Legends 相关域名
+#此条ip检测
+DOMAIN-SUFFIX,youngjoygame.com,台湾节点
+###
 DOMAIN-SUFFIX,aihelp.net
-DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN-SUFFIX,bytegsdk.com
 DOMAIN,analytics.adjust.net.in
 DOMAIN,analytics.adjust.world
