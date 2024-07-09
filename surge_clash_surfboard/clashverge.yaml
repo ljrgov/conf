@@ -140,7 +140,7 @@ proxy-groups:
   - {name: Emby, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
   - {name: 国际媒体, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png}
   - {name: 苹果服务, type: select, proxies: [土耳其节点, 美国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png}
-  - {name: PayPal, type: select, proxies: [土耳其节点, 美国节点,香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: Apple.png}
+  - {name: PayPal, type: select, proxies: [土耳其节点, 美国节点,香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/ljrgov/conf/main/icon/paypal.png}
   - {name: Twitter, type: select,  proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
   - {name: 兜底分流, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 中东节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color//Final.png}
 #节点组
