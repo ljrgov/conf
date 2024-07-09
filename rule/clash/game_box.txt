@@ -1,5 +1,4 @@
-# NAME: Steam
-# 这些可以直连
+# Steam
 DOMAIN-SUFFIX,cdn-ali.content.steamchina.com
 DOMAIN-SUFFIX,cdn-qc.content.steamchina.com
 DOMAIN-SUFFIX,cdn-ws.content.steamchina.com
@@ -14,8 +13,7 @@ DOMAIN-SUFFIX,steamcontent.tnkjmec.com
 DOMAIN-SUFFIX,steampowered.com.8686c.com
 DOMAIN-SUFFIX,steamstatic.com.8686c.com
 DOMAIN-SUFFIX,wmsjsteam.com
-# ========
-# 这些需要代理
+
 DOMAIN-SUFFIX,steamserver.net
 DOMAIN,steammobile.akamaized.net
 DOMAIN-SUFFIX,fanatical.com
@@ -44,7 +42,9 @@ DOMAIN-KEYWORD,steambroadcast
 DOMAIN-KEYWORD,steamstore
 DOMAIN-KEYWORD,steamuserimages
 
-# NAME: Epic
+DOMAIN-SUFFIX,*.steamserver.net
+
+# Epic
 DOMAIN-SUFFIX,battlebreakers.com
 DOMAIN-SUFFIX,eac-cdn.com
 DOMAIN-SUFFIX,easy.ac
