@@ -101,7 +101,7 @@ FilterUS: &FilterUS '^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|�
 FilterUK: &FilterUK '^(?=.*((?i)🇬🇧|英国|伦敦|(\b(UK|United Kingdom)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterFR: &FilterFR '^(?=.*((?i)🇫🇷|法国|(\b(FR|France)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterDE: &FilterDE '^(?=.*((?i)🇩🇪|德国|(\b(DE|Germany)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterGame: &FilterGame '^(?=.*((?i)🇨🇳|游戏|🎮|(\b(GAME)\b)))(?!.*((?i)回国|校园|用备)).*$'
+FilterGame: &FilterGame '^(?=.*((?i)🇭🇰|🇨🇳|游戏|🎮|(\b(GAME)\b)))(?!.*((?i)回国|校园|备用)).*$'
 FilterAS: &FilterAS '^(?=.*((?i)🇮🇳|🇮🇩|🇵🇭|🇻🇳|🇹🇭|🇲🇾|🇦🇫|🇰🇿|🇰🇬|🇹🇯|🇹🇲|🇺🇿|🇱🇰|🇧🇩|🇳🇵|🇧🇹|🇲🇳))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterEU: &FilterEU '^(?=.*((?i)🇮🇹|🇪🇸|🇳🇱|🇧🇪|🇸🇪|🇵🇱|🇺🇦|🇬🇷|🇷🇸|🇷🇴|🇵🇹|🇭🇺|🇨🇿|🇦🇹|🇨🇭|🇧🇬))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterAF: &FilterAF '^(?=.*((?i)🇪🇬|🇿🇦|🇰🇪|🇪🇹|🇲🇦|🇩🇿|🇬🇭|🇨🇮|🇸🇳|🇺🇬|🇲🇿|🇦🇴|🇲🇬|🇱🇾|🇨🇩|🇿🇲|🇿🇼|🇧🇫|🇹🇳|🇷🇼))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
@@ -130,7 +130,7 @@ i: &i {type: http, behavior: ipcidr,  format: text, interval: 86400}
 # 策略组
 proxy-groups: 
   - {name: 广告拦截, type: select, proxies: [REJECT, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png}
-  - {name: 游戏平台, type: select, include-all-providers: true, filter: *FilterGame, proxies: [土耳其节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
+  - {name: 游戏平台, type: select, include-all-providers: true, filter: *FilterGame, proxies: [DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: 全球代理, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 中东节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png}
   - {name: AI, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/chxm1023/ChatGPT4.png}
   - {name: Google, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
