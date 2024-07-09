@@ -16,6 +16,7 @@ DOMAIN-SUFFIX,steamstatic.com.8686c.com
 DOMAIN-SUFFIX,wmsjsteam.com
 # ========
 # 这些需要代理
+DOMAIN-SUFFIX,steamserver.net
 DOMAIN,steammobile.akamaized.net
 DOMAIN-SUFFIX,fanatical.com
 DOMAIN-SUFFIX,humblebundle.com
@@ -38,6 +39,7 @@ DOMAIN-SUFFIX,steamuserimages-a.akamaihd.net
 DOMAIN-SUFFIX,steamvideo-a.akamaihd.net
 DOMAIN-SUFFIX,underlords.com
 DOMAIN-SUFFIX,valvesoftware.com
+DOMAIN-KEYWORD,steam
 DOMAIN-KEYWORD,steambroadcast
 DOMAIN-KEYWORD,steamstore
 DOMAIN-KEYWORD,steamuserimages
