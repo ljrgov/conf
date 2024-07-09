@@ -81,7 +81,7 @@ dns:
 # 锚点 - 节点订阅的参数 [每小时更新一次订阅节点，每 6 秒一次健康检查]
 airport: &airport {type: http, interval: 3600, health-check: {enable: true, url: 'http://cp.cloudflare.com', interval: 6}}
 
-# 锚点 - 节点订阅, url：处添加订阅; additional-prefix为订阅节点添加机场名称前缀，比如🇭🇰香港节点 >> 机场1🇭🇰香港节点
+# 锚点 - 节点订阅, url：'😊😊😊😊' 处添加订阅; additional-prefix为订阅节点添加机场名称前缀，比如🇭🇰香港节点 >> 机场1🇭🇰香港节点
 proxy-providers: 
   机场1:
     url: '😊😊😊😊' 
