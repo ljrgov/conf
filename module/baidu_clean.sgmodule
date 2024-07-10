@@ -1,6 +1,11 @@
 #!name=Baidu 首页
-#!desc=纯净搜索 @key
+#!desc=纯净搜索，去除部分网友广告 @key
 #!category=✌️去广告、会员
+#! \\ You Can Change The World With Code.
+#!配置教程: https://limbopro.com/archives/12904.html
+#!电报群组: https://t.me/Adblock4limbo
+#!源码仓库: https://github.com/limbopro/Adblock4limbo
+#!许可说明: https://github.com/limbopro/Adblock4limbo/blob/main/LICENSE
 
 
 [Map Local]
