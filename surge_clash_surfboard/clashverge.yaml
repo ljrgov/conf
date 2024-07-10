@@ -101,14 +101,12 @@ FilterUS: &FilterUS '^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|�
 FilterUK: &FilterUK '^(?=.*((?i)🇬🇧|英国|伦敦|(\b(UK|United Kingdom)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterFR: &FilterFR '^(?=.*((?i)🇫🇷|法国|(\b(FR|France)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterDE: &FilterDE '^(?=.*((?i)🇩🇪|德国|(\b(DE|Germany)\b)))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterGame: &FilterGame '^(?=.*((?i)🇭🇰|🇨🇳|游戏|🎮|(\b(GAME)\b)))(?!.*((?i)回国|校园|备用)).*$'
+FilterGame: &FilterGame '^(?=.*((?i)🇨🇳|🇭🇰|游戏|🎮|(\b(GAME)\b)))(?!.*((?i)回国|校园|备用)).*$'
 FilterAS: &FilterAS '^(?=.*((?i)🇮🇳|🇮🇩|🇵🇭|🇻🇳|🇹🇭|🇲🇾|🇦🇫|🇰🇿|🇰🇬|🇹🇯|🇹🇲|🇺🇿|🇱🇰|🇧🇩|🇳🇵|🇧🇹|🇲🇳))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterEU: &FilterEU '^(?=.*((?i)🇮🇹|🇪🇸|🇳🇱|🇧🇪|🇸🇪|🇵🇱|🇺🇦|🇬🇷|🇷🇸|🇷🇴|🇵🇹|🇭🇺|🇨🇿|🇦🇹|🇨🇭|🇧🇬))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterAF: &FilterAF '^(?=.*((?i)🇪🇬|🇿🇦|🇰🇪|🇪🇹|🇲🇦|🇩🇿|🇬🇭|🇨🇮|🇸🇳|🇺🇬|🇲🇿|🇦🇴|🇲🇬|🇱🇾|🇨🇩|🇿🇲|🇿🇼|🇧🇫|🇹🇳|🇷🇼))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
+FilterAF: &FilterAF '^(?=.*((?i)🇪🇬|🇿🇦|🇰🇪|🇪🇹|🇲🇦|🇩🇿|🇬🇭|🇨🇮|🇸🇳|🇺🇬|🇲🇿|🇦🇴|🇲🇬|🇱🇾|🇨🇩|🇿🇲|🇿🇼|🇧🇫|🇹🇳|🇷🇼|🇸🇦|🇮🇷|🇮🇶|🇮🇱|🇦🇪|🇶🇦|🇧🇭|🇴🇲|🇰🇼|🇯🇴|🇸🇾|🇱🇧|🇪🇬|🇾🇪|🇮🇶|🇨🇾|🇦🇲|🇦🇿|🇬🇪))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterAU: &FilterAU '^(?=.*((?i)🇦🇺|🇳🇿|🇵🇬|🇫🇯|🇸🇧|🇻🇺|🇹🇴|🇼🇸|🇰🇮|🇰🇳|🇫🇲|🇲🇭|🇳🇷|🇵🇼|🇵🇳))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterNM: &FilterNM '^(?=.*((?i)🇲🇽|🇨🇺|🇯🇲|🇩🇴|🇭🇹|🇧🇸|🇧🇧|🇹🇹|🇨🇷|🇵🇦|🇸🇻|🇬🇹|🇭🇳|🇳🇮|🇨🇴|🇻🇪|🇵🇷))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterSM: &FilterSM '^(?=.*((?i)🇧🇷|🇦🇷|🇨🇴|🇵🇪|🇻🇪|🇨🇱|🇪🇨|🇧🇴|🇵🇾|🇺🇾|🇬🇾|🇸🇷|🇫🇰|🇬🇫|🇻🇨|🇻🇬|🇦🇬|🇧🇿|🇧🇲|🇧🇧))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
-FilterME: &FilterME '^(?=.*((?i)🇸🇦|🇮🇷|🇮🇶|🇮🇱|🇦🇪|🇶🇦|🇧🇭|🇴🇲|🇰🇼|🇯🇴|🇸🇾|🇱🇧|🇪🇬|🇾🇪|🇮🇶|🇨🇾|🇦🇲|🇦🇿|🇬🇪))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
+FilterAM: &FilterAM '^(?=.*((?i)🇲🇽|🇨🇺|🇯🇲|🇩🇴|🇭🇹|🇧🇸|🇧🇧|🇹🇹|🇨🇷|🇵🇦|🇸🇻|🇬🇹|🇭🇳|🇳🇮|🇨🇴|🇻🇪|🇵🇷|🇧🇷|🇦🇷|🇨🇴|🇵🇪|🇻🇪|🇨🇱|🇪🇨|🇧🇴|🇵🇾|🇺🇾|🇬🇾|🇸🇷|🇫🇰|🇬🇫|🇻🇨|🇻🇬|🇦🇬|🇧🇿|🇧🇲|🇧🇧))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 FilterBY: &FilterBY '^(?=.*((?i)备用))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
 FilterT: &FilterT '^(?=.*((?i)🇹🇷))(?!.*((?i)回国|校园|游戏|备用|🎮|(\b(GAME)\b))).*$'
 
@@ -130,26 +128,26 @@ i: &i {type: http, behavior: ipcidr,  format: text, interval: 86400}
 # 策略组
 proxy-groups: 
   - {name: 广告拦截, type: select, proxies: [REJECT, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png}
-  - {name: 游戏平台, type: select, include-all-providers: true, filter: *FilterGame, proxies: [DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
-  - {name: 全球代理, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 中东节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png}
-  - {name: AI, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/chxm1023/ChatGPT4.png}
-  - {name: Google, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
-  - {name: TikTok, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png}
-  - {name: Telegram, type: select,  proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
-  - {name: Microsoft, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Copilot.png}
-  - {name: Emby, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
-  - {name: 国际媒体, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png}
+  - {name: 游戏平台, type: select, include-all-providers: true, filter: *FilterGame, proxies: [土耳其节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
+  - {name: 全球代理, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png}
+  - {name: AI, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/chxm1023/ChatGPT4.png}
+  - {name: Google, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
+  - {name: TikTok, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png}
+  - {name: Telegram, type: select,  proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
+  - {name: Microsoft, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Copilot.png}
+  - {name: Emby, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
+  - {name: 国际媒体, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/ljrgov/conf/main/icon/globalmedia.png}
   - {name: 苹果服务, type: select, proxies: [土耳其节点, 美国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png}
-  - {name: PayPal, type: select, proxies: [土耳其节点, 美国节点,香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/ljrgov/conf/main/icon/paypal.png}
-  - {name: Twitter, type: select,  proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
-  - {name: 兜底分流, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 新国节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 中东节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color//Final.png}
+  - {name: PayPal, type: select, proxies: [土耳其节点, 美国节点, 香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/ljrgov/conf/main/icon/paypal.png}
+  - {name: Twitter, type: select,  proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
+  - {name: 兜底分流, type: select, proxies: [香港节点, 台湾节点, 日本节点, 韩国节点, 狮城节点, 美国节点, 英国节点, 法国节点, 德国节点, 亚洲节点, 欧洲节点, 澳洲节点, 美洲节点, 非洲节点, 备用节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color//Final.png}
 #节点组
   - {name: 土耳其节点, type: select, proxies: [⏱土耳节点, 🎛土耳节点, 🚥土耳节点, ✌️土耳节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Turkey.png}
   - {name: 香港节点, type: select, proxies: [⏱香港节点, 🎛香港节点, 🚥香港节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
   - {name: 台湾节点, type: select, proxies: [⏱台湾节点, 🎛台湾节点, 🚥台湾节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
   - {name: 日本节点, type: select, proxies: [⏱日本节点, 🎛日本节点, 🚥日本节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
   - {name: 韩国节点, type: select, proxies: [⏱韩国节点, 🎛韩国节点, 🚥韩国节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png}
-  - {name: 新国节点, type: select, proxies: [⏱新国节点, 🎛新国节点, 🚥新国节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
+  - {name: 狮城节点, type: select, proxies: [⏱狮城节点, 🎛狮城节点, 🚥狮城节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
   - {name: 美国节点, type: select, proxies: [⏱美国节点, 🎛美国节点, 🚥美国节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
   - {name: 英国节点, type: select, proxies: [⏱英国节点, 🎛英国节点, 🚥英国节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Kingdom.png}
   - {name: 法国节点, type: select, proxies: [⏱法国节点, 🎛法国节点, 🚥法国节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/France.png}
@@ -158,7 +156,7 @@ proxy-groups:
 #  - {name: 台湾节点, type: select, proxies: [⏱台湾节点, 🎛台湾节点, 🚥台湾节点, ✌️台湾节点]}
 #  - {name: 日本节点, type: select, proxies: [⏱日本节点, 🎛日本节点, 🚥日本节点, ✌️日本节点]}
 #  - {name: 韩国节点, type: select, proxies: [⏱韩国节点, 🎛韩国节点, 🚥韩国节点, ✌️韩国节点]}
-#  - {name: 新国节点, type: select, proxies: [⏱新国节点, 🎛新国节点, 🚥新国节点, ✌️新国节点]}
+#  - {name: 狮城节点, type: select, proxies: [⏱狮城节点, 🎛狮城节点, 🚥狮城节点, ✌️狮城节点]}
 #  - {name: 美国节点, type: select, proxies: [⏱美国节点, 🎛美国节点, 🚥美国节点, ✌️美国节点]}
 #  - {name: 英国节点, type: select, proxies: [⏱英国节点, 🎛英国节点, 🚥英国节点, ✌️英国节点]}
 #  - {name: 法国节点, type: select, proxies: [⏱法国节点, 🎛法国节点, 🚥法国节点, ✌️法国节点]}
@@ -169,7 +167,6 @@ proxy-groups:
   - {name: 澳洲节点, type: select, proxies: [⏱澳洲节点, 🎛澳洲节点, 🚥澳洲节点, ✌️澳洲节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Oceania_Map.png}
   - {name: 美洲节点, type: select, proxies: [⏱美洲节点, 🎛美洲节点, 🚥美洲节点, ✌️美洲节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/America_Map.png}
   - {name: 非洲节点, type: select, proxies: [⏱非洲节点, 🎛非洲节点, 🚥非洲节点, ✌️非洲节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Africa_Map.png}
-  - {name: 中东节点, type: select, proxies: [⏱中东节点, 🎛中东节点, 🚥中东节点, ✌️中东节点], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States_Map.png}
 
 # 手动选择策略
   - {name: ✌️土耳节点, <<: *select, filter: *FilterT, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
@@ -177,7 +174,7 @@ proxy-groups:
 #  - {name: ✌️台湾节点, <<: *select, filter: *FilterTW}
 #  - {name: ✌️日本节点, <<: *select, filter: *FilterJP}
 #  - {name: ✌️韩国节点, <<: *select, filter: *FilterKR}
-#  - {name: ✌️新国节点, <<: *select, filter: *FilterSG}
+#  - {name: ✌️狮城节点, <<: *select, filter: *FilterSG}
 #  - {name: ✌️美国节点, <<: *select, filter: *FilterUS}
 #  - {name: ✌️英国节点, <<: *select, filter: *FilterUK}
 #  - {name: ✌️法国节点, <<: *select, filter: *FilterFR}
@@ -185,9 +182,8 @@ proxy-groups:
   - {name: ✌️亚洲节点, <<: *select, filter: *FilterAS, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
   - {name: ✌️欧洲节点, <<: *select, filter: *FilterEU, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
   - {name: ✌️澳洲节点, <<: *select, filter: *FilterAU, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
-  - {name: ✌️美洲节点, <<: *select, filter: *FilterNM, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
+  - {name: ✌️美洲节点, <<: *select, filter: *FilterAM, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
   - {name: ✌️非洲节点, <<: *select, filter: *FilterAF, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
-  - {name: ✌️中东节点, <<: *select, filter: *FilterME, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png}
 
 # 时延优选策略组
   - {name: ⏱土耳节点, <<: *UrlTest, filter: *FilterT} 
@@ -195,7 +191,7 @@ proxy-groups:
   - {name: ⏱台湾节点, <<: *UrlTest, filter: *FilterTW}
   - {name: ⏱日本节点, <<: *UrlTest, filter: *FilterJP}
   - {name: ⏱韩国节点, <<: *UrlTest, filter: *FilterKR}
-  - {name: ⏱新国节点, <<: *UrlTest, filter: *FilterSG}
+  - {name: ⏱狮城节点, <<: *UrlTest, filter: *FilterSG}
   - {name: ⏱美国节点, <<: *UrlTest, filter: *FilterUS}
   - {name: ⏱英国节点, <<: *UrlTest, filter: *FilterUK}
   - {name: ⏱法国节点, <<: *UrlTest, filter: *FilterFR}
@@ -204,8 +200,7 @@ proxy-groups:
   - {name: ⏱欧洲节点, <<: *UrlTest, filter: *FilterEU}
   - {name: ⏱非洲节点, <<: *UrlTest, filter: *FilterAF}
   - {name: ⏱澳洲节点, <<: *UrlTest, filter: *FilterAU}
-  - {name: ⏱美洲节点, <<: *UrlTest, filter: *FilterNM}
-  - {name: ⏱中东节点, <<: *UrlTest, filter: *FilterME}
+  - {name: ⏱美洲节点, <<: *UrlTest, filter: *FilterAM}
 
 # 负载均衡策略组
   - {name: 🎛土耳节点, <<: *LoadBalance, filter: *FilterT}
@@ -213,7 +208,7 @@ proxy-groups:
   - {name: 🎛台湾节点, <<: *LoadBalance, filter: *FilterTW}
   - {name: 🎛日本节点, <<: *LoadBalance, filter: *FilterJP}
   - {name: 🎛韩国节点, <<: *LoadBalance, filter: *FilterKR}
-  - {name: 🎛新国节点, <<: *LoadBalance, filter: *FilterSG}
+  - {name: 🎛狮城节点, <<: *LoadBalance, filter: *FilterSG}
   - {name: 🎛美国节点, <<: *LoadBalance, filter: *FilterUS}
   - {name: 🎛英国节点, <<: *LoadBalance, filter: *FilterUK}
   - {name: 🎛法国节点, <<: *LoadBalance, filter: *FilterFR}
@@ -222,8 +217,7 @@ proxy-groups:
   - {name: 🎛欧洲节点, <<: *LoadBalance, filter: *FilterEU}
   - {name: 🎛非洲节点, <<: *LoadBalance, filter: *FilterAF}
   - {name: 🎛澳洲节点, <<: *LoadBalance, filter: *FilterAU}
-  - {name: 🎛美洲节点, <<: *LoadBalance, filter: *FilterNM}
-  - {name: 🎛中东节点, <<: *LoadBalance, filter: *FilterME}
+  - {name: 🎛美洲节点, <<: *LoadBalance, filter: *FilterAM}
 
 # 故障转移策略组
   - {name: 🚥土耳节点, <<: *FallBack, filter: *FilterT}
@@ -231,7 +225,7 @@ proxy-groups:
   - {name: 🚥台湾节点, <<: *FallBack, filter: *FilterTW}
   - {name: 🚥日本节点, <<: *FallBack, filter: *FilterJP}
   - {name: 🚥韩国节点, <<: *FallBack, filter: *FilterKR}
-  - {name: 🚥新国节点, <<: *FallBack, filter: *FilterSG}
+  - {name: 🚥狮城节点, <<: *FallBack, filter: *FilterSG}
   - {name: 🚥美国节点, <<: *FallBack, filter: *FilterUS}
   - {name: 🚥英国节点, <<: *FallBack, filter: *FilterUK}
   - {name: 🚥法国节点, <<: *FallBack, filter: *FilterFR}
@@ -240,8 +234,7 @@ proxy-groups:
   - {name: 🚥欧洲节点, <<: *FallBack, filter: *FilterEU}
   - {name: 🚥非洲节点, <<: *FallBack, filter: *FilterAF}
   - {name: 🚥澳洲节点, <<: *FallBack, filter: *FilterAU}
-  - {name: 🚥美洲节点, <<: *FallBack, filter: *FilterNM}
-  - {name: 🚥中东节点, <<: *FallBack, filter: *FilterME}
+  - {name: 🚥美洲节点, <<: *FallBack, filter: *FilterAM}
 
 # 订阅规则
 rule-providers:
