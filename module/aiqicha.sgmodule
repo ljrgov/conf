@@ -1,48 +1,48 @@
-#!name = 爱企查去广告
-#!desc = 移除开屏广告、应用内弹窗、首页轮播图、悬浮部件、信息流和搜索填充词。
-#!openUrl = https://apps.apple.com/app/id1527039353
-#!author = 可莉🅥
-#!homepage = https://gitlab.com/lodepuly/vpn_tool/-/tree/master/Tool/Loon/Plugin
-#!icon = https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/Aiinquiry.png
-#!date = 2024-06-29 19:35:12
+#!name=爱企查去广告
+#!desc=移除开屏广告、应用内弹窗、首页轮播图、悬浮部件、信息流和搜索填充词。
+#!author=可莉🅥
+#!category=✌️去广告、会员
+#!icon=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/Aiinquiry.png
+#!openUrl=https://apps.apple.com/app/id1527039353
+#!homepage=https://gitlab.com/lodepuly/vpn_tool/-/tree/master/Tool/Loon/Plugin
+#!date=2024-06-29 19:35:12
 
 [Rule]
-URL-REGEX, ^http:\/\/180\.76\.76\.112\/v\d\/, REJECT
+URL-REGEX,^http:\/\/180\.76\.76\.112\/v\d\/,REJECT
 
-[Rewrite]
+[URL Rewrite]
+^https:\/\/aiqicha\.baidu\.com\/app\/commonstatusAjax - reject
+
+[Map Local]
 # 首页 - 轮播图
-^https:\/\/aiqicha\.baidu\.com\/app\/bannerPicAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/app\/bannerPicAjax data-type=text data="{}" status-code=200
 
 # 首页 - 悬浮部件
-^https:\/\/aiqicha\.baidu\.com\/app\/getPopConfigAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/app\/getPopConfigAjax data-type=text data="{}" status-code=200
 
 # 首页 - 热门话题
-^https:\/\/aiqicha\.baidu\.com\/app\/getHotTopicAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/app\/getHotTopicAjax data-type=text data="{}" status-code=200
 
 # 首页 - 每日早报
-^https:\/\/aiqicha\.baidu\.com\/app\/getNewsReportAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/app\/getNewsReportAjax data-type=text data="{}" status-code=200
 
 # 首页 - 专家讲堂
-^https:\/\/aiqicha\.baidu\.com\/app\/getExpertVideoAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/app\/getExpertVideoAjax data-type=text data="{}" status-code=200
 
 # 首页 - 热门快讯
-^https:\/\/aiqicha\.baidu\.com\/apps\/getHotRecommendV2Ajax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/apps\/getHotRecommendV2Ajax data-type=text data="{}" status-code=200
 
 # 首页 - 底部登录横幅
-^https:\/\/aiqicha\.baidu\.com\/m\/getLoginWordsAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/m\/getLoginWordsAjax data-type=text data="{}" status-code=200
 
 # 首页 - 弹窗
-^https:\/\/aiqicha\.baidu\.com\/app\/getAppPopSettingAjax reject-dict
-^https:\/\/aiqicha\.baidu\.com\/app\/commonstatusAjax reject
+^https:\/\/aiqicha\.baidu\.com\/app\/getAppPopSettingAjax data-type=text data="{}" status-code=200
 
 # 首页 - 精选监控
-^https:\/\/aiqicha\.baidu\.com\/apps\/getHomeMonitorDataAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/apps\/getHomeMonitorDataAjax data-type=text data="{}" status-code=200
 
 # 首页 - 搜索栏大家都在搜
-^https:\/\/aiqicha\.baidu\.com\/apps\/searchRecommendAjax reject-dict
+^https:\/\/aiqicha\.baidu\.com\/apps\/searchRecommendAjax data-type=text data="{}" status-code=200
 
-# 未知的视频
-# ^https:\/\/b2baifanfan\.baidu\.com\/crm\/web\/b2b\/im\/common\/getConfigByDeviceNum reject-dict
-
-[Mitm]
-hostname = aiqicha.baidu.com
+[MITM]
+hostname = %APPEND% aiqicha.baidu.com
