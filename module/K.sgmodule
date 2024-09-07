@@ -1,1 +1,12 @@
-cvv
+#!name=k歌
+#!desc=过滤微信公众号广告
+#!category=测试
+#!homepage=https://gitlab.com/lodepuly/vpn_tool/-/blob/master/README.md
+#!date=2024-09-05 23:53:41
+
+
+[Map Local]
+^https:\/\/wallpaper-1258344696\.file\.myqcloud\.com\? data="{}"
+
+[MITM]
+hostname = %APPEND% wallpaper-1258344696.file.myqcloud.com
