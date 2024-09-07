@@ -3,6 +3,7 @@
 #!author=RuCu6 Maasea
 #!update=2024-08-27 16:05
 #!category=✌️去广告、会员
+#!url=http://script.hub/file/_start_/https://raw.githubusercontent.com/RuCu6/QuanX/main/Rewrites/Cube/bilibili.snippet/_end_/bilibili.sgmodule?type=qx-rewrite&target=surge-module
 
 [Map Local]
 ^https:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? data-type=text data="{}" status-code=200
