@@ -10,6 +10,7 @@
 
 [Rule]
 DOMAIN-SUFFIX,wxs.qq.com,REJECT
+DOMAIN-SUFFIX,wximg.wxs.qq.com,REJECT
 
 [Map Local]
 # ^http:\/\/\w+\.wxs\.qq\.com\/\d+\/\d+\/(snscosdownload|snssvpdownload)\/(SH|SZ)\/reserved\/\w+ reject-dict
