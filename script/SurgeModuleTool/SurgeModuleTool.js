@@ -203,30 +203,30 @@ for await (const [index, file] of files.entries()) {
       content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
 // 检查是否有 #!category 字段
-let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-let selectedCategory = '未分类'; // 默认分类
+     let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+     let selectedCategory = '未分类'; // 默认分类
 
 // 提示用户选择分类
-let categoryAlert = new Alert();
-categoryAlert.title = '选择模块分类';
-categoryAlert.addAction('去广告');
-categoryAlert.addAction('功能模块');
-categoryAlert.addAction('面板模块');
-categoryAlert.addCancelAction('取消');
-let categoryIdx = await categoryAlert.presentAlert();
+     let categoryAlert = new Alert();
+     categoryAlert.title = '选择模块分类';
+     categoryAlert.addAction('去广告');
+     categoryAlert.addAction('功能模块');
+     categoryAlert.addAction('面板模块');
+     categoryAlert.addCancelAction('取消');
+     let categoryIdx = await categoryAlert.presentAlert();
 
 // 根据选择更新分类
-switch (categoryIdx) {
-  case 0:
-    selectedCategory = '去广告';
-    break;
-  case 1:
+     switch (categoryIdx) {
+   case 0:
+     selectedCategory = '去广告';
+     break;
+   case 1:
     selectedCategory = '功能模块';
     break;
-  case 2:
+   case 2:
     selectedCategory = '面板模块';
     break;
-  default:
+   default:
     selectedCategory = originalCategory || '未分类';
 }
 
