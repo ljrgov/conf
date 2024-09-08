@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: green; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.1";
+let ToolVersion = "1.2";
 
 async function delay(milliseconds) {
   var before = Date.now();
@@ -48,7 +48,7 @@ function updateCategory(content, newCategory) {
 async function promptForCategory() {
   let alert = new Alert();
   alert.title = '设置模块分类';
-  alert.addTextField('输入或选择分类', 'Default Category');
+  alert.addTextField('输入或选择分类');
   alert.addAction('确定');
   alert.addCancelAction('取消');
   let idx = await alert.presentAlert();
@@ -183,35 +183,86 @@ for await (const [index, file] of files.entries()) {
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${url}\n`);
 
       content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
+      // console.log(content);
       
-      if (filePath) {
-        fm.writeString(filePath, content);
+     if (filePath) {
+        fm.writeString(filePath, content)
       } else {
-        await DocumentPicker.exportString(content, file);
+        await DocumentPicker.exportString(content, file)
       }
 
-      report.success += 1;
-      await delay(1000);
+      // }
+      let nameInfo = `${name}`
+      let descInfo = `${desc}`
+      if (originalName && name !== originalName) {
+        nameInfo = `${originalName} -> ${name}`
+      }
+      if (originalDesc && desc !== originalDesc) {
+        descInfo = `${originalDesc} -> ${desc}`
+      }
+      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
+      report.success += 1
+      await delay(1 * 1000)
+      if (fromUrlScheme) {
+        alert = new Alert()
+        alert.title = `✅ ${nameInfo}`
+        alert.message = `${descInfo}\n${file}`
+        alert.addDestructiveAction('重载 Surge')
+        alert.addAction('打开 Surge')
+        alert.addCancelAction('关闭')
+        idx = await alert.presentAlert()
+        if (idx == 0) {
+          const req = new Request('http://script.hub/reload')
+          req.timeoutInterval = 10
+          req.method = 'GET'
+          let res = await req.loadString()
+        } else if (idx == 1) {
+          Safari.open('surge://')
+        }
+      }
     } catch (e) {
       if (noUrl) {
-        report.noUrl += 1;
+        report.noUrl += 1
       } else {
-        report.fail.push(originalName || file);
+        report.fail.push(originalName || file)
+      }
+
+      if (noUrl) {
+        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
+        console.log(e)
+      } else {
+        console.log(`\n❌ ${originalName || ''}\n${file}`)
+        console.error(`${originalName || file}: ${e}`)
+      }
+      if (fromUrlScheme) {
+        alert = new Alert()
+        alert.title = `❌ ${originalName || ''}\n${file}`
+        alert.message = `${e.message || e}`
+        alert.addCancelAction('关闭')
+        await alert.presentAlert()
       }
     }
   }
 }
-
 if (!checkUpdate && !fromUrlScheme) {
-  let alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
-  let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert = new Alert()
+  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
+    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`;
-  await alert.presentAlert();
-}
+  }`
+  alert.addDestructiveAction('重载 Surge')
+  alert.addAction('打开 Surge')
+  alert.addCancelAction('关闭')
+  idx = await alert.presentAlert()
+  if (idx == 0) {
+    const req = new Request('http://script.hub/reload')
+    req.timeoutInterval = 10
+    req.method = 'GET'
+    let res = await req.loadString()
+  } else if (idx == 1) {
+    Safari.open('surge://')
 
 
 // @key Think @wuhu.
