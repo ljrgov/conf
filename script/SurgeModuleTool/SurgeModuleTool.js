@@ -3,6 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
+//239、240行替换路径名称用来自动修改#!category值
 let ToolVersion = "2.03";
 
 async function delay(milliseconds) {
@@ -189,17 +190,58 @@ for await (const [index, file] of files.entries()) {
       res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
       content = `${res}`.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
+// 从文件路径中提取文件夹名称作为类别值
+function getCategoryFromPath(filePath) {
+  const parts = filePath.split('/');
+  if (parts.length > 1) {
+    return parts[parts.length - 2]; // 上层文件夹名称
+  }
+  return 'default'; // 如果没有上层文件夹，则返回默认值
+}
 
-      const category = getCategoryFromPath(filePath)
-      if (!content.includes('#!category=')) {
-        content = `#!category=${category}\n` + content
+async function updateFileContent(filePath, content) {
+  const category = getCategoryFromPath(filePath);
+
+  // 检查并添加 #!category= 行
+  if (!content.includes('#!category=')) {
+    content = `#!category=${category}\n` + content;
+  }
+
+  // 写入或导出文件
+  if (filePath) {
+    fm.writeString(filePath, content);
+  } else {
+    await DocumentPicker.exportString(content, file);
+  }
+}
+
+// 处理指定路径中的所有 .sgmodule 文件
+async function processFilesInPaths(paths) {
+  for (const folderPath of paths) {
+    const files = fm.listContents(folderPath);
+    const sgmoduleFiles = files.filter(file => file.endsWith('.sgmodule'));
+
+    for (const file of sgmoduleFiles) {
+      const filePath = `${folderPath}/${file}`;
+      try {
+        let content = fm.readString(filePath);
+        await updateFileContent(filePath, content);
+        console.log(`File updated: ${filePath}`);
+      } catch (error) {
+        console.error(`Error processing file ${filePath}:`, error);
       }
-      
-      if (filePath) {
-        fm.writeString(filePath, content)
-      } else {
-        await DocumentPicker.exportString(content, file)
-      }
+    }
+  }
+}
+
+//替换路径名称
+// 示例：处理指定路径中的所有 .sgmodule 文件
+const paths = [
+  'Surge/功能模块',      // 替换为实际路径
+  'Surge/去广告解会员'   // 替换为实际路径
+];
+
+await processFilesInPaths(paths);
 
       let nameInfo = `${name}`
       let descInfo = `${desc}`
@@ -284,7 +326,7 @@ async function update() {
   let version
   let resp
   try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now()
+    const url = 'https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/SurgeModuleTool.js?v=' + Date.now()
     let req = new Request(url)
     req.method = 'GET'
     req.headers = {
