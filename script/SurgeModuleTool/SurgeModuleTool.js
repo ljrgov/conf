@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.2";
+let ToolVersion = "1.3";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -265,13 +265,13 @@ for await (const [index, file] of files.entries()) {
         categoryInfo = `${originalCategory} -> ${category}`;
       }
 
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
+      console.log(`\✔️ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
       report.success += 1;
       await delay(1 * 1000);
 
       if (fromUrlScheme) {
         alert = new Alert();
-        alert.title = `✅ ${nameInfo}`;
+        alert.title ✔️ ${nameInfo}`;
         alert.message = `${descInfo}\n类别: ${categoryInfo}\n${file}`;
         alert.addDestructiveAction('重载 Surge');
         alert.addAction('打开 Surge');
@@ -294,7 +294,7 @@ for await (const [index, file] of files.entries()) {
       }
 
       if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`);
+        console.log(⁉️ ${originalName || ''}\n${file}`);
         console.log(e);
       } else {
         console.log(`\n❌ ${originalName || ''}\n${file}`);
@@ -314,11 +314,11 @@ for await (const [index, file] of files.entries()) {
 
 if (!checkUpdate && !fromUrlScheme) {
   alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
-  let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  let upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
+  let noUrlErrk = report.noUrl > ⁉️ 无链接: ${report.noUrl}` : '';
   let categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📁 类别替换成功: ${categoryReplaceSuccess}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
+  alert.message = `${noUrlErrk}\n✔️ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
