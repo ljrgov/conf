@@ -117,6 +117,7 @@ let report = {
   noUrl: 0,
 }
 
+// 初始化分类变更信息和计数
 let categoryChangeInfo = ''; // 用于跟踪分类变更信息
 let categoryChangedCount = 0;
 
@@ -204,7 +205,7 @@ for await (const [index, file] of files.entries()) {
 
 // 检查是否有 #!category 字段
      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-     let selectedCategory = '未分类'; // 默认分类
+     originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
 
 // 提示用户选择分类
      let categoryAlert = new Alert();
@@ -227,15 +228,18 @@ for await (const [index, file] of files.entries()) {
     selectedCategory = '面板模块';
     break;
    default:
-    selectedCategory = originalCategory || '未分类';
+    selectedCategory = originalCategory;
 }
 
 // 如果没有 #!category，则添加
 if (!categoryMatched) {
   content = `#!category=${selectedCategory}\n${content}`;
 } else {
-  // 如果已有 #!category，则替换
-  content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+  // 如果已有 #!category，并且新选择的分类与原分类不同，则替换
+  if (selectedCategory !== originalCategory) {
+    content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+    categoryChangedCount++; // 记录分类变更
+  }
 }
 
       // 保存文件内容
@@ -326,7 +330,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 
 // @key Think @wuhu.
