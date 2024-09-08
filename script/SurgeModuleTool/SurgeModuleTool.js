@@ -101,24 +101,19 @@ async function handleLocalModuleUpdate(filePath) {
 }
 
 // 处理所有本地下载的模块
-async function processLocalModules(directoryPaths) {
-  for (const directoryPath of directoryPaths) {
-    let files = fm.listContents(directoryPath);
+async function processLocalModules(directoryPath) {
+  let files = fm.listContents(directoryPath);
+  
+  for (let file of files) {
+    let filePath = `${directoryPath}/${file}`;
     
-    for (let file of files) {
-      let filePath = `${directoryPath}/${file}`;
-      
-      // 处理每个文件
-      await handleLocalModuleUpdate(filePath);
-    }
+    // 处理每个文件
+    await handleLocalModuleUpdate(filePath);
   }
 }
 
 // 主函数，设置本地模块目录路径
-const directoryPaths = [
-  '/path/to/your/iCloud/Surge/功能模块',  // iCloud/后替换为实际路径
-  '/path/to/your/iCloud/Surge/去广告解会员'  // iCloud/后替换为实际路径
-];
+const directoryPath = '/path/to/your/local/modules'; // 请替换为实际的本地模块目录路径
 
 // 用户操作选择
 let idx;
@@ -198,161 +193,171 @@ let report = {
   noUrl: 0,
 };
 
-for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    // console.log(file);
-    let originalName;
-    let originalDesc;
-    let noUrl;
-    try {
-      let content;
-      let filePath;
-      if (contents.length > 0) {
-        content = contents[index];
-      } else {
-        filePath = `${folderPath}/${file}`;
-        content = fm.readString(filePath);
-      }
-      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalNameMatched) {
-        originalName = originalNameMatched[1];
-      }
-      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalDescMatched) {
-        originalDesc = originalDescMatched[1];
-        if (originalDesc) {
-          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '');
-        }
-      }
-      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-      if (!matched) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-      const subscribed = matched[0];
-      const url = matched[1];
-      if (!url) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-
-      const req = new Request(url);
-      req.timeoutInterval = 10;
-      req.method = 'GET';
-      let res = await req.loadString();
-      const statusCode = req.response.statusCode;
-      if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`);
-      }
-      if (!res) {
-        throw new Error('未获取到模块内容');
-      }
-
-      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-      if (!nameMatched) {
-        throw new Error('不是合法的模块内容');
-      }
-      const name = nameMatched[1];
-      if (!name) {
-        throw new Error('模块无名称字段');
-      }
-      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-      let desc;
-      if (descMatched) {
-        desc = descMatched[1];
-      }
-      if (!desc) {
-        res = `#!desc=\n${res}`;
-      }
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-      // console.log(res);
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
-      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
-      // console.log(content);
-      if (filePath) {
-        fm.writeString(filePath, content);
-      } else {
-        await DocumentPicker.exportString(content, file);
-      }
-
-      let nameInfo = `${name}`;
-      let descInfo = `${desc}`;
-      if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`;
-      }
-      if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`;
-      }
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
-      report.success += 1;
-      await delay(1 * 1000);
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `✅ ${nameInfo}`;
-        alert.message = `${descInfo}\n${file}`;
-        alert.addDestructiveAction('重载 Surge');
-        alert.addAction('打开 Surge');
-        alert.addCancelAction('关闭');
-        idx = await alert.presentAlert();
-        if (idx == 0) {
-          const req = new Request('http://script.hub/reload');
-          req.timeoutInterval = 10;
-          req.method = 'GET';
-          let res = await req.loadString();
-        } else if (idx == 1) {
-          Safari.open('surge://');
-        }
-      }
-    } catch (e) {
-      if (noUrl) {
-        report.noUrl += 1;
-      } else {
-        report.fail.push(originalName || file);
-      }
-
-      if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`);
-        console.log(e);
-      } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`);
-        console.error(`${originalName || file}: ${e}`);
-      }
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `❌ ${originalName || ''}\n${file}`;
-        alert.message = `${e.message || e}`;
-        alert.addCancelAction('关闭');
-        await alert.presentAlert();
-      }
+if (files.length > 0) {
+  if (folderPath) {
+    await processLocalModules(folderPath);
+  } else {
+    // 处理单个模块的逻辑
+    for (let i = 0; i < files.length; i++) {
+      let filePath = `${folderPath}/${files[i]}`;
+      let content = contents[i] || fm.readString(filePath);
+      await handleLocalModuleUpdate(filePath);
     }
   }
 }
 
-if (!checkUpdate && !fromUrlScheme) {
-  alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
-    report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`;
-  alert.addDestructiveAction('重载 Surge');
-  alert.addAction('打开 Surge');
-  alert.addCancelAction('关闭');
-  idx = await alert.presentAlert();
-  if (idx == 0) {
-    const req = new Request('http://script.hub/reload');
-    req.timeoutInterval = 10;
-    req.method = 'GET';
-    let res = await req.loadString();
-  } else if (idx == 1) {
-    Safari.open('surge://');
+
+for await (const [index, file] of files.entries()) {
+  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
+    // console.log(file);
+    let originalName
+    let originalDesc
+    let noUrl
+    try {
+      let content
+      let filePath
+      if (contents.length > 0) {
+        content = contents[index]
+      } else {
+        filePath = `${folderPath}/${file}`
+        content = fm.readString(filePath)
+      }
+      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im)
+      if (originalNameMatched) {
+        originalName = originalNameMatched[1]
+      }
+      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im)
+      if (originalDescMatched) {
+        originalDesc = originalDescMatched[1]
+        if (originalDesc) {
+          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '')
+        }
+      }
+      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im)
+      if (!matched) {
+        noUrl = true
+        throw new Error('无订阅链接')
+      }
+      const subscribed = matched[0]
+      const url = matched[1]
+      if (!url) {
+        noUrl = true
+        throw new Error('无订阅链接')
+      }
+
+      const req = new Request(url)
+      req.timeoutInterval = 10
+      req.method = 'GET'
+      let res = await req.loadString()
+      const statusCode = req.response.statusCode
+      if (statusCode < 200 || statusCode >= 400) {
+        throw new Error(`statusCode: ${statusCode}`)
+      }
+      if (!res) {
+        throw new Error(`未获取到模块内容`)
+      }
+
+      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
+      if (!nameMatched) {
+        throw new Error(`不是合法的模块内容`)
+      }
+      const name = nameMatched[1]
+      if (!name) {
+        throw new Error('模块无名称字段')
+      }
+      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
+      let desc
+      if (descMatched) {
+        desc = descMatched[1]
+      }
+      if (!desc) {
+        res = `#!desc=\n${res}`
+      }
+      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
+      // console.log(res);
+      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
+      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
+      // console.log(content);
+      if (filePath) {
+        fm.writeString(filePath, content)
+      } else {
+        await DocumentPicker.exportString(content, file)
+      }
+
+      // }
+      let nameInfo = `${name}`
+      let descInfo = `${desc}`
+      if (originalName && name !== originalName) {
+        nameInfo = `${originalName} -> ${name}`
+      }
+      if (originalDesc && desc !== originalDesc) {
+        descInfo = `${originalDesc} -> ${desc}`
+      }
+      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
+      report.success += 1
+      await delay(1 * 1000)
+      if (fromUrlScheme) {
+        alert = new Alert()
+        alert.title = `✅ ${nameInfo}`
+        alert.message = `${descInfo}\n${file}`
+        alert.addDestructiveAction('重载 Surge')
+        alert.addAction('打开 Surge')
+        alert.addCancelAction('关闭')
+        idx = await alert.presentAlert()
+        if (idx == 0) {
+          const req = new Request('http://script.hub/reload')
+          req.timeoutInterval = 10
+          req.method = 'GET'
+          let res = await req.loadString()
+        } else if (idx == 1) {
+          Safari.open('surge://')
+        }
+      }
+    } catch (e) {
+      if (noUrl) {
+        report.noUrl += 1
+      } else {
+        report.fail.push(originalName || file)
+      }
+
+      if (noUrl) {
+        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
+        console.log(e)
+      } else {
+        console.log(`\n❌ ${originalName || ''}\n${file}`)
+        console.error(`${originalName || file}: ${e}`)
+      }
+      if (fromUrlScheme) {
+        alert = new Alert()
+        alert.title = `❌ ${originalName || ''}\n${file}`
+        alert.message = `${e.message || e}`
+        alert.addCancelAction('关闭')
+        await alert.presentAlert()
+      }
+    }
   }
 }
-
-// 处理本地模块
-await processLocalModules(directoryPath);
-
+if (!checkUpdate && !fromUrlScheme) {
+  alert = new Alert()
+  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
+    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
+  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
+    report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
+  }`
+  alert.addDestructiveAction('重载 Surge')
+  alert.addAction('打开 Surge')
+  alert.addCancelAction('关闭')
+  idx = await alert.presentAlert()
+  if (idx == 0) {
+    const req = new Request('http://script.hub/reload')
+    req.timeoutInterval = 10
+    req.method = 'GET'
+    let res = await req.loadString()
+  } else if (idx == 1) {
+    Safari.open('surge://')
+  }
+}
 
 
 // @key Think @wuhu.
