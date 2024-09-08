@@ -1,6 +1,6 @@
 #!name=Github private
 #!desc=验证私人仓库
-#!category=🧰功能模块
+
 #!author=Your Name
 #!arguments=token, username
 #!arguments-desc=github令牌, 用户名
