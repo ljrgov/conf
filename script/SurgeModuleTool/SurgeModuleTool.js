@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "3.0.8";
+let ToolVersion = "3.0.7";
 
 // 使用 Promise 实现延迟，而不是手动循环
 async function delay(milliseconds) {
@@ -33,18 +33,28 @@ async function updateProgress(totalFiles, report) {
   progressAlert.title = '正在处理文件...';
   progressAlert.message = `已处理 ${report.success}/${totalFiles} 个文件`;
   progressAlert.addCancelAction('取消');
-  
+
   let isCancelled = false;
-  let interval = setInterval(() => {
-    progressAlert.message = `已处理 ${report.success}/${totalFiles} 个文件`;
-  }, 1000);
+
+  // 函数用于轮询更新消息
+  async function pollProgress() {
+    while (!isCancelled) {
+      progressAlert.message = `已处理 ${report.success}/${totalFiles} 个文件`;
+      await delay(1000); // 每秒更新一次
+    }
+  }
+
+  // 启动轮询进程
+  let pollPromise = pollProgress();
 
   let cancel = await progressAlert.presentAlert();
-  clearInterval(interval);
-  
   if (cancel === -1) {
     isCancelled = true;
   }
+
+  // 等待轮询结束
+  await pollPromise;
+
   return isCancelled;
 }
 
@@ -281,6 +291,7 @@ if (files.length) {
     }
   }
 }
+
 
 
 
