@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-  //119/120行更改文件路径
+  
 let ToolVersion = "1.3";
 
 async function delay(milliseconds) {
