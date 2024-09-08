@@ -207,40 +207,60 @@ for await (const [index, file] of files.entries()) {
      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
      originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
 
-// 提示用户选择分类
-     let categoryAlert = new Alert();
-     categoryAlert.title = '选择模块分类';
-     categoryAlert.addAction('去广告');
-     categoryAlert.addAction('功能模块');
-     categoryAlert.addAction('面板模块');
-     categoryAlert.addCancelAction('取消');
-     let categoryIdx = await categoryAlert.presentAlert();
+// 提示用户一次选择分类
+let categoryAlert = new Alert();
+categoryAlert.title = '选择模块分类';
+categoryAlert.addAction('去广告');
+categoryAlert.addAction('功能模块');
+categoryAlert.addAction('面板模块');
+categoryAlert.addCancelAction('取消');
+let categoryIdx = await categoryAlert.presentAlert();
 
 // 根据选择更新分类
-     switch (categoryIdx) {
-   case 0:
-     selectedCategory = '去广告';
-     break;
-   case 1:
+let selectedCategory;
+switch (categoryIdx) {
+  case 0:
+    selectedCategory = '去广告';
+    break;
+  case 1:
     selectedCategory = '功能模块';
     break;
-   case 2:
+  case 2:
     selectedCategory = '面板模块';
     break;
-   default:
-    selectedCategory = originalCategory;
+  default:
+    selectedCategory = '未分类'; // 如果用户取消，设置默认分类
 }
 
-// 如果没有 #!category，则添加
-if (!categoryMatched) {
-  content = `#!category=${selectedCategory}\n${content}`;
-} else {
-  // 如果已有 #!category，并且新选择的分类与原分类不同，则替换
-  if (selectedCategory !== originalCategory) {
-    content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
-    categoryChangedCount++; // 记录分类变更
-  }
-}
+// 遍历所有文件并应用选定的分类
+let categoryChangedCount = 0;
+for await (const [index, file] of files.entries()) {
+  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
+    let originalCategory;
+    try {
+      let content;
+      let filePath;
+      if (contents.length > 0) {
+        content = contents[index];
+      } else {
+        filePath = `${folderPath}/${file}`;
+        content = fm.readString(filePath);
+      }
+
+      // 检查是否有 #!category 字段
+      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+      originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
+
+      // 如果没有 #!category，则添加
+      if (!categoryMatched) {
+        content = `#!category=${selectedCategory}\n${content}`;
+      } else {
+        // 如果已有 #!category，并且新选择的分类与原分类不同，则替换
+        if (selectedCategory !== originalCategory) {
+          content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+          categoryChangedCount++; // 记录分类变更
+        }
+      }
 
       // 保存文件内容
       if (filePath) {
@@ -316,7 +336,7 @@ if (!checkUpdate && !fromUrlScheme) {
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
   let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
+  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
