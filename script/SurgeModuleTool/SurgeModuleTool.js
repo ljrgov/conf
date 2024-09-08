@@ -4,7 +4,7 @@
 
 // prettier-ignore
   
-let ToolVersion = "1.4";
+let ToolVersion = "1.5";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -80,175 +80,172 @@ async function promptForCategory(currentCategory) {
 }
 
 // 用户操作选择
-let idx;
-let fromUrlScheme;
-let checkUpdate;
+async function main() {
+  let idx;
+  let fromUrlScheme;
+  let checkUpdate;
 
-if (args.queryParameters.url) {
-  fromUrlScheme = true;
-}
+  if (args.queryParameters.url) {
+    fromUrlScheme = true;
+  }
 
-if (fromUrlScheme) {
-  idx = 1;
-} else {
-  let alert = new Alert();
-  alert.title = 'Surge 模块工具';
-  alert.addDestructiveAction('更新本脚本');
-  alert.addAction('从链接创建');
-  alert.addAction('更新单个模块');
-  alert.addAction('更新全部模块');
-  alert.addCancelAction('取消');
-  idx = await alert.presentAlert();
-}
-
-let folderPath;
-let files = [];
-let contents = [];
-const fm = FileManager.iCloud();
-
-if (idx == 3) {
-  folderPath = await DocumentPicker.openFolder();
-  files = fm.listContents(folderPath);
-} else if (idx == 2) {
-  const filePath = await DocumentPicker.openFile();
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-} else if (idx == 1) {
-  let url;
-  let name;
   if (fromUrlScheme) {
-    url = args.queryParameters.url;
-    name = args.queryParameters.name;
+    idx = 1;
   } else {
-    let alert = new Alert();
-    alert.title = '将自动添加后缀 .sgmodule';
-    alert.addTextField('链接(必填)', '');
-    alert.addTextField('名称(选填)', '');
-    alert.addAction('下载');
+    const alert = new Alert();
+    alert.title = 'Surge 模块工具';
+    alert.addDestructiveAction('更新本脚本');
+    alert.addAction('从链接创建');
+    alert.addAction('更新单个模块');
+    alert.addAction('更新全部模块');
     alert.addCancelAction('取消');
-    await alert.presentAlert();
-    url = alert.textFieldValue(0);
-    name = alert.textFieldValue(1);
+    idx = await alert.presentAlert();
   }
-  if (url) {
-    if (!name) {
-      const plainUrl = url.split('?')[0];
-      const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-      if (fullname) {
-        name = fullname.replace(/\.sgmodule$/, '');
-      }
+
+  const fm = FileManager.iCloud();
+  let folderPath;
+  let files = [];
+  let contents = [];
+
+  if (idx === 3) {
+    folderPath = await DocumentPicker.openFolder();
+    files = fm.listContents(folderPath);
+  } else if (idx === 2) {
+    const filePath = await DocumentPicker.openFile();
+    folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+    files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+  } else if (idx === 1) {
+    let url;
+    let name;
+    if (fromUrlScheme) {
+      url = args.queryParameters.url;
+      name = args.queryParameters.name;
+    } else {
+      const alert = new Alert();
+      alert.title = '将自动添加后缀 .sgmodule';
+      alert.addTextField('链接(必填)', '');
+      alert.addTextField('名称(选填)', '');
+      alert.addAction('下载');
+      alert.addCancelAction('取消');
+      await alert.presentAlert();
+      url = alert.textFieldValue(0);
+      name = alert.textFieldValue(1);
+    }
+
+    if (url) {
       if (!name) {
-        name = `untitled-${new Date().toLocaleString()}`;
+        const plainUrl = url.split('?')[0];
+        const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
+        name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
+      }
+      name = convertToValidFileName(name);
+      files = [`${name}.sgmodule`];
+      contents = [`#SUBSCRIBED ${url}`];
+    }
+  } else if (idx === 0) {
+    console.log('检查更新');
+    checkUpdate = true;
+    await update();
+  }
+
+  let report = { success: 0, fail: [], noUrl: 0 };
+
+  if (files.length > 0) {
+    if (folderPath) {
+      await processLocalModules(folderPath); // Ensure this function is defined
+    } else {
+      for (const file of files) {
+        const filePath = `${folderPath}/${file}`;
+        const content = contents.length > 0 ? contents[files.indexOf(file)] : fm.readString(filePath);
+        await handleLocalModuleUpdate(filePath); // Ensure this function is defined
       }
     }
-    name = convertToValidFileName(name);
-    files = [`${name}.sgmodule`];
-    contents = [`#SUBSCRIBED ${url}`];
   }
-} else if (idx == 0) {
-  console.log('检查更新');
-  checkUpdate = true;
-  await update();
-}
 
-let report = {
-  success: 0,
-  fail: [],
-  noUrl: 0,
-};
+  for (const [index, file] of files.entries()) {
+    if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
+      let originalName;
+      let originalDesc;
+      let noUrl;
+      try {
+        let content;
+        let filePath;
+        if (contents.length > 0) {
+          content = contents[index];
+        } else {
+          filePath = `${folderPath}/${file}`;
+          content = fm.readString(filePath);
+        }
 
-if (files.length > 0) {
-  if (folderPath) {
-    await processLocalModules(folderPath);
-  } else {
-    // 处理单个模块的逻辑
-    for (let i = 0; i < files.length; i++) {
-      let filePath = `${folderPath}/${files[i]}`;
-      let content = contents[i] || fm.readString(filePath);
-      await handleLocalModuleUpdate(filePath);
-    }
-  }
-}
+        const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+        originalName = originalNameMatched ? originalNameMatched[1] : '';
 
+        const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+        originalDesc = originalDescMatched ? originalDescMatched[1].replace(/^🔗.*?]\s*/i, '') : '';
 
-for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    // console.log(file);
-    let originalName
-    let originalDesc
-    let noUrl
-    try {
-      let content
-      let filePath
-      if (contents.length > 0) {
-        content = contents[index]
-      } else {
-        filePath = `${folderPath}/${file}`
-        content = fm.readString(filePath)
-      }
-      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im)
-      if (originalNameMatched) {
-        originalName = originalNameMatched[1]
-      }
-      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im)
-      if (originalDescMatched) {
-        originalDesc = originalDescMatched[1]
-        if (originalDesc) {
-          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '')
+        const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+        if (!matched) {
+          noUrl = true;
+          throw new Error('无订阅链接');
+        }
+
+        const subscribed = matched[0];
+        const url = matched[1];
+        if (!url) {
+          noUrl = true;
+          throw new Error('无订阅链接');
+        }
+
+        const req = new Request(url);
+        req.timeoutInterval = 10;
+        req.method = 'GET';
+        const res = await req.loadString();
+        const statusCode = req.response.statusCode;
+        if (statusCode < 200 || statusCode >= 400) {
+          throw new Error(`statusCode: ${statusCode}`);
+        }
+
+        const nameMatched = res.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+        if (!nameMatched) {
+          throw new Error('不是合法的模块内容');
+        }
+
+        const name = nameMatched[1];
+        if (!name) {
+          throw new Error('模块无名称字段');
+        }
+
+        const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+        let desc = descMatched ? descMatched[1] : '';
+        if (!desc) {
+          res = `#!desc=\n${res}`;
+        }
+        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+        res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
+
+        await fm.writeString(filePath, res);
+        report.success += 1;
+      } catch (e) {
+        console.error(e.message);
+        if (noUrl) {
+          report.noUrl += 1;
+        } else {
+          report.fail.push(file);
         }
       }
-      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im)
-      if (!matched) {
-        noUrl = true
-        throw new Error('无订阅链接')
-      }
-      const subscribed = matched[0]
-      const url = matched[1]
-      if (!url) {
-        noUrl = true
-        throw new Error('无订阅链接')
-      }
+    }
+  }
 
-      const req = new Request(url)
-      req.timeoutInterval = 10
-      req.method = 'GET'
-      let res = await req.loadString()
-      const statusCode = req.response.statusCode
-      if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`)
-      }
-      if (!res) {
-        throw new Error(`未获取到模块内容`)
-      }
+  const reportMessage = `成功: ${report.success}\n失败: ${report.fail.join(', ')}\n无链接: ${report.noUrl}`;
+  const alert = new Alert();
+  alert.title = '处理完成';
+  alert.message = reportMessage;
+  alert.addAction('关闭');
+  await alert.presentAlert();
+}
 
-      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
-      if (!nameMatched) {
-        throw new Error(`不是合法的模块内容`)
-      }
-      const name = nameMatched[1]
-      if (!name) {
-        throw new Error('模块无名称字段')
-      }
-      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
-      let desc
-      if (descMatched) {
-        desc = descMatched[1]
-      }
-      if (!desc) {
-        res = `#!desc=\n${res}`
-      }
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
-      // console.log(res);
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
-      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
-      // console.log(content);
-      if (filePath) {
-        fm.writeString(filePath, content)
-      } else {
-        await DocumentPicker.exportString(content, file)
-      }
+main().catch(console.error);
 
-      // }
       let nameInfo = `${name}`
       let descInfo = `${desc}`
       if (originalName && name !== originalName) {
@@ -326,59 +323,63 @@ if (!checkUpdate && !fromUrlScheme) {
 
 // @key Think @wuhu.
 async function update() {
-  const fm = FileManager.iCloud()
-  const dict = fm.documentsDirectory()
-  // const scriptName = Script.name()
-  const scriptName = 'SurgeModuleTool'
-  let version
-  let resp
-  try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now()
-    let req = new Request(url)
-    req.method = 'GET'
-    req.headers = {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-    }
-    resp = await req.loadString()
+  const fm = FileManager.iCloud();
+  const dict = fm.documentsDirectory();
+  const scriptName = 'SurgeModuleTool';
+  let version;
+  let resp;
 
-    const regex = /let ToolVersion = "([\d.]+)"/
-    const match = resp.match(regex)
-    version = match ? match[1] : ''
+  try {
+    const url = `https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=${Date.now()}`;
+    const req = new Request(url);
+    req.method = 'GET';
+    req.headers = { 'Cache-Control': 'no-cache', Pragma: 'no-cache' };
+    resp = await req.loadString();
+
+    const regex = /let ToolVersion = "([\d.]+)"/;
+    const match = resp.match(regex);
+    version = match ? match[1] : '';
   } catch (e) {
-    console.error(e)
+    console.error('Error fetching the script version:', e);
+    return;
   }
 
   if (!version) {
-    let alert = new Alert()
-    alert.title = 'Surge 模块工具'
-    alert.message = '无法获取在线版本'
-    alert.addCancelAction('关闭')
-    await alert.presentAlert()
-    return
-  } else {
-    let needUpdate = version > ToolVersion
-    if (!needUpdate) {
-      let alert = new Alert()
-      alert.title = 'Surge 模块工具'
-      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`
-      alert.addDestructiveAction('强制更新')
-      alert.addCancelAction('关闭')
-      idx = await alert.presentAlert()
-      if (idx === 0) {
-        needUpdate = true
-      }
+    const alert = new Alert();
+    alert.title = 'Surge 模块工具';
+    alert.message = '无法获取在线版本';
+    alert.addCancelAction('关闭');
+    await alert.presentAlert();
+    return;
+  }
+
+  const needUpdate = version > ToolVersion;
+  if (!needUpdate) {
+    const alert = new Alert();
+    alert.title = 'Surge 模块工具';
+    alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
+    alert.addDestructiveAction('强制更新');
+    alert.addCancelAction('关闭');
+    const idx = await alert.presentAlert();
+    if (idx === 0) {
+      needUpdate = true;
     }
-    if (needUpdate) {
-      fm.writeString(`${dict}/${scriptName}.js`, resp)
-      console.log('更新成功: ' + version)
-      let notification = new Notification()
-      notification.title = 'Surge 模块工具 更新成功: ' + version
-      notification.subtitle = '点击通知跳转'
-      notification.sound = 'default'
-      notification.openURL = `scriptable:///open/${scriptName}`
-      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false)
-      await notification.schedule()
+  }
+
+  if (needUpdate) {
+    try {
+      fm.writeString(`${dict}/${scriptName}.js`, resp);
+      console.log('更新成功: ' + version);
+      const notification = new Notification();
+      notification.title = `Surge 模块工具 更新成功: ${version}`;
+      notification.subtitle = '点击通知跳转';
+      notification.sound = 'default';
+      notification.openURL = `scriptable:///open/${scriptName}`;
+      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
+      await notification.schedule();
+    } catch (e) {
+      console.error('Error updating the script:', e);
     }
   }
 }
+
