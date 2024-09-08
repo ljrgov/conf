@@ -3,7 +3,8 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.03";
+  //119/120行更改文件路径
+let ToolVersion = "1.2";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -41,38 +42,93 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+// 更新模块分类的函数
 function updateCategory(content, newCategory) {
-  // 查找现有的 #!category 字段并替换，如果不存在则插入
   const categoryRegex = /^#!category\s*?=\s*?(.*?)\s*(\n|$)/im;
   if (categoryRegex.test(content)) {
-    // 替换已有的 #!category
     return content.replace(categoryRegex, `#!category=${newCategory}\n`);
   } else {
-    // 如果没有 #!category，则在文件头插入
     return addLineAfterLastOccurrence(content, `\n#!category=${newCategory}\n`);
   }
 }
 
-async function promptForCategory() {
+// 弹出对话框让用户选择分类
+async function promptForCategory(currentCategory) {
   let alert = new Alert();
-  alert.title = '设置模块分类';
-  alert.addTextField('输入或选择分类');
-  alert.addAction('确定');
+  alert.title = '选择模块分类';
+  alert.addAction('功能模块');
+  alert.addAction('去广告');
+  alert.addAction('面板模块');
   alert.addCancelAction('取消');
+
   let idx = await alert.presentAlert();
   
   if (idx === -1) {
-    return null; // 用户取消操作
+    return currentCategory; // 用户取消操作，不改变分类
   }
-  return alert.textFieldValue(0); // 返回输入的分类
+  
+  switch (idx) {
+    case 0:
+      return '功能模块';
+    case 1:
+      return '去广告';
+    case 2:
+      return '面板模块';
+    default:
+      return currentCategory; // 默认情况下返回当前分类
+  }
 }
 
+// 处理本地模块文件的更新
+async function handleLocalModuleUpdate(filePath) {
+  let content = fm.readString(filePath);
+  
+  // 查找当前分类
+  const currentCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
+  const currentCategory = currentCategoryMatched ? currentCategoryMatched[1] : '默认分类';
+  
+  // 弹出对话框让用户选择新的分类
+  let newCategory = await promptForCategory(currentCategory);
+  
+  if (newCategory !== currentCategory) {
+    // 更新模块内容中的分类
+    content = updateCategory(content, newCategory);
+    
+    // 将更新后的内容保存到文件
+    fm.writeString(filePath, content);
+    console.log(`文件 ${filePath} 更新为分类 ${newCategory}`);
+  }
+}
+
+// 处理所有本地下载的模块
+async function processLocalModules(directoryPaths) {
+  for (const directoryPath of directoryPaths) {
+    let files = fm.listContents(directoryPath);
+    
+    for (let file of files) {
+      let filePath = `${directoryPath}/${file}`;
+      
+      // 处理每个文件
+      await handleLocalModuleUpdate(filePath);
+    }
+  }
+}
+
+// 主函数，设置本地模块目录路径
+const directoryPaths = [
+  '/path/to/your/iCloud/Surge/功能模块',  // iCloud/后替换为实际路径
+  '/path/to/your/iCloud/Surge/去广告解会员'  // iCloud/后替换为实际路径
+];
+
+// 用户操作选择
 let idx;
 let fromUrlScheme;
 let checkUpdate;
+
 if (args.queryParameters.url) {
   fromUrlScheme = true;
 }
+
 if (fromUrlScheme) {
   idx = 1;
 } else {
@@ -90,6 +146,7 @@ let folderPath;
 let files = [];
 let contents = [];
 const fm = FileManager.iCloud();
+
 if (idx == 3) {
   folderPath = await DocumentPicker.openFolder();
   files = fm.listContents(folderPath);
@@ -141,11 +198,12 @@ let report = {
   noUrl: 0,
 };
 
-const selectedCategory = await promptForCategory(); // 获取用户输入的分类
-
 for await (const [index, file] of files.entries()) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName, originalDesc, noUrl;
+    // console.log(file);
+    let originalName;
+    let originalDesc;
+    let noUrl;
     try {
       let content;
       let filePath;
@@ -155,20 +213,30 @@ for await (const [index, file] of files.entries()) {
         filePath = `${folderPath}/${file}`;
         content = fm.readString(filePath);
       }
-
+      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (originalNameMatched) {
+        originalName = originalNameMatched[1];
+      }
+      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (originalDescMatched) {
+        originalDesc = originalDescMatched[1];
+        if (originalDesc) {
+          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '');
+        }
+      }
       const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
       if (!matched) {
         noUrl = true;
         throw new Error('无订阅链接');
       }
-
+      const subscribed = matched[0];
       const url = matched[1];
       if (!url) {
         noUrl = true;
         throw new Error('无订阅链接');
       }
 
-      let req = new Request(url);
+      const req = new Request(url);
       req.timeoutInterval = 10;
       req.method = 'GET';
       let res = await req.loadString();
@@ -176,101 +244,115 @@ for await (const [index, file] of files.entries()) {
       if (statusCode < 200 || statusCode >= 400) {
         throw new Error(`statusCode: ${statusCode}`);
       }
+      if (!res) {
+        throw new Error('未获取到模块内容');
+      }
 
-      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?(.*?)\s*(\n|$)/im);
+      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
       if (!nameMatched) {
-        throw new Error(`不是合法的模块内容`);
+        throw new Error('不是合法的模块内容');
       }
-
       const name = nameMatched[1];
-      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?(.*?)\s*(\n|$)/im);
-      let desc = descMatched ? descMatched[1] : '';
-
-      // 更新 #!category 字段
-      res = updateCategory(res, selectedCategory || 'Default Category');
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${url}\n`);
-
-      content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
+      if (!name) {
+        throw new Error('模块无名称字段');
+      }
+      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      let desc;
+      if (descMatched) {
+        desc = descMatched[1];
+      }
+      if (!desc) {
+        res = `#!desc=\n${res}`;
+      }
+      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+      // console.log(res);
+      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
+      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
       // console.log(content);
-      
-     if (filePath) {
-        fm.writeString(filePath, content)
+      if (filePath) {
+        fm.writeString(filePath, content);
       } else {
-        await DocumentPicker.exportString(content, file)
+        await DocumentPicker.exportString(content, file);
       }
 
-      // }
-      let nameInfo = `${name}`
-      let descInfo = `${desc}`
+      let nameInfo = `${name}`;
+      let descInfo = `${desc}`;
       if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`
+        nameInfo = `${originalName} -> ${name}`;
       }
       if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`
+        descInfo = `${originalDesc} -> ${desc}`;
       }
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
-      report.success += 1
-      await delay(1 * 1000)
+      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
+      report.success += 1;
+      await delay(1 * 1000);
       if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `✅ ${nameInfo}`
-        alert.message = `${descInfo}\n${file}`
-        alert.addDestructiveAction('重载 Surge')
-        alert.addAction('打开 Surge')
-        alert.addCancelAction('关闭')
-        idx = await alert.presentAlert()
+        alert = new Alert();
+        alert.title = `✅ ${nameInfo}`;
+        alert.message = `${descInfo}\n${file}`;
+        alert.addDestructiveAction('重载 Surge');
+        alert.addAction('打开 Surge');
+        alert.addCancelAction('关闭');
+        idx = await alert.presentAlert();
         if (idx == 0) {
-          const req = new Request('http://script.hub/reload')
-          req.timeoutInterval = 10
-          req.method = 'GET'
-          let res = await req.loadString()
+          const req = new Request('http://script.hub/reload');
+          req.timeoutInterval = 10;
+          req.method = 'GET';
+          let res = await req.loadString();
         } else if (idx == 1) {
-          Safari.open('surge://')
+          Safari.open('surge://');
         }
       }
     } catch (e) {
       if (noUrl) {
-        report.noUrl += 1
+        report.noUrl += 1;
       } else {
-        report.fail.push(originalName || file)
+        report.fail.push(originalName || file);
       }
 
       if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
-        console.log(e)
+        console.log(`\n🈚️ ${originalName || ''}\n${file}`);
+        console.log(e);
       } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`)
-        console.error(`${originalName || file}: ${e}`)
+        console.log(`\n❌ ${originalName || ''}\n${file}`);
+        console.error(`${originalName || file}: ${e}`);
       }
       if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `❌ ${originalName || ''}\n${file}`
-        alert.message = `${e.message || e}`
-        alert.addCancelAction('关闭')
-        await alert.presentAlert()
+        alert = new Alert();
+        alert.title = `❌ ${originalName || ''}\n${file}`;
+        alert.message = `${e.message || e}`;
+        alert.addCancelAction('关闭');
+        await alert.presentAlert();
       }
     }
   }
 }
+
 if (!checkUpdate && !fromUrlScheme) {
-  alert = new Alert()
+  alert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
+    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`
-  alert.addDestructiveAction('重载 Surge')
-  alert.addAction('打开 Surge')
-  alert.addCancelAction('关闭')
-  idx = await alert.presentAlert()
+  }`;
+  alert.addDestructiveAction('重载 Surge');
+  alert.addAction('打开 Surge');
+  alert.addCancelAction('关闭');
+  idx = await alert.presentAlert();
   if (idx == 0) {
-    const req = new Request('http://script.hub/reload')
-    req.timeoutInterval = 10
-    req.method = 'GET'
-    let res = await req.loadString()
+    const req = new Request('http://script.hub/reload');
+    req.timeoutInterval = 10;
+    req.method = 'GET';
+    let res = await req.loadString();
   } else if (idx == 1) {
-    Safari.open('surge://')
+    Safari.open('surge://');
+  }
+}
+
+// 处理本地模块
+await processLocalModules(directoryPath);
+
 
 
 // @key Think @wuhu.
