@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "3.0.1";
+let ToolVersion = "3.0.2";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -146,137 +146,159 @@ switch (categoryIdx) {
     selectedCategory = '未分类'; // 如果用户取消，设置默认分类
 }
 
-// 显示初始对话框并开始处理文件
+// 显示初始对话框
 let initialAlert = new Alert();
 initialAlert.title = '处理中...';
 initialAlert.message = '请稍等，正在处理文件。';
 initialAlert.addCancelAction('取消');
-// 立即展示初始对话框
-await initialAlert.presentAlert();
 
-// 处理文件
-async function processFiles() {
-  for await (const [index, file] of files.entries()) {
-    if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-      let originalCategory;
-      let noUrl; // 记录没有链接的文件
-      let originalName, originalDesc; // 记录原始信息
-      try {
-        let content;
-        let filePath;
+let isCancelled = false; // 用于标记用户是否取消了操作
 
-        // 检查是否从 `contents` 读取内容
-        if (contents.length > 0) {
-          content = contents[index];
-        } else {
-          filePath = `${folderPath}/${file}`;
-          content = fm.readString(filePath);
+// 创建一个 Promise 来控制文件处理的开始和取消
+let processingPromise = new Promise(async (resolve) => {
+  // 监听用户操作
+  let alertPromise = new Promise((alertResolve) => {
+    initialAlert.presentAlert().then(() => {
+      isCancelled = true; // 用户点击了取消
+      alertResolve();
+    });
+  });
+
+  // 处理文件的异步函数
+  async function processFiles() {
+    for await (const [index, file] of files.entries()) {
+      if (isCancelled) {
+        console.log('操作已取消');
+        break;
+      }
+
+      if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
+        let originalCategory;
+        let noUrl; // 记录没有链接的文件
+        let originalName, originalDesc; // 记录原始信息
+        try {
+          let content;
+          let filePath;
+
+          // 检查是否从 `contents` 读取内容
+          if (contents.length > 0) {
+            content = contents[index];
+          } else {
+            filePath = `${folderPath}/${file}`;
+            content = fm.readString(filePath);
+          }
+
+          // 处理 #!name 和 #!desc
+          const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+          if (originalNameMatched) originalName = originalNameMatched[1];
+
+          const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+          if (originalDescMatched) {
+            originalDesc = originalDescMatched[1];
+            if (originalDesc) originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, ''); // 去掉旧的链接
+          }
+
+          // 处理订阅链接
+          const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+          if (!matched) {
+            noUrl = true;
+            throw new Error('无订阅链接');
+          }
+          const subscribed = matched[0];
+          const url = matched[1];
+          if (!url) {
+            noUrl = true;
+            throw new Error('无订阅链接');
+          }
+
+          // 获取新的模块内容
+          const req = new Request(url);
+          req.timeoutInterval = 10;
+          req.method = 'GET';
+          let res = await req.loadString();
+          const statusCode = req.response.statusCode;
+          if (statusCode < 200 || statusCode >= 400) {
+            throw new Error(`statusCode: ${statusCode}`);
+          }
+
+          // 验证模块内容是否合法
+          const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+          if (!nameMatched) throw new Error(`不是合法的模块内容`);
+          const name = nameMatched[1];
+          if (!name) throw new Error('模块无名称字段');
+
+          // 处理 #!desc
+          const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+          let desc;
+          if (descMatched) desc = descMatched[1];
+          if (!desc) res = `#!desc=\n${res}`;
+
+          // 处理分类
+          let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+          originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
+
+          // 如果没有 #!category 字段，添加新分类；如果有则替换
+          if (!categoryMatched) {
+            content = `#!category=${selectedCategory}\n${content}`;
+          } else if (selectedCategory !== originalCategory) {
+            content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+            categoryChangedCount++; // 记录分类变更次数
+          }
+
+          // 保存文件内容
+          if (filePath) {
+            fm.writeString(filePath, content);
+          } else {
+            await DocumentPicker.exportString(content, file);
+          }
+
+          // 输出更新结果
+          let nameInfo = `${name}`;
+          let descInfo = `${desc}`;
+          if (originalName && name !== originalName) {
+            nameInfo = `${originalName} -> ${name}`;
+          }
+          if (originalDesc && desc !== originalDesc) {
+            descInfo = `${originalDesc} -> ${desc}`;
+          }
+          console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
+          report.success += 1;
+          await delay(1 * 1000);
+
+        } catch (e) {
+          if (noUrl) {
+            report.noUrl += 1;
+          } else {
+            report.fail.push(originalName || file);
+          }
+          console.error(`❌ ${originalName || file}: ${e}`);
         }
-
-        // 处理 #!name 和 #!desc
-        const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-        if (originalNameMatched) originalName = originalNameMatched[1];
-
-        const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-        if (originalDescMatched) {
-          originalDesc = originalDescMatched[1];
-          if (originalDesc) originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, ''); // 去掉旧的链接
-        }
-
-        // 处理订阅链接
-        const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-        if (!matched) {
-          noUrl = true;
-          throw new Error('无订阅链接');
-        }
-        const subscribed = matched[0];
-        const url = matched[1];
-        if (!url) {
-          noUrl = true;
-          throw new Error('无订阅链接');
-        }
-
-        // 获取新的模块内容
-        const req = new Request(url);
-        req.timeoutInterval = 10;
-        req.method = 'GET';
-        let res = await req.loadString();
-        const statusCode = req.response.statusCode;
-        if (statusCode < 200 || statusCode >= 400) {
-          throw new Error(`statusCode: ${statusCode}`);
-        }
-
-        // 验证模块内容是否合法
-        const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-        if (!nameMatched) throw new Error(`不是合法的模块内容`);
-        const name = nameMatched[1];
-        if (!name) throw new Error('模块无名称字段');
-
-        // 处理 #!desc
-        const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-        let desc;
-        if (descMatched) desc = descMatched[1];
-        if (!desc) res = `#!desc=\n${res}`;
-
-        // 处理分类
-        let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-        originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
-
-        // 如果没有 #!category 字段，添加新分类；如果有则替换
-        if (!categoryMatched) {
-          content = `#!category=${selectedCategory}\n${content}`;
-        } else if (selectedCategory !== originalCategory) {
-          content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
-          categoryChangedCount++; // 记录分类变更次数
-        }
-
-        // 保存文件内容
-        if (filePath) {
-          fm.writeString(filePath, content);
-        } else {
-          await DocumentPicker.exportString(content, file);
-        }
-
-        // 输出更新结果
-        let nameInfo = `${name}`;
-        let descInfo = `${desc}`;
-        if (originalName && name !== originalName) {
-          nameInfo = `${originalName} -> ${name}`;
-        }
-        if (originalDesc && desc !== originalDesc) {
-          descInfo = `${originalDesc} -> ${desc}`;
-        }
-        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
-        report.success += 1;
-        await delay(1 * 1000);
-
-      } catch (e) {
-        if (noUrl) {
-          report.noUrl += 1;
-        } else {
-          report.fail.push(originalName || file);
-        }
-        console.error(`❌ ${originalName || file}: ${e}`);
       }
     }
+    resolve(); // 文件处理完成
   }
 
-  // 记录分类变更信息
-  if (categoryChangedCount > 0) {
-    categoryChangeInfo = `\n🔄 分类变更: ${categoryChangedCount}`;
-  }
+  processFiles(); // 启动文件处理
+  alertPromise.then(() => {
+    isCancelled = true; // 设置取消标记
+  });
+});
 
-  // 处理完成后显示结果对话框
-  let finalAlert = new Alert();
+// 等待文件处理完成
+await processingPromise;
+
+// 处理完成后关闭初始对话框并显示结果对话框
+if (!isCancelled) {
+  let resultAlert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
   let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
-  finalAlert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  finalAlert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
-  finalAlert.addDestructiveAction('重载 Surge');
-  finalAlert.addAction('打开 Surge');
-  finalAlert.addCancelAction('关闭');
-  
-  let idx = await finalAlert.presentAlert();
+  resultAlert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  resultAlert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
+  resultAlert.addDestructiveAction('重载 Surge');
+  resultAlert.addAction('打开 Surge');
+  resultAlert.addCancelAction('关闭');
+
+  let idx = await resultAlert.presentAlert();
   if (idx == 0) {
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
@@ -286,10 +308,6 @@ async function processFiles() {
     Safari.open('surge://');
   }
 }
-
-// 执行文件处理
-processFiles();
-
 
 // @key Think @wuhu.
 async function update() {
