@@ -146,13 +146,13 @@ switch (categoryIdx) {
     selectedCategory = '未分类'; // 如果用户取消，设置默认分类
 }
 
-// 显示初始对话框
+// 显示初始对话框并开始处理文件
 let initialAlert = new Alert();
 initialAlert.title = '处理中...';
 initialAlert.message = '请稍等，正在处理文件。';
 initialAlert.addCancelAction('取消');
-// 不等待对话框关闭，直接开始处理文件
-initialAlert.presentAlert();
+// 立即展示初始对话框
+await initialAlert.presentAlert();
 
 // 处理文件
 async function processFiles() {
@@ -260,10 +260,12 @@ async function processFiles() {
       }
     }
   }
-}
 
-// 执行文件处理
-processFiles().then(async () => {
+  // 记录分类变更信息
+  if (categoryChangedCount > 0) {
+    categoryChangeInfo = `\n🔄 分类变更: ${categoryChangedCount}`;
+  }
+
   // 处理完成后显示结果对话框
   let finalAlert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
@@ -283,7 +285,10 @@ processFiles().then(async () => {
   } else if (idx == 1) {
     Safari.open('surge://');
   }
-});
+}
+
+// 执行文件处理
+processFiles();
 
 
 // @key Think @wuhu.
