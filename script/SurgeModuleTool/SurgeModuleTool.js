@@ -42,26 +42,89 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+// 处理本地模块的函数
+async function processLocalModules(folderPath) {
+  const fm = FileManager.iCloud();
+  let files = [];
+
+  // 检查文件夹是否存在
+  if (!fm.fileExists(folderPath)) {
+    console.error(`文件夹 ${folderPath} 不存在`);
+    return; // 退出函数
+  }
+
+  try {
+    // 尝试列出文件夹中的内容
+    files = fm.listContents(folderPath);
+  } catch (e) {
+    console.error(`无法访问文件夹 ${folderPath}: ${e.message}`);
+    return; // 退出函数
+  }
+
+  for (const file of files) {
+    // 处理符合条件的文件
+    if (/\.(sgmodule)$/i.test(file)) {
+      const filePath = `${folderPath}/${file}`;
+      try {
+        // 处理每个本地模块
+        await handleLocalModuleUpdate(filePath);
+      } catch (e) {
+        console.error(`处理文件 ${filePath} 时出错: ${e.message}`);
+      }
+    }
+  }
+}
+
+// 处理本地模块更新的函数
+async function handleLocalModuleUpdate(filePath) {
+  const fm = FileManager.iCloud();
+  let content;
+
+  try {
+    // 尝试读取文件内容
+    content = fm.readString(filePath);
+  } catch (e) {
+    console.error(`无法读取文件 ${filePath}: ${e.message}`);
+    throw e; // 重新抛出异常以便在调用函数中处理
+  }
+
+  // 这里是更新逻辑的示例
+  try {
+    let updatedContent = updateCategory(content, '新的分类'); // 假设你有一个 updateCategory 函数
+    await fm.writeString(filePath, updatedContent);
+  } catch (e) {
+    console.error(`更新文件 ${filePath} 时出错: ${e.message}`);
+    throw e; // 重新抛出异常以便在调用函数中处理
+  }
+}
+
 // 更新模块分类的函数
 function updateCategory(content, newCategory) {
   const categoryRegex = /^#!category\s*?=\s*?(.*?)\s*(\n|$)/im;
   if (categoryRegex.test(content)) {
     return content.replace(categoryRegex, `#!category=${newCategory}\n`);
   } else {
-    return addLineAfterLastOccurrence(content, `\n#!category=${newCategory}\n`);
+    // 将新的 #!category 字段添加到内容的第三行
+    const lines = content.split('\n');
+    if (lines.length >= 2) {
+      lines.splice(2, 0, `#!category=${newCategory}`);
+    } else {
+      lines.push(`#!category=${newCategory}`);
+    }
+    return lines.join('\n');
   }
 }
 
-// 弹出对话框让用户选择分类
+// 弹出对话框让用户选择分类的函数
 async function promptForCategory(currentCategory) {
-  let alert = new Alert();
+  const alert = new Alert();
   alert.title = '选择模块分类';
   alert.addAction('功能模块');
   alert.addAction('去广告');
   alert.addAction('面板模块');
   alert.addCancelAction('取消');
 
-  let idx = await alert.presentAlert();
+  const idx = await alert.presentAlert();
   
   if (idx === -1) {
     return currentCategory; // 用户取消操作，不改变分类
@@ -77,74 +140,6 @@ async function promptForCategory(currentCategory) {
     default:
       return currentCategory; // 默认情况下返回当前分类
   }
-}
-
-// 处理本地模块的函数
-async function processLocalModules(folderPath) {
-  const fm = FileManager.iCloud();
-  const files = fm.listContents(folderPath);
-
-  for (const file of files) {
-    if (/\.(sgmodule)$/i.test(file)) {
-      const filePath = `${folderPath}/${file}`;
-      await handleLocalModuleUpdate(filePath); // 处理每个本地模块
-    }
-  }
-}
-
-// 处理和更新每个本地模块的函数
-async function handleLocalModuleUpdate(filePath) {
-  const fm = FileManager.iCloud();
-  let content = fm.readString(filePath);
-  
-  try {
-    // 提取名称和描述
-    const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-    const originalName = originalNameMatched ? originalNameMatched[1] : '';
-
-    const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-    const originalDesc = originalDescMatched ? originalDescMatched[1].replace(/^🔗.*?]\s*/i, '') : '';
-
-    // 弹出对话框让用户选择分类
-    const newCategory = await promptForCategory(originalName);
-    content = updateCategory(content, newCategory);
-
-    // 写入更新后的内容
-    fm.writeString(filePath, content);
-
-    // 日志输出
-    let nameInfo = `${originalName}`;
-    let descInfo = `${originalDesc}`;
-    if (originalName && newCategory !== originalName) {
-      nameInfo = `${originalName} -> ${newCategory}`;
-    }
-    if (originalDesc && descInfo !== originalDesc) {
-      descInfo = `${originalDesc} -> ${descInfo}`;
-    }
-    console.log(`\n✅ ${nameInfo}\n${descInfo}\n${filePath}`);
-  } catch (e) {
-    console.error(`❌ 更新失败: ${filePath}`);
-    console.error(e.message);
-  }
-}
-
-// 添加新行到最后一行后
-function addLineAfterLastOccurrence(content, line) {
-  const lastIndex = content.lastIndexOf('\n');
-  if (lastIndex === -1) {
-    return line + content;
-  }
-  return content.slice(0, lastIndex) + line + content.slice(lastIndex);
-}
-
-// 将字符串转换为有效的文件名
-function convertToValidFileName(name) {
-  return name.replace(/[\/\\?%*:|"<>]/g, '_').replace(/^\.+/, '');
-}
-
-// 延迟函数
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // 主函数
@@ -177,7 +172,12 @@ async function main() {
 
   if (idx === 3) {
     folderPath = await DocumentPicker.openFolder();
-    await processLocalModules(folderPath); // 处理本地模块
+    // 处理访问权限错误
+    if (!fm.fileExists(folderPath)) {
+      console.error(`文件夹 ${folderPath} 不存在或无法访问`);
+      return;
+    }
+    files = fm.listContents(folderPath);
   } else if (idx === 2) {
     const filePath = await DocumentPicker.openFile();
     folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -213,19 +213,19 @@ async function main() {
   } else if (idx === 0) {
     console.log('检查更新');
     checkUpdate = true;
-    await update(); // 更新脚本
+    await update();
   }
 
   let report = { success: 0, fail: [], noUrl: 0 };
 
   if (files.length > 0) {
     if (folderPath) {
-      await processLocalModules(folderPath); // 处理本地模块
+      await processLocalModules(folderPath); // 确保 processLocalModules 函数已定义
     } else {
       for (const file of files) {
         const filePath = `${folderPath}/${file}`;
         const content = contents.length > 0 ? contents[files.indexOf(file)] : fm.readString(filePath);
-        await handleLocalModuleUpdate(filePath); // 处理每个本地模块
+        await handleLocalModuleUpdate(filePath); // 确保 handleLocalModuleUpdate 函数已定义
       }
     }
   }
@@ -288,11 +288,10 @@ async function main() {
         if (!desc) {
           res = `#!desc=\n${res}`;
         }
-        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)\s+(.*?)\s*(\n|$)/im, '');
+        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+        res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
 
-        content = updateCategory(res, name);
-        await delay(100); // 100ms 延迟
-        fm.writeString(filePath, content);
+        await fm.writeString(filePath, res);
 
         // Logging and updating
         let nameInfo = `${name}`;
@@ -303,14 +302,14 @@ async function main() {
         if (originalDesc && desc !== originalDesc) {
           descInfo = `${originalDesc} -> ${desc}`;
         }
-        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${filePath}`);
+        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
         report.success += 1;
         await delay(1 * 1000); // 1 秒延迟
 
         if (fromUrlScheme) {
           const alert = new Alert();
           alert.title = `✅ ${nameInfo}`;
-          alert.message = `${descInfo}\n${filePath}`;
+          alert.message = `${descInfo}\n${file}`;
           alert.addDestructiveAction('重载 Surge');
           alert.addAction('打开 Surge');
           alert.addCancelAction('关闭');
@@ -331,12 +330,12 @@ async function main() {
           report.fail.push(originalName || file);
         }
 
-        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${filePath}`);
+        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${file}`);
         console.error(e.message);
 
         if (fromUrlScheme) {
           const alert = new Alert();
-          alert.title = `❌ ${originalName || ''}\n${filePath}`;
+          alert.title = `❌ ${originalName || ''}\n${file}`;
           alert.message = `${e.message || e}`;
           alert.addCancelAction('关闭');
           await alert.presentAlert();
@@ -366,19 +365,8 @@ async function main() {
   }
 }
 
-// 延迟函数
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// 更新脚本
-async function update() {
-  console.log('更新脚本');
-}
-
-// 执行主函数
+// 调用主函数
 await main();
-
 
 // @key Think @wuhu.
 async function update() {
