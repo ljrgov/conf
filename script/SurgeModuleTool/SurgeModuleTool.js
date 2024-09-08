@@ -1,10 +1,10 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: cloud-download-alt;
+// icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-//239、240行替换路径名称用来自动修改#!category值
-let ToolVersion = "2.03";
+
+let ToolVersion = "2.04";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -190,58 +190,85 @@ for await (const [index, file] of files.entries()) {
       res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
       content = `${res}`.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
-// 从文件路径中提取文件夹名称作为类别值
-function getCategoryFromPath(filePath) {
-  const parts = filePath.split('/');
-  if (parts.length > 1) {
-    return parts[parts.length - 2]; // 上层文件夹名称
-  }
-  return 'default'; // 如果没有上层文件夹，则返回默认值
+      
+// 获取 iCloud 文件管理器
+const fm = FileManager.iCloud();
+
+// 用户选择文件夹
+let alert = new Alert();
+alert.title = '选择文件夹';
+alert.message = '请选择包含 .sgmodule 文件的文件夹：';
+alert.addAction('选择文件夹');
+alert.addCancelAction('取消');
+let idx = await alert.presentAlert();
+
+if (idx === -1) {
+  console.log('用户取消了操作');
+  return;
 }
 
-async function updateFileContent(filePath, content) {
-  const category = getCategoryFromPath(filePath);
+// 打开文件夹选择对话框
+let folderPath = await DocumentPicker.openFolder();
+if (!folderPath) {
+  console.log('未选择文件夹');
+  return;
+}
 
-  // 检查并添加 #!category= 行
+// 列出 .sgmodule 文件夹中的文件
+let modulesFiles = fm.listContents(folderPath);
+let sgModules = modulesFiles.filter(file => file.endsWith('.sgmodule'));
+
+// 获取用户输入的 #!category 值
+alert = new Alert();
+alert.title = '设置 #!category';
+alert.addTextField('输入 #!category 值', '默认类别');
+alert.addAction('确定');
+alert.addCancelAction('取消');
+idx = await alert.presentAlert();
+
+if (idx === -1) {
+  console.log('用户取消了操作');
+  return;
+}
+
+const category = alert.textFieldValue(0);
+
+// 选择要处理的文件
+alert = new Alert();
+alert.title = '选择文件操作';
+alert.message = '选择要处理的文件：';
+for (let i = 0; i < sgModules.length; i++) {
+  alert.addAction(sgModules[i]);
+}
+alert.addCancelAction('所有文件');
+idx = await alert.presentAlert();
+
+// 处理单个文件或所有文件
+let filesToProcess = [];
+if (idx === -1) {
+  filesToProcess = sgModules;
+} else {
+  filesToProcess = [sgModules[idx]];
+}
+
+// 处理每个选择的文件
+for (let file of filesToProcess) {
+  let filePath = fm.joinPath(folderPath, file);
+  let content = fm.readString(filePath);
+
+  // 检查并添加 #!category
   if (!content.includes('#!category=')) {
     content = `#!category=${category}\n` + content;
-  }
-
-  // 写入或导出文件
-  if (filePath) {
-    fm.writeString(filePath, content);
   } else {
-    await DocumentPicker.exportString(content, file);
+    content = content.replace(/#!category=.*\n/, `#!category=${category}\n`);
   }
+
+  // 保存文件
+  fm.writeString(filePath, content);
+  console.log(`处理并更新文件 ${file}`);
 }
-
-// 处理指定路径中的所有 .sgmodule 文件
-async function processFilesInPaths(paths) {
-  for (const folderPath of paths) {
-    const files = fm.listContents(folderPath);
-    const sgmoduleFiles = files.filter(file => file.endsWith('.sgmodule'));
-
-    for (const file of sgmoduleFiles) {
-      const filePath = `${folderPath}/${file}`;
-      try {
-        let content = fm.readString(filePath);
-        await updateFileContent(filePath, content);
-        console.log(`File updated: ${filePath}`);
-      } catch (error) {
-        console.error(`Error processing file ${filePath}:`, error);
-      }
-    }
-  }
-}
-
-//替换路径名称
-// 示例：处理指定路径中的所有 .sgmodule 文件
-const paths = [
-  'Surge/功能模块',      // 替换为实际路径
-  'Surge/去广告解会员'   // 替换为实际路径
-];
-
-await processFilesInPaths(paths);
+// 输出完成处理的日志
+console.log('选择的 .sgmodule 文件已处理完毕。');
 
       let nameInfo = `${name}`
       let descInfo = `${desc}`
