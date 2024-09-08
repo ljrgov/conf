@@ -1,22 +1,29 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: green; icon-glyph: cloud-download-alt;
+// icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.2";
+// prettier-ignore
+let ToolVersion = "2.03";
 
 async function delay(milliseconds) {
-  var before = Date.now();
+  var before = Date.now()
   while (Date.now() < before + milliseconds) {}
-  return true;
+  return true
 }
-
 function convertToValidFileName(str) {
-  const invalidCharsRegex = /[\/:*?"<>|]/g;
-  const validFileName = str.replace(invalidCharsRegex, '_');
-  const multipleDotsRegex = /\.{2,}/g;
-  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
-  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
-  return fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
+  // 替换非法字符为下划线
+  const invalidCharsRegex = /[\/:*?"<>|]/g
+  const validFileName = str.replace(invalidCharsRegex, '_')
+
+  // 删除多余的点号
+  const multipleDotsRegex = /\.{2,}/g
+  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.')
+
+  // 删除文件名开头和结尾的点号和空格
+  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g
+  const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '')
+
+  return finalFileName
 }
 
 function addLineAfterLastOccurrence(text, addition) {
@@ -25,12 +32,13 @@ function addLineAfterLastOccurrence(text, addition) {
   const lastIndex = matchArray ? matchArray.length - 1 : -1;
 
   if (lastIndex >= 0) {
-    const lastMatch = matchArray[lastIndex];
-    const insertIndex = text.indexOf(lastMatch) + lastMatch.length;
-    return text.slice(0, insertIndex) + addition + text.slice(insertIndex);
+    const lastMatch = matchArray[lastIndex]
+    const insertIndex = text.indexOf(lastMatch) + lastMatch.length
+    const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex)
+    return newText
   }
 
-  return text;
+  return text
 }
 
 function updateCategory(content, newCategory) {
