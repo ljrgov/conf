@@ -4,7 +4,7 @@
 
 // prettier-ignore
   
-let ToolVersion = "1.6";
+let ToolVersion = "1.7";
 
 async function delay(milliseconds) {
   var before = Date.now()
