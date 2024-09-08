@@ -4,7 +4,7 @@
 
 // prettier-ignore
   //119/120行更改文件路径
-let ToolVersion = "1.2";
+let ToolVersion = "1.3";
 
 async function delay(milliseconds) {
   var before = Date.now()
