@@ -4,7 +4,7 @@
 
 // prettier-ignore
   
-let ToolVersion = "1.3";
+let ToolVersion = "1.4";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -78,42 +78,6 @@ async function promptForCategory(currentCategory) {
       return currentCategory; // 默认情况下返回当前分类
   }
 }
-
-// 处理本地模块文件的更新
-async function handleLocalModuleUpdate(filePath) {
-  let content = fm.readString(filePath);
-  
-  // 查找当前分类
-  const currentCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
-  const currentCategory = currentCategoryMatched ? currentCategoryMatched[1] : '默认分类';
-  
-  // 弹出对话框让用户选择新的分类
-  let newCategory = await promptForCategory(currentCategory);
-  
-  if (newCategory !== currentCategory) {
-    // 更新模块内容中的分类
-    content = updateCategory(content, newCategory);
-    
-    // 将更新后的内容保存到文件
-    fm.writeString(filePath, content);
-    console.log(`文件 ${filePath} 更新为分类 ${newCategory}`);
-  }
-}
-
-// 处理所有本地下载的模块
-async function processLocalModules(directoryPath) {
-  let files = fm.listContents(directoryPath);
-  
-  for (let file of files) {
-    let filePath = `${directoryPath}/${file}`;
-    
-    // 处理每个文件
-    await handleLocalModuleUpdate(filePath);
-  }
-}
-
-// 主函数，设置本地模块目录路径
-const directoryPath = '/path/to/your/local/modules'; // 请替换为实际的本地模块目录路径
 
 // 用户操作选择
 let idx;
