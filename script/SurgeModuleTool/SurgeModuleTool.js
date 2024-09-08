@@ -4,7 +4,7 @@
 
 // prettier-ignore
   
-let ToolVersion = "1.5";
+let ToolVersion = "1.6";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -45,23 +45,34 @@ function addLineAfterLastOccurrence(text, addition) {
 // 更新模块分类的函数
 function updateCategory(content, newCategory) {
   const categoryRegex = /^#!category\s*?=\s*?(.*?)\s*(\n|$)/im;
+  const categoryLine = `#!category=${newCategory}\n`;
+
   if (categoryRegex.test(content)) {
-    return content.replace(categoryRegex, `#!category=${newCategory}\n`);
+    return content.replace(categoryRegex, categoryLine);
   } else {
-    return addLineAfterLastOccurrence(content, `\n#!category=${newCategory}\n`);
+    const lines = content.split('\n');
+    if (lines.length < 2) {
+      // 内容少于2行，直接追加到末尾
+      return content + `\n${categoryLine}`;
+    } else {
+      // 插入到第三行
+      lines.splice(2, 0, `#!category=${newCategory}`);
+      return lines.join('\n');
+    }
   }
 }
 
+
 // 弹出对话框让用户选择分类
 async function promptForCategory(currentCategory) {
-  let alert = new Alert();
+  const alert = new Alert();
   alert.title = '选择模块分类';
   alert.addAction('功能模块');
   alert.addAction('去广告');
   alert.addAction('面板模块');
-  alert.addCancelAction('取消');
+  alert.addDestructiveAction('取消'); // 改为显著的取消操作
 
-  let idx = await alert.presentAlert();
+  const idx = await alert.presentAlert();
   
   if (idx === -1) {
     return currentCategory; // 用户取消操作，不改变分类
@@ -78,6 +89,7 @@ async function promptForCategory(currentCategory) {
       return currentCategory; // 默认情况下返回当前分类
   }
 }
+
 
 // 用户操作选择
 async function main() {
@@ -155,7 +167,7 @@ async function main() {
       await processLocalModules(folderPath); // Ensure this function is defined
     } else {
       for (const file of files) {
-        const filePath = `${folderPath}/${file}`;
+        const filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
         const content = contents.length > 0 ? contents[files.indexOf(file)] : fm.readString(filePath);
         await handleLocalModuleUpdate(filePath); // Ensure this function is defined
       }
@@ -172,8 +184,9 @@ async function main() {
         let filePath;
         if (contents.length > 0) {
           content = contents[index];
+          filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
         } else {
-          filePath = `${folderPath}/${file}`;
+          filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
           content = fm.readString(filePath);
         }
 
@@ -189,7 +202,6 @@ async function main() {
           throw new Error('无订阅链接');
         }
 
-        const subscribed = matched[0];
         const url = matched[1];
         if (!url) {
           noUrl = true;
@@ -224,101 +236,81 @@ async function main() {
         res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
 
         await fm.writeString(filePath, res);
+        
+        // Logging and updating
+        let nameInfo = `${name}`;
+        let descInfo = `${desc}`;
+        if (originalName && name !== originalName) {
+          nameInfo = `${originalName} -> ${name}`;
+        }
+        if (originalDesc && desc !== originalDesc) {
+          descInfo = `${originalDesc} -> ${desc}`;
+        }
+        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
         report.success += 1;
+        await delay(1 * 1000); // 1 秒延迟
+
+        if (fromUrlScheme) {
+          const alert = new Alert();
+          alert.title = `✅ ${nameInfo}`;
+          alert.message = `${descInfo}\n${file}`;
+          alert.addDestructiveAction('重载 Surge');
+          alert.addAction('打开 Surge');
+          alert.addCancelAction('关闭');
+          idx = await alert.presentAlert();
+          if (idx === 0) {
+            const req = new Request('http://script.hub/reload');
+            req.timeoutInterval = 10;
+            req.method = 'GET';
+            await req.loadString();
+          } else if (idx === 1) {
+            Safari.open('surge://');
+          }
+        }
       } catch (e) {
-        console.error(e.message);
         if (noUrl) {
           report.noUrl += 1;
         } else {
-          report.fail.push(file);
+          report.fail.push(originalName || file);
+        }
+
+        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${file}`);
+        console.error(e.message);
+
+        if (fromUrlScheme) {
+          const alert = new Alert();
+          alert.title = `❌ ${originalName || ''}\n${file}`;
+          alert.message = `${e.message || e}`;
+          alert.addCancelAction('关闭');
+          await alert.presentAlert();
         }
       }
     }
   }
 
-  const reportMessage = `成功: ${report.success}\n失败: ${report.fail.join(', ')}\n无链接: ${report.noUrl}`;
-  const alert = new Alert();
-  alert.title = '处理完成';
-  alert.message = reportMessage;
-  alert.addAction('关闭');
-  await alert.presentAlert();
+  if (!checkUpdate && !fromUrlScheme) {
+    const alert = new Alert();
+    const upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
+    const noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+    alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+    alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
+    alert.addDestructiveAction('重载 Surge');
+    alert.addAction('打开 Surge');
+    alert.addCancelAction('关闭');
+    idx = await alert.presentAlert();
+    if (idx === 0) {
+      const req = new Request('http://script.hub/reload');
+      req.timeoutInterval = 10;
+      req.method = 'GET';
+      await req.loadString();
+    } else if (idx === 1) {
+      Safari.open('surge://');
+    }
+  }
 }
 
 main().catch(console.error);
 
-      let nameInfo = `${name}`
-      let descInfo = `${desc}`
-      if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`
-      }
-      if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`
-      }
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
-      report.success += 1
-      await delay(1 * 1000)
-      if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `✅ ${nameInfo}`
-        alert.message = `${descInfo}\n${file}`
-        alert.addDestructiveAction('重载 Surge')
-        alert.addAction('打开 Surge')
-        alert.addCancelAction('关闭')
-        idx = await alert.presentAlert()
-        if (idx == 0) {
-          const req = new Request('http://script.hub/reload')
-          req.timeoutInterval = 10
-          req.method = 'GET'
-          let res = await req.loadString()
-        } else if (idx == 1) {
-          Safari.open('surge://')
-        }
-      }
-    } catch (e) {
-      if (noUrl) {
-        report.noUrl += 1
-      } else {
-        report.fail.push(originalName || file)
-      }
-
-      if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
-        console.log(e)
-      } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`)
-        console.error(`${originalName || file}: ${e}`)
-      }
-      if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `❌ ${originalName || ''}\n${file}`
-        alert.message = `${e.message || e}`
-        alert.addCancelAction('关闭')
-        await alert.presentAlert()
-      }
-    }
-  }
-}
-if (!checkUpdate && !fromUrlScheme) {
-  alert = new Alert()
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
-    report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`
-  alert.addDestructiveAction('重载 Surge')
-  alert.addAction('打开 Surge')
-  alert.addCancelAction('关闭')
-  idx = await alert.presentAlert()
-  if (idx == 0) {
-    const req = new Request('http://script.hub/reload')
-    req.timeoutInterval = 10
-    req.method = 'GET'
-    let res = await req.loadString()
-  } else if (idx == 1) {
-    Safari.open('surge://')
-  }
-}
 
 
 // @key Think @wuhu.
