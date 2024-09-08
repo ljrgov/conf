@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "3.0.2";
+let ToolVersion = "3.0.3";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -152,18 +152,12 @@ initialAlert.title = '处理中...';
 initialAlert.message = '请稍等，正在处理文件。';
 initialAlert.addCancelAction('取消');
 
-let isCancelled = false; // 用于标记用户是否取消了操作
+// 用于标记用户是否取消了操作
+let isCancelled = false;
 
-// 创建一个 Promise 来控制文件处理的开始和取消
+// 显示初始对话框并启动文件处理
+let initialAlertPromise = initialAlert.presentAlert();
 let processingPromise = new Promise(async (resolve) => {
-  // 监听用户操作
-  let alertPromise = new Promise((alertResolve) => {
-    initialAlert.presentAlert().then(() => {
-      isCancelled = true; // 用户点击了取消
-      alertResolve();
-    });
-  });
-
   // 处理文件的异步函数
   async function processFiles() {
     for await (const [index, file] of files.entries()) {
@@ -279,16 +273,17 @@ let processingPromise = new Promise(async (resolve) => {
   }
 
   processFiles(); // 启动文件处理
-  alertPromise.then(() => {
-    isCancelled = true; // 设置取消标记
-  });
 });
 
-// 等待文件处理完成
-await processingPromise;
+// 等待用户操作和文件处理完成
+await Promise.race([initialAlertPromise, processingPromise]);
 
-// 处理完成后关闭初始对话框并显示结果对话框
+// 文件处理完成后关闭初始对话框并显示结果对话框
 if (!isCancelled) {
+  // Close initial alert (assuming there's a method or action to close it, replace with the actual method if available)
+  initialAlert.dismiss(); // Close initial alert if it was shown
+
+  // 显示结果对话框
   let resultAlert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
   let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
@@ -308,6 +303,9 @@ if (!isCancelled) {
     Safari.open('surge://');
   }
 }
+
+
+
 
 // @key Think @wuhu.
 async function update() {
