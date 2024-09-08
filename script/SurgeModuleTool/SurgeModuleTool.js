@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.3";
+let ToolVersion = "2.4";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -202,50 +202,41 @@ for await (const [index, file] of files.entries()) {
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
       content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
-      // 处理 #!category 字段
-      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-      selectedCategory = '未分类'; // 默认分类
-      if (categoryMatched) {
-        originalCategory = categoryMatched[1];
-        selectedCategory = originalCategory;
-      } else {
-        // 如果没有 #!category，则添加
-        content = `#!category=未分类\n${content}`;
-      }
+// 检查是否有 #!category 字段
+let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+let selectedCategory = '未分类'; // 默认分类
 
-      // 提示用户选择分类
-      let categoryAlert = new Alert();
-      categoryAlert.title = '选择模块分类';
-      categoryAlert.addAction('去广告');
-      categoryAlert.addAction('功能模块');
-      categoryAlert.addAction('面板模块');
-      categoryAlert.addCancelAction('取消');
-      let categoryIdx = await categoryAlert.presentAlert();
+// 提示用户选择分类
+let categoryAlert = new Alert();
+categoryAlert.title = '选择模块分类';
+categoryAlert.addAction('去广告');
+categoryAlert.addAction('功能模块');
+categoryAlert.addAction('面板模块');
+categoryAlert.addCancelAction('取消');
+let categoryIdx = await categoryAlert.presentAlert();
 
-      // 根据选择更新分类
-      switch (categoryIdx) {
-        case 0:
-          selectedCategory = '去广告';
-          break;
-        case 1:
-          selectedCategory = '功能模块';
-          break;
-        case 2:
-          selectedCategory = '面板模块';
-          break;
-        default:
-          selectedCategory = originalCategory || '未分类';
-      }
+// 根据选择更新分类
+switch (categoryIdx) {
+  case 0:
+    selectedCategory = '去广告';
+    break;
+  case 1:
+    selectedCategory = '功能模块';
+    break;
+  case 2:
+    selectedCategory = '面板模块';
+    break;
+  default:
+    selectedCategory = originalCategory || '未分类';
+}
 
-      // 如果分类有变化，记录变更信息
-      if (selectedCategory && selectedCategory !== originalCategory) {
-        categoryChangedCount += 1;
-        if (categoryMatched) {
-          content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
-        } else {
-          content = `#!category=${selectedCategory}\n${content}`;
-        }
-      }
+// 如果没有 #!category，则添加
+if (!categoryMatched) {
+  content = `#!category=${selectedCategory}\n${content}`;
+} else {
+  // 如果已有 #!category，则替换
+  content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+}
 
       // 保存文件内容
       if (filePath) {
