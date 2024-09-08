@@ -216,7 +216,7 @@ if (!checkUpdate && !fromUrlScheme) {
 
 // 定义本地脚本版本
 const localVersion = '1.0.0';  // 当前脚本版本号
-const updateScriptUrl = 'https://your-update-url.com/latest-script.js';  // 替换为你的脚本更新链接
+const updateScriptUrl = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js';  // 替换为你的脚本更新链接
 
 async function checkScriptUpdate() {
   try {
