@@ -3,11 +3,21 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "3.0.8";
+let ToolVersion = "3.0.9";
 
-// 使用 Promise 实现延迟，而不是手动循环
-async function delay(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
+// 使用 Promise 实现延迟
+function delay(milliseconds) {
+  return new Promise(resolve => {
+    let startTime = Date.now();
+    function checkTime() {
+      if (Date.now() - startTime >= milliseconds) {
+        resolve();
+      } else {
+        setTimeout(checkTime, 1); // 每 1 毫秒检查一次
+      }
+    }
+    checkTime();
+  });
 }
 
 function convertToValidFileName(str) {
@@ -40,7 +50,7 @@ async function updateProgress(totalFiles, report) {
   async function pollProgress() {
     while (!isCancelled) {
       progressAlert.message = `已处理 ${report.success}/${totalFiles} 个文件`;
-      await delay(1000); // 每秒更新一次
+      await delay(10); // 每10豪秒更新一次
     }
   }
 
