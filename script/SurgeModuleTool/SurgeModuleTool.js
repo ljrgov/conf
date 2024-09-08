@@ -265,60 +265,14 @@ for await (const [index, file] of files.entries()) {
         categoryInfo = `${originalCategory} -> ${category}`;
       }
 
-      console.log(`\✔️ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
-      report.success += 1;
-      await delay(1 * 1000);
+      console.log(`✅ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
+report.success += 1;
+await delay(1 * 1000);
 
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title ✔️ ${nameInfo}`;
-        alert.message = `${descInfo}\n类别: ${categoryInfo}\n${file}`;
-        alert.addDestructiveAction('重载 Surge');
-        alert.addAction('打开 Surge');
-        alert.addCancelAction('关闭');
-        idx = await alert.presentAlert();
-        if (idx == 0) {
-          const req = new Request('http://script.hub/reload');
-          req.timeoutInterval = 10;
-          req.method = 'GET';
-          await req.loadString();
-        } else if (idx == 1) {
-          Safari.open('surge://');
-        }
-      }
-    } catch (e) {
-      if (noUrl) {
-        report.noUrl += 1;
-      } else {
-        report.fail.push(originalName || file);
-      }
-
-      if (noUrl) {
-        console.log(⁉️ ${originalName || ''}\n${file}`);
-        console.log(e);
-      } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`);
-        console.error(`${originalName || file}: ${e}`);
-      }
-
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `❌ ${originalName || ''}\n${file}`;
-        alert.message = `${e.message || e}`;
-        alert.addCancelAction('关闭');
-        await alert.presentAlert();
-      }
-    }
-  }
-}
-
-if (!checkUpdate && !fromUrlScheme) {
+if (fromUrlScheme) {
   alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
-  let noUrlErrk = report.noUrl > ⁉️ 无链接: ${report.noUrl}` : '';
-  let categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📁 类别替换成功: ${categoryReplaceSuccess}` : '';
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✔️ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
+  alert.title = `✅ ${nameInfo}`;
+  alert.message = `${descInfo}\n类别: ${categoryInfo}\n${file}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
@@ -332,6 +286,52 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+} catch (e) {
+  if (noUrl) {
+    report.noUrl += 1;
+  } else {
+    report.fail.push(originalName || file);
+  }
+
+  if (noUrl) {
+    console.log(`⚠️ ${originalName || ''}\n${file}`);
+    console.log(e);
+  } else {
+    console.log(`\n❌ ${originalName || ''}\n${file}`);
+    console.error(`${originalName || file}: ${e}`);
+  }
+
+  if (fromUrlScheme) {
+    alert = new Alert();
+    alert.title = `❌ ${originalName || ''}\n${file}`;
+    alert.message = `${e.message || e}`;
+    alert.addCancelAction('关闭');
+    await alert.presentAlert();
+  }
+}
+}
+
+if (!checkUpdate && !fromUrlScheme) {
+  alert = new Alert();
+  let upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
+  let noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
+  let categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📁 类别替换成功: ${categoryReplaceSuccess}` : '';
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
+  alert.addDestructiveAction('重载 Surge');
+  alert.addAction('打开 Surge');
+  alert.addCancelAction('关闭');
+  idx = await alert.presentAlert();
+  if (idx == 0) {
+    const req = new Request('http://script.hub/reload');
+    req.timeoutInterval = 10;
+    req.method = 'GET';
+    await req.loadString();
+  } else if (idx == 1) {
+    Safari.open('surge://');
+  }
+}
+
 
 
 
