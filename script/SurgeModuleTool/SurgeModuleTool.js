@@ -1,5 +1,9 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: blue; icon-glyph: cloud-download-alt;
+
 // prettier-ignore
-let ToolVersion = "3.0.9";
+let ToolVersion = "3.1.0";
 
 async function delay(milliseconds) {
   return new Promise(resolve => {
@@ -42,6 +46,7 @@ function addLineAfterLastOccurrence(text, addition) {
 let idx;
 let fromUrlScheme;
 let checkUpdate;
+let isCancelled = false;  // 新增标志位，用于控制取消操作
 
 if (args.queryParameters.url) {
   fromUrlScheme = true;
@@ -58,6 +63,23 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块');
   alert.addCancelAction('取消');
   idx = await alert.presentAlert();
+
+  // 如果用户点击取消，设置标志位
+  if (idx === 4) {
+    isCancelled = true;
+  }
+}
+
+if (isCancelled) {
+  console.log('操作已取消');
+  return; // 终止所有操作
+}
+
+if (idx === 0) {
+  console.log('检查更新');
+  checkUpdate = true;
+  await update();
+  return; // 只执行更新脚本相关代码，结束脚本执行
 }
 
 let folderPath;
@@ -79,7 +101,7 @@ if (idx == 3) {
     url = args.queryParameters.url;
     name = args.queryParameters.name;
   } else {
-    alert = new Alert();
+    let alert = new Alert();
     alert.title = '将自动添加后缀 .sgmodule';
     alert.addTextField('链接(必填)', '');
     alert.addTextField('名称(选填)', '');
@@ -104,10 +126,11 @@ if (idx == 3) {
     files = [`${name}.sgmodule`];
     contents = [`#SUBSCRIBED ${url}`];
   }
-} else if (idx == 0) {
+} else if (idx === 0) {
   console.log('检查更新');
   checkUpdate = true;
   await update();
+  return; // 只执行更新脚本相关代码，结束脚本执行
 }
 
 let report = {
@@ -126,6 +149,11 @@ categoryAlert.addAction('功能模块');
 categoryAlert.addAction('面板模块');
 categoryAlert.addCancelAction('取消');
 let categoryIdx = await categoryAlert.presentAlert();
+
+if (categoryIdx === -1) {
+  console.log('操作已取消');
+  return; // 终止所有操作
+}
 
 let selectedCategory;
 switch (categoryIdx) {
@@ -146,8 +174,6 @@ let initialAlert = new Alert();
 initialAlert.title = '处理中...';
 initialAlert.message = '请稍等，正在处理文件。';
 initialAlert.addCancelAction('取消');
-
-let isCancelled = false;
 
 let processingPromise = new Promise(async (resolve) => {
   let alertPromise = new Promise((alertResolve) => {
@@ -289,6 +315,7 @@ if (!isCancelled) {
   }
 }
 
+// 更新脚本函数
 async function update() {
   const fm = FileManager.iCloud();
   const dict = fm.documentsDirectory();
