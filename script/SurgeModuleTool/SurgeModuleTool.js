@@ -4,7 +4,7 @@
 
 // prettier-ignore
   
-let ToolVersion = "1.8";
+let ToolVersion = "1.9";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -47,9 +47,9 @@ async function processLocalModules(folderPath) {
   const fm = FileManager.iCloud();
   let files = [];
 
-  // 检查文件夹是否存在
+  // 检查文件夹是否存在并且是否可以访问
   if (!fm.fileExists(folderPath)) {
-    console.error(`文件夹 ${folderPath} 不存在`);
+    console.error(`文件夹 ${folderPath} 不存在或无法访问`);
     return; // 退出函数
   }
 
@@ -142,6 +142,110 @@ async function promptForCategory(currentCategory) {
   }
 }
 
+// 处理文件内容的函数
+async function processFileContent(filePath, content) {
+  let originalName;
+  let originalDesc;
+  let noUrl;
+
+  try {
+    const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    originalName = originalNameMatched ? originalNameMatched[1] : '';
+
+    const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    originalDesc = originalDescMatched ? originalDescMatched[1].replace(/^🔗.*?]\s*/i, '') : '';
+
+    const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+    if (!matched) {
+      noUrl = true;
+      throw new Error('无订阅链接');
+    }
+
+    const url = matched[1];
+    if (!url) {
+      noUrl = true;
+      throw new Error('无订阅链接');
+    }
+
+    const req = new Request(url);
+    req.timeoutInterval = 10;
+    req.method = 'GET';
+    const res = await req.loadString();
+    const statusCode = req.response.statusCode;
+    if (statusCode < 200 || statusCode >= 400) {
+      throw new Error(`statusCode: ${statusCode}`);
+    }
+
+    const nameMatched = res.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    if (!nameMatched) {
+      throw new Error('不是合法的模块内容');
+    }
+
+    const name = nameMatched[1];
+    if (!name) {
+      throw new Error('模块无名称字段');
+    }
+
+    const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    let desc = descMatched ? descMatched[1] : '';
+    if (!desc) {
+      res = `#!desc=\n${res}`;
+    }
+    res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+    res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
+
+    await fm.writeString(filePath, res);
+
+    // Logging and updating
+    let nameInfo = `${name}`;
+    let descInfo = `${desc}`;
+    if (originalName && name !== originalName) {
+      nameInfo = `${originalName} -> ${name}`;
+    }
+    if (originalDesc && desc !== originalDesc) {
+      descInfo = `${originalDesc} -> ${desc}`;
+    }
+    console.log(`\n✅ ${nameInfo}\n${descInfo}\n${filePath}`);
+    report.success += 1;
+    await delay(1 * 1000); // 1 秒延迟
+
+    if (fromUrlScheme) {
+      const alert = new Alert();
+      alert.title = `✅ ${nameInfo}`;
+      alert.message = `${descInfo}\n${filePath}`;
+      alert.addDestructiveAction('重载 Surge');
+      alert.addAction('打开 Surge');
+      alert.addCancelAction('关闭');
+      idx = await alert.presentAlert();
+      if (idx === 0) {
+        const req = new Request('http://script.hub/reload');
+        req.timeoutInterval = 10;
+        req.method = 'GET';
+        await req.loadString();
+      } else if (idx === 1) {
+        Safari.open('surge://');
+      }
+    }
+  } catch (e) {
+    if (noUrl) {
+      report.noUrl += 1;
+    } else {
+      report.fail.push(originalName || filePath);
+    }
+
+    console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${filePath}`);
+    console.error(e.message);
+
+    if (fromUrlScheme) {
+      const alert = new Alert();
+      alert.title = `❌ ${originalName || ''}\n${filePath}`;
+      alert.message = `${e.message || e}`;
+      alert.addCancelAction('关闭');
+      await alert.presentAlert();
+    }
+  }
+}
+
 // 主函数
 async function main() {
   let idx;
@@ -199,12 +303,16 @@ async function main() {
       url = alert.textFieldValue(0);
       name = alert.textFieldValue(1);
     }
-
     if (url) {
       if (!name) {
         const plainUrl = url.split('?')[0];
         const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-        name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
+        if (fullname) {
+          name = fullname.replace(/\.sgmodule$/, '');
+        }
+        if (!name) {
+          name = `untitled-${new Date().toLocaleString()}`;
+        }
       }
       name = convertToValidFileName(name);
       files = [`${name}.sgmodule`];
@@ -216,132 +324,24 @@ async function main() {
     await update();
   }
 
-  let report = { success: 0, fail: [], noUrl: 0 };
+  let report = {
+    success: 0,
+    fail: [],
+    noUrl: 0,
+  };
 
-  if (files.length > 0) {
-    if (folderPath) {
-      await processLocalModules(folderPath); // 确保 processLocalModules 函数已定义
-    } else {
-      for (const file of files) {
-        const filePath = `${folderPath}/${file}`;
-        const content = contents.length > 0 ? contents[files.indexOf(file)] : fm.readString(filePath);
-        await handleLocalModuleUpdate(filePath); // 确保 handleLocalModuleUpdate 函数已定义
-      }
-    }
-  }
-
-  for (const [index, file] of files.entries()) {
-    if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-      let originalName;
-      let originalDesc;
-      let noUrl;
+  for (const file of files) {
+    const filePath = `${folderPath}/${file}`;
+    if (contents.length > 0) {
       try {
-        let content;
-        let filePath;
-        if (contents.length > 0) {
-          content = contents[index];
-        } else {
-          filePath = `${folderPath}/${file}`;
-          content = fm.readString(filePath);
-        }
-
-        const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-        originalName = originalNameMatched ? originalNameMatched[1] : '';
-
-        const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-        originalDesc = originalDescMatched ? originalDescMatched[1].replace(/^🔗.*?]\s*/i, '') : '';
-
-        const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-        if (!matched) {
-          noUrl = true;
-          throw new Error('无订阅链接');
-        }
-
-        const subscribed = matched[0];
-        const url = matched[1];
-        if (!url) {
-          noUrl = true;
-          throw new Error('无订阅链接');
-        }
-
-        const req = new Request(url);
-        req.timeoutInterval = 10;
-        req.method = 'GET';
-        const res = await req.loadString();
-        const statusCode = req.response.statusCode;
-        if (statusCode < 200 || statusCode >= 400) {
-          throw new Error(`statusCode: ${statusCode}`);
-        }
-
-        const nameMatched = res.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-        if (!nameMatched) {
-          throw new Error('不是合法的模块内容');
-        }
-
-        const name = nameMatched[1];
-        if (!name) {
-          throw new Error('模块无名称字段');
-        }
-
-        const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-        let desc = descMatched ? descMatched[1] : '';
-        if (!desc) {
-          res = `#!desc=\n${res}`;
-        }
-        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-        res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
-
-        await fm.writeString(filePath, res);
-
-        // Logging and updating
-        let nameInfo = `${name}`;
-        let descInfo = `${desc}`;
-        if (originalName && name !== originalName) {
-          nameInfo = `${originalName} -> ${name}`;
-        }
-        if (originalDesc && desc !== originalDesc) {
-          descInfo = `${originalDesc} -> ${desc}`;
-        }
-        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
-        report.success += 1;
-        await delay(1 * 1000); // 1 秒延迟
-
-        if (fromUrlScheme) {
-          const alert = new Alert();
-          alert.title = `✅ ${nameInfo}`;
-          alert.message = `${descInfo}\n${file}`;
-          alert.addDestructiveAction('重载 Surge');
-          alert.addAction('打开 Surge');
-          alert.addCancelAction('关闭');
-          idx = await alert.presentAlert();
-          if (idx === 0) {
-            const req = new Request('http://script.hub/reload');
-            req.timeoutInterval = 10;
-            req.method = 'GET';
-            await req.loadString();
-          } else if (idx === 1) {
-            Safari.open('surge://');
-          }
-        }
+        await fm.writeString(filePath, contents[0]);
       } catch (e) {
-        if (noUrl) {
-          report.noUrl += 1;
-        } else {
-          report.fail.push(originalName || file);
-        }
-
-        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${file}`);
-        console.error(e.message);
-
-        if (fromUrlScheme) {
-          const alert = new Alert();
-          alert.title = `❌ ${originalName || ''}\n${file}`;
-          alert.message = `${e.message || e}`;
-          alert.addCancelAction('关闭');
-          await alert.presentAlert();
-        }
+        console.error(`无法写入文件 ${filePath}: ${e.message}`);
+        report.fail.push(file);
+        continue;
       }
     }
+    await processFileContent(filePath, fm.readString(filePath));
   }
 
   if (!checkUpdate && !fromUrlScheme) {
@@ -367,6 +367,7 @@ async function main() {
 
 // 调用主函数
 await main();
+
 
 // @key Think @wuhu.
 async function update() {
