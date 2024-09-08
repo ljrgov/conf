@@ -1,13 +1,20 @@
+// prettier-ignore
+let ToolVersion = "3.0.8";
 
-let ToolVersion = "3.0.7";
+async function delay(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 function convertToValidFileName(str) {
+  // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g;
   const validFileName = str.replace(invalidCharsRegex, '_');
 
+  // 删除多余的点号
   const multipleDotsRegex = /\.{2,}/g;
   const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
 
+  // 删除文件名开头和结尾的点号和空格
   const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
   const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
 
@@ -36,6 +43,7 @@ let checkUpdate;
 if (args.queryParameters.url) {
   fromUrlScheme = true;
 }
+
 if (fromUrlScheme) {
   idx = 1;
 } else {
@@ -53,21 +61,22 @@ let folderPath;
 let files = [];
 let contents = [];
 const fm = FileManager.iCloud();
-if (idx === 3) {
+
+if (idx == 3) {
   folderPath = await DocumentPicker.openFolder();
   files = fm.listContents(folderPath);
-} else if (idx === 2) {
+} else if (idx == 2) {
   const filePath = await DocumentPicker.openFile();
   folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
   files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-} else if (idx === 1) {
+} else if (idx == 1) {
   let url;
   let name;
   if (fromUrlScheme) {
     url = args.queryParameters.url;
     name = args.queryParameters.name;
   } else {
-    let alert = new Alert();
+    alert = new Alert();
     alert.title = '将自动添加后缀 .sgmodule';
     alert.addTextField('链接(必填)', '');
     alert.addTextField('名称(选填)', '');
@@ -92,7 +101,7 @@ if (idx === 3) {
     files = [`${name}.sgmodule`];
     contents = [`#SUBSCRIBED ${url}`];
   }
-} else if (idx === 0) {
+} else if (idx == 0) {
   console.log('检查更新');
   checkUpdate = true;
   await update();
@@ -104,8 +113,8 @@ let report = {
   noUrl: 0,
 };
 
-let categoryChangeInfo = '';
-let categoryChangedCount = 0;
+let categoryChangeInfo = ''; // 用于跟踪分类变更信息
+let categoryChangedCount = 0; // 记录分类变更的次数
 
 let categoryAlert = new Alert();
 categoryAlert.title = '选择模块分类';
@@ -127,7 +136,7 @@ switch (categoryIdx) {
     selectedCategory = '面板模块';
     break;
   default:
-    selectedCategory = '未分类';
+    selectedCategory = '未分类'; // 如果用户取消，设置默认分类
 }
 
 let initialAlert = new Alert();
@@ -146,7 +155,7 @@ let processingPromise = new Promise(async (resolve) => {
   });
 
   async function processFiles() {
-    for (const [index, file] of files.entries()) {
+    for await (const [index, file] of files.entries()) {
       if (isCancelled) {
         console.log('操作已取消');
         break;
@@ -167,16 +176,16 @@ let processingPromise = new Promise(async (resolve) => {
             content = fm.readString(filePath);
           }
 
-          const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+          const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
           if (originalNameMatched) originalName = originalNameMatched[1];
 
-          const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+          const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
           if (originalDescMatched) {
             originalDesc = originalDescMatched[1];
             if (originalDesc) originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '');
           }
 
-          const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+          const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
           if (!matched) {
             noUrl = true;
             throw new Error('无订阅链接');
@@ -194,15 +203,15 @@ let processingPromise = new Promise(async (resolve) => {
           let res = await req.loadString();
           const statusCode = req.response.statusCode;
           if (statusCode < 200 || statusCode >= 400) {
-            throw new Error(`状态码: ${statusCode}`);
+            throw new Error(`statusCode: ${statusCode}`);
           }
 
-          const nameMatched = res.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+          const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
           if (!nameMatched) throw new Error('不是合法的模块内容');
           const name = nameMatched[1];
           if (!name) throw new Error('模块无名称字段');
 
-          const descMatched = res.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+          const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
           let desc;
           if (descMatched) desc = descMatched[1];
           if (!desc) res = `#!desc=\n${res}`;
@@ -223,8 +232,8 @@ let processingPromise = new Promise(async (resolve) => {
             await DocumentPicker.exportString(content, file);
           }
 
-          let nameInfo = name;
-          let descInfo = desc;
+          let nameInfo = `${name}`;
+          let descInfo = `${desc}`;
           if (originalName && name !== originalName) {
             nameInfo = `${originalName} -> ${name}`;
           }
@@ -245,38 +254,41 @@ let processingPromise = new Promise(async (resolve) => {
         }
       }
     }
-    resolve();
+    resolve(); // 文件处理完成
   }
 
-  processFiles();
+  processFiles(); // 启动文件处理
   alertPromise.then(() => {
-    isCancelled = true;
+    isCancelled = true; // 设置取消标记
   });
 });
 
+// 等待文件处理完成
 await processingPromise;
 
+// 处理完成后关闭初始对话框并显示结果对话框
 if (!isCancelled) {
   let resultAlert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
   let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
   resultAlert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  resultAlert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${categoryChangedCount > 0 ? `分类变更: ${categoryChangedCount}` : ''}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
+  resultAlert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
   resultAlert.addDestructiveAction('重载 Surge');
   resultAlert.addAction('打开 Surge');
   resultAlert.addCancelAction('关闭');
 
   let idx = await resultAlert.presentAlert();
-  if (idx == 0) {
+  if (idx === 0) {
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
     req.method = 'GET';
     await req.loadString();
-  } else if (idx == 1) {
+  } else if (idx === 1) {
     Safari.open('surge://');
   }
 }
 
+// @key Think @wuhu.
 async function update() {
   const fm = FileManager.iCloud();
   const dict = fm.documentsDirectory();
@@ -284,7 +296,7 @@ async function update() {
   let version;
   let resp;
   try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now();
+    const url = `https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=${Date.now()}`;
     let req = new Request(url);
     req.method = 'GET';
     req.headers = {
@@ -292,45 +304,16 @@ async function update() {
       Pragma: 'no-cache',
     };
     resp = await req.loadString();
-
-    const regex = /let ToolVersion = "([\d.]+)"/;
-    const match = resp.match(regex);
-    version = match ? match[1] : '';
+    const localPath = fm.joinPath(dict, `${scriptName}.js`);
+    const currentVersion = fm.readString(localPath).match(/ToolVersion\s*=\s*"([^"]+)"/)[1];
+    if (ToolVersion !== currentVersion) {
+      fm.writeString(localPath, resp);
+      console.log('脚本已更新');
+    } else {
+      console.log('脚本已是最新版本');
+    }
   } catch (e) {
-    console.error(e);
-  }
-
-  if (!version) {
-    let alert = new Alert();
-    alert.title = 'Surge 模块工具';
-    alert.message = '无法获取在线版本';
-    alert.addCancelAction('关闭');
-    await alert.presentAlert();
-    return;
-  } else {
-    let needUpdate = version > ToolVersion;
-    if (!needUpdate) {
-      let alert = new Alert();
-      alert.title = 'Surge 模块工具';
-      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
-      alert.addDestructiveAction('强制更新');
-      alert.addCancelAction('关闭');
-      idx = await alert.presentAlert();
-      if (idx === 0) {
-        needUpdate = true;
-      }
-    }
-    if (needUpdate) {
-      fm.writeString(`${dict}/${scriptName}.js`, resp);
-      console.log('更新成功: ' + version);
-      let notification = new Notification();
-      notification.title = 'Surge 模块工具 更新成功: ' + version;
-      notification.subtitle = '点击通知跳转';
-      notification.sound = 'default';
-      notification.openURL = `scriptable:///open/${scriptName}`;
-      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
-      await notification.schedule();
-    }
+    console.error('更新脚本失败', e);
   }
 }
 
