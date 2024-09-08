@@ -1,20 +1,23 @@
 // prettier-ignore
-let ToolVersion = "3.0.8";
+let ToolVersion = "3.0.9";
 
 async function delay(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
+  return new Promise(resolve => {
+    const start = Date.now();
+    while (Date.now() - start < milliseconds) {
+      // 空循环，直到时间过去
+    }
+    resolve();
+  });
 }
 
 function convertToValidFileName(str) {
-  // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g;
   const validFileName = str.replace(invalidCharsRegex, '_');
 
-  // 删除多余的点号
   const multipleDotsRegex = /\.{2,}/g;
   const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
 
-  // 删除文件名开头和结尾的点号和空格
   const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
   const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
 
@@ -254,19 +257,17 @@ let processingPromise = new Promise(async (resolve) => {
         }
       }
     }
-    resolve(); // 文件处理完成
+    resolve();
   }
 
-  processFiles(); // 启动文件处理
+  processFiles();
   alertPromise.then(() => {
-    isCancelled = true; // 设置取消标记
+    isCancelled = true;
   });
 });
 
-// 等待文件处理完成
 await processingPromise;
 
-// 处理完成后关闭初始对话框并显示结果对话框
 if (!isCancelled) {
   let resultAlert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
@@ -288,7 +289,6 @@ if (!isCancelled) {
   }
 }
 
-// @key Think @wuhu.
 async function update() {
   const fm = FileManager.iCloud();
   const dict = fm.documentsDirectory();
@@ -316,6 +316,5 @@ async function update() {
     console.error('更新脚本失败', e);
   }
 }
-
 
 
