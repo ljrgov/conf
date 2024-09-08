@@ -214,66 +214,61 @@ if (!checkUpdate && !fromUrlScheme) {
 }
 
 
-// 定义本地脚本版本
-const localVersion = '1.0.0';  // 当前脚本版本号
-const updateScriptUrl = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js';  // 替换为你的脚本更新链接
-
-async function checkScriptUpdate() {
+// @key Think @wuhu.
+async function update() {
+  const fm = FileManager.iCloud()
+  const dict = fm.documentsDirectory()
+  // const scriptName = Script.name()
+  const scriptName = 'SurgeModuleTool'
+  let version
+  let resp
   try {
-    let req = new Request(updateScriptUrl);
-    let remoteScript = await req.loadString();
-    
-    // 通过正则提取远程脚本的版本号
-    const remoteVersion = (remoteScript.match(/^#!version\s*=\s*([\d.]+)/im) || [])[1];
-    
-    if (remoteVersion && isNewerVersion(localVersion, remoteVersion)) {
-      console.log(`发现新版本: ${remoteVersion}, 当前版本: ${localVersion}`);
-      
-      let updateAlert = new Alert();
-      updateAlert.title = "发现新版本";
-      updateAlert.message = `最新版本: ${remoteVersion}, 是否更新？`;
-      updateAlert.addAction("更新");
-      updateAlert.addCancelAction("取消");
-      let response = await updateAlert.present();
-
-      if (response === 0) {
-        // 进行更新操作
-        const filePath = getScriptFilePath();  // 获取本脚本路径
-        FileManager.iCloud().writeString(filePath, remoteScript);  // 将远程脚本写入本地
-        console.log('脚本已更新，请重新运行脚本以应用新版本。');
-        return true;
-      }
-    } else {
-      console.log(`当前已是最新版本 (${localVersion})`);
+    const url = 'https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/SurgeModuleTool.js?v=' + Date.now()
+    let req = new Request(url)
+    req.method = 'GET'
+    req.headers = {
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
     }
-  } catch (err) {
-    console.error(`检查更新失败: ${err.message}`);
+    resp = await req.loadString()
+
+    const regex = /let ToolVersion = "([\d.]+)"/
+    const match = resp.match(regex)
+    version = match ? match[1] : ''
+  } catch (e) {
+    console.error(e)
   }
-  return false;
-}
 
-// 比较版本号是否是新版本
-function isNewerVersion(localVer, remoteVer) {
-  const localParts = localVer.split('.').map(Number);
-  const remoteParts = remoteVer.split('.').map(Number);
-  
-  for (let i = 0; i < Math.max(localParts.length, remoteParts.length); i++) {
-    const localPart = localParts[i] || 0;
-    const remotePart = remoteParts[i] || 0;
-    
-    if (remotePart > localPart) return true;
-    if (remotePart < localPart) return false;
+  if (!version) {
+    let alert = new Alert()
+    alert.title = 'Surge 模块工具'
+    alert.message = '无法获取在线版本'
+    alert.addCancelAction('关闭')
+    await alert.presentAlert()
+    return
+  } else {
+    let needUpdate = version > ToolVersion
+    if (!needUpdate) {
+      let alert = new Alert()
+      alert.title = 'Surge 模块工具'
+      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`
+      alert.addDestructiveAction('强制更新')
+      alert.addCancelAction('关闭')
+      idx = await alert.presentAlert()
+      if (idx === 0) {
+        needUpdate = true
+      }
+    }
+    if (needUpdate) {
+      fm.writeString(`${dict}/${scriptName}.js`, resp)
+      console.log('更新成功: ' + version)
+      let notification = new Notification()
+      notification.title = 'Surge 模块工具 更新成功: ' + version
+      notification.subtitle = '点击通知跳转'
+      notification.sound = 'default'
+      notification.openURL = `scriptable:///open/${scriptName}`
+      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false)
+      await notification.schedule()
+    }
   }
-  return false;
 }
-
-// 获取当前脚本的路径
-function getScriptFilePath() {
-  const fm = FileManager.iCloud();
-  const scriptDir = fm.documentsDirectory();
-  const scriptName = Script.name();  // 自动获取当前脚本名称
-  return fm.joinPath(scriptDir, `${scriptName}.js`);
-}
-
-// 调用检查更新
-await checkScriptUpdate();
