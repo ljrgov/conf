@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.3";
+let ToolVersion = "1.4";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -117,155 +117,7 @@ let report = {
   noUrl: 0,
 }
 
-// 添加记录类别字段替换结果的字段
-let categoryReplaceSuccess = 0;
-let categoryReplaceFail = 0;
-
-for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName, originalDesc, originalCategory, noUrl;
-    try {
-      let content, filePath;
-      if (contents.length > 0) {
-        content = contents[index];
-      } else {
-        filePath = `${folderPath}/${file}`;
-        content = fm.readString(filePath);
-      }
-
-      // 处理原始名称
-      const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalNameMatched) {
-        originalName = originalNameMatched[1];
-      }
-
-      // 处理原始描述
-      const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalDescMatched) {
-        originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
-      }
-
-      // 处理原始类别
-      const originalCategoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalCategoryMatched) {
-        originalCategory = originalCategoryMatched[1];
-      }
-
-      // 如果没有类别字段，将其添加到第三行
-      if (!originalCategory) {
-        const lines = content.split('\n');
-        if (lines.length >= 2) {
-          lines.splice(2, 0, `#!category=📁`);
-          content = lines.join('\n');
-        } else {
-          content = `#!category=📁\n${content}`;
-        }
-      }
-
-      const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-      if (!matched) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-
-      const subscribed = matched[0];
-      const url = matched[1];
-      if (!url) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-
-      const req = new Request(url);
-      req.timeoutInterval = 10;
-      req.method = 'GET';
-      let res = await req.loadString();
-      const statusCode = req.response.statusCode;
-      if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`状态码错误: ${statusCode}`);
-      }
-      if (!res) {
-        throw new Error('未获取到模块内容');
-      }
-
-      // 获取新的模块名称
-      const nameMatched = res.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-      if (!nameMatched) {
-        throw new Error('不是合法的模块内容');
-      }
-      const name = nameMatched[1];
-      if (!name) {
-        throw new Error('模块无名称字段');
-      }
-
-      // 获取新的描述
-      const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-      let desc = descMatched ? descMatched[1] : '';
-      if (!desc) {
-        res = `#!desc=\n${res}`;
-      }
-
-      // 处理类别字段
-      let category = originalCategory;
-      if (originalCategory) {
-        // 如果有原始类别字段，则通过对话框选择新的类别
-        const alert = new Alert();
-        alert.title = '选择新的分类';
-        alert.message = `当前分类: ${originalCategory}`;
-        alert.addAction('🚫去广告');
-        alert.addAction('🛠️功能');
-        alert.addAction('📗面板');
-        alert.addAction('默认不变');
-        const idx = await alert.presentAlert();
-        switch (idx) {
-          case 0:
-            category = '🚫去广告';
-            break;
-          case 1:
-            category = '🛠️功能';
-            break;
-          case 2:
-            category = '📗面板';
-            break;
-          case 3:
-            category = originalCategory; // 默认不变
-            break;
-          default:
-            category = '📁';
-            break;
-        }
-        if (category !== originalCategory) {
-          res = res.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}`);
-          categoryReplaceSuccess += 1;
-        }
-      } else {
-        categoryReplaceSuccess += 1;
-      }
-
-      // 替换链接信息
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
-
-      // 更新描述字段
-      content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
-
-      if (filePath) {
-        fm.writeString(filePath, content);
-      } else {
-        await DocumentPicker.exportString(content, file);
-      }
-
-      let nameInfo = name, descInfo = desc, categoryInfo = category;
-      if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`;
-      }
-      if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`;
-      }
-      if (originalCategory && category !== originalCategory) {
-        categoryInfo = `${originalCategory} -> ${category}`;
-      }
-
-      console.log(`✅ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
+console.log(`✅ ${nameInfo}\n${descInfo}\n类别: ${categoryInfo}\n${file}`);
 report.success += 1;
 await delay(1 * 1000);
 
@@ -331,6 +183,7 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
 
 
 
