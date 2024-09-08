@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.6";
+let ToolVersion = "2.7";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -119,93 +119,7 @@ let report = {
 
 // 初始化分类变更信息和计数
 let categoryChangeInfo = ''; // 用于跟踪分类变更信息
-let categoryChangedCount = 0;
-
-for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName;
-    let originalDesc;
-    let noUrl;
-    let originalCategory; // 记录原来的分类
-    let selectedCategory; // 记录新选择的分类
-
-    try {
-      let content;
-      let filePath;
-      if (contents.length > 0) {
-        content = contents[index];
-      } else {
-        filePath = `${folderPath}/${file}`;
-        content = fm.readString(filePath);
-      }
-
-      // 处理 #!name 和 #!desc
-      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalNameMatched) {
-        originalName = originalNameMatched[1];
-      }
-      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalDescMatched) {
-        originalDesc = originalDescMatched[1];
-        if (originalDesc) {
-          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '');
-        }
-      }
-
-      // 处理订阅链接
-      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-      if (!matched) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-      const subscribed = matched[0];
-      const url = matched[1];
-      if (!url) {
-        noUrl = true;
-        throw new Error('无订阅链接');
-      }
-
-      // 发送请求获取模块内容
-      const req = new Request(url);
-      req.timeoutInterval = 10;
-      req.method = 'GET';
-      let res = await req.loadString();
-      const statusCode = req.response.statusCode;
-      if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`);
-      }
-      if (!res) {
-        throw new Error(`未获取到模块内容`);
-      }
-
-      // 验证模块内容是否合法
-      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-      if (!nameMatched) {
-        throw new Error(`不是合法的模块内容`);
-      }
-      const name = nameMatched[1];
-      if (!name) {
-        throw new Error('模块无名称字段');
-      }
-
-      // 处理 #!desc
-      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
-      let desc;
-      if (descMatched) {
-        desc = descMatched[1];
-      }
-      if (!desc) {
-        res = `#!desc=\n${res}`;
-      }
-
-      // 去掉旧的订阅链接，添加新的链接
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
-      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
-
-// 检查是否有 #!category 字段
-     let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
-     originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
+let categoryChangedCount = 0; // 记录分类变更的次数
 
 // 提示用户一次选择分类
 let categoryAlert = new Alert();
@@ -233,13 +147,16 @@ switch (categoryIdx) {
 }
 
 // 遍历所有文件并应用选定的分类
-let categoryChangedCount = 0;
 for await (const [index, file] of files.entries()) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
     let originalCategory;
+    let noUrl; // 记录没有链接的文件
+    let originalName, originalDesc; // 记录原始信息
     try {
       let content;
       let filePath;
+
+      // 检查是否从 `contents` 读取内容
       if (contents.length > 0) {
         content = contents[index];
       } else {
@@ -247,19 +164,61 @@ for await (const [index, file] of files.entries()) {
         content = fm.readString(filePath);
       }
 
-      // 检查是否有 #!category 字段
+      // 处理 #!name 和 #!desc
+      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (originalNameMatched) originalName = originalNameMatched[1];
+
+      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (originalDescMatched) {
+        originalDesc = originalDescMatched[1];
+        if (originalDesc) originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, ''); // 去掉旧的链接
+      }
+
+      // 处理订阅链接
+      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+      if (!matched) {
+        noUrl = true;
+        throw new Error('无订阅链接');
+      }
+      const subscribed = matched[0];
+      const url = matched[1];
+      if (!url) {
+        noUrl = true;
+        throw new Error('无订阅链接');
+      }
+
+      // 获取新的模块内容
+      const req = new Request(url);
+      req.timeoutInterval = 10;
+      req.method = 'GET';
+      let res = await req.loadString();
+      const statusCode = req.response.statusCode;
+      if (statusCode < 200 || statusCode >= 400) {
+        throw new Error(`statusCode: ${statusCode}`);
+      }
+
+      // 验证模块内容是否合法
+      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      if (!nameMatched) throw new Error(`不是合法的模块内容`);
+      const name = nameMatched[1];
+      if (!name) throw new Error('模块无名称字段');
+
+      // 处理 #!desc
+      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      let desc;
+      if (descMatched) desc = descMatched[1];
+      if (!desc) res = `#!desc=\n${res}`;
+
+      // 处理分类
       let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
       originalCategory = categoryMatched ? categoryMatched[1] : '未分类'; // 记录原分类
 
-      // 如果没有 #!category，则添加
+      // 如果没有 #!category 字段，添加新分类；如果有则替换
       if (!categoryMatched) {
         content = `#!category=${selectedCategory}\n${content}`;
-      } else {
-        // 如果已有 #!category，并且新选择的分类与原分类不同，则替换
-        if (selectedCategory !== originalCategory) {
-          content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
-          categoryChangedCount++; // 记录分类变更
-        }
+      } else if (selectedCategory !== originalCategory) {
+        content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+        categoryChangedCount++; // 记录分类变更次数
       }
 
       // 保存文件内容
@@ -282,45 +241,13 @@ for await (const [index, file] of files.entries()) {
       report.success += 1;
       await delay(1 * 1000);
 
-      // 从 URL 启动的额外操作
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `✅ ${nameInfo}`;
-        alert.message = `${descInfo}\n${file}`;
-        alert.addDestructiveAction('重载 Surge');
-        alert.addAction('打开 Surge');
-        alert.addCancelAction('关闭');
-        idx = await alert.presentAlert();
-        if (idx == 0) {
-          const req = new Request('http://script.hub/reload');
-          req.timeoutInterval = 10;
-          req.method = 'GET';
-          let res = await req.loadString();
-        } else if (idx == 1) {
-          Safari.open('surge://');
-        }
-      }
     } catch (e) {
       if (noUrl) {
         report.noUrl += 1;
       } else {
         report.fail.push(originalName || file);
       }
-
-      if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`);
-        console.log(e);
-      } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`);
-        console.error(`${originalName || file}: ${e}`);
-      }
-      if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `❌ ${originalName || ''}\n${file}`;
-        alert.message = `${e.message || e}`;
-        alert.addCancelAction('关闭');
-        await alert.presentAlert();
-      }
+      console.error(`❌ ${originalName || file}: ${e}`);
     }
   }
 }
@@ -340,12 +267,12 @@ if (!checkUpdate && !fromUrlScheme) {
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
-  idx = await alert.presentAlert();
+  let idx = await alert.presentAlert();
   if (idx == 0) {
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
     req.method = 'GET';
-    let res = await req.loadString();
+    await req.loadString();
   } else if (idx == 1) {
     Safari.open('surge://');
   }
