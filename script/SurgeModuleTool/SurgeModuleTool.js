@@ -45,34 +45,23 @@ function addLineAfterLastOccurrence(text, addition) {
 // 更新模块分类的函数
 function updateCategory(content, newCategory) {
   const categoryRegex = /^#!category\s*?=\s*?(.*?)\s*(\n|$)/im;
-  const categoryLine = `#!category=${newCategory}\n`;
-
   if (categoryRegex.test(content)) {
-    return content.replace(categoryRegex, categoryLine);
+    return content.replace(categoryRegex, `#!category=${newCategory}\n`);
   } else {
-    const lines = content.split('\n');
-    if (lines.length < 2) {
-      // 内容少于2行，直接追加到末尾
-      return content + `\n${categoryLine}`;
-    } else {
-      // 插入到第三行
-      lines.splice(2, 0, `#!category=${newCategory}`);
-      return lines.join('\n');
-    }
+    return addLineAfterLastOccurrence(content, `\n#!category=${newCategory}\n`);
   }
 }
 
-
 // 弹出对话框让用户选择分类
 async function promptForCategory(currentCategory) {
-  const alert = new Alert();
+  let alert = new Alert();
   alert.title = '选择模块分类';
   alert.addAction('功能模块');
   alert.addAction('去广告');
   alert.addAction('面板模块');
-  alert.addDestructiveAction('取消'); // 改为显著的取消操作
+  alert.addCancelAction('取消');
 
-  const idx = await alert.presentAlert();
+  let idx = await alert.presentAlert();
   
   if (idx === -1) {
     return currentCategory; // 用户取消操作，不改变分类
@@ -90,8 +79,75 @@ async function promptForCategory(currentCategory) {
   }
 }
 
+// 处理本地模块的函数
+async function processLocalModules(folderPath) {
+  const fm = FileManager.iCloud();
+  const files = fm.listContents(folderPath);
 
-// 用户操作选择
+  for (const file of files) {
+    if (/\.(sgmodule)$/i.test(file)) {
+      const filePath = `${folderPath}/${file}`;
+      await handleLocalModuleUpdate(filePath); // 处理每个本地模块
+    }
+  }
+}
+
+// 处理和更新每个本地模块的函数
+async function handleLocalModuleUpdate(filePath) {
+  const fm = FileManager.iCloud();
+  let content = fm.readString(filePath);
+  
+  try {
+    // 提取名称和描述
+    const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    const originalName = originalNameMatched ? originalNameMatched[1] : '';
+
+    const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    const originalDesc = originalDescMatched ? originalDescMatched[1].replace(/^🔗.*?]\s*/i, '') : '';
+
+    // 弹出对话框让用户选择分类
+    const newCategory = await promptForCategory(originalName);
+    content = updateCategory(content, newCategory);
+
+    // 写入更新后的内容
+    fm.writeString(filePath, content);
+
+    // 日志输出
+    let nameInfo = `${originalName}`;
+    let descInfo = `${originalDesc}`;
+    if (originalName && newCategory !== originalName) {
+      nameInfo = `${originalName} -> ${newCategory}`;
+    }
+    if (originalDesc && descInfo !== originalDesc) {
+      descInfo = `${originalDesc} -> ${descInfo}`;
+    }
+    console.log(`\n✅ ${nameInfo}\n${descInfo}\n${filePath}`);
+  } catch (e) {
+    console.error(`❌ 更新失败: ${filePath}`);
+    console.error(e.message);
+  }
+}
+
+// 添加新行到最后一行后
+function addLineAfterLastOccurrence(content, line) {
+  const lastIndex = content.lastIndexOf('\n');
+  if (lastIndex === -1) {
+    return line + content;
+  }
+  return content.slice(0, lastIndex) + line + content.slice(lastIndex);
+}
+
+// 将字符串转换为有效的文件名
+function convertToValidFileName(name) {
+  return name.replace(/[\/\\?%*:|"<>]/g, '_').replace(/^\.+/, '');
+}
+
+// 延迟函数
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 主函数
 async function main() {
   let idx;
   let fromUrlScheme;
@@ -121,7 +177,7 @@ async function main() {
 
   if (idx === 3) {
     folderPath = await DocumentPicker.openFolder();
-    files = fm.listContents(folderPath);
+    await processLocalModules(folderPath); // 处理本地模块
   } else if (idx === 2) {
     const filePath = await DocumentPicker.openFile();
     folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -157,19 +213,19 @@ async function main() {
   } else if (idx === 0) {
     console.log('检查更新');
     checkUpdate = true;
-    await update();
+    await update(); // 更新脚本
   }
 
   let report = { success: 0, fail: [], noUrl: 0 };
 
   if (files.length > 0) {
     if (folderPath) {
-      await processLocalModules(folderPath); // Ensure this function is defined
+      await processLocalModules(folderPath); // 处理本地模块
     } else {
       for (const file of files) {
-        const filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
+        const filePath = `${folderPath}/${file}`;
         const content = contents.length > 0 ? contents[files.indexOf(file)] : fm.readString(filePath);
-        await handleLocalModuleUpdate(filePath); // Ensure this function is defined
+        await handleLocalModuleUpdate(filePath); // 处理每个本地模块
       }
     }
   }
@@ -184,9 +240,8 @@ async function main() {
         let filePath;
         if (contents.length > 0) {
           content = contents[index];
-          filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
         } else {
-          filePath = `${folderPath ? folderPath + '/' : ''}${file}`;
+          filePath = `${folderPath}/${file}`;
           content = fm.readString(filePath);
         }
 
@@ -202,6 +257,7 @@ async function main() {
           throw new Error('无订阅链接');
         }
 
+        const subscribed = matched[0];
         const url = matched[1];
         if (!url) {
           noUrl = true;
@@ -232,11 +288,12 @@ async function main() {
         if (!desc) {
           res = `#!desc=\n${res}`;
         }
-        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-        res = addLineAfterLastOccurrence(res, `\n\n#SUBSCRIBED ${url}`);
+        res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)\s+(.*?)\s*(\n|$)/im, '');
 
-        await fm.writeString(filePath, res);
-        
+        content = updateCategory(res, name);
+        await delay(100); // 100ms 延迟
+        fm.writeString(filePath, content);
+
         // Logging and updating
         let nameInfo = `${name}`;
         let descInfo = `${desc}`;
@@ -246,14 +303,14 @@ async function main() {
         if (originalDesc && desc !== originalDesc) {
           descInfo = `${originalDesc} -> ${desc}`;
         }
-        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
+        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${filePath}`);
         report.success += 1;
         await delay(1 * 1000); // 1 秒延迟
 
         if (fromUrlScheme) {
           const alert = new Alert();
           alert.title = `✅ ${nameInfo}`;
-          alert.message = `${descInfo}\n${file}`;
+          alert.message = `${descInfo}\n${filePath}`;
           alert.addDestructiveAction('重载 Surge');
           alert.addAction('打开 Surge');
           alert.addCancelAction('关闭');
@@ -274,12 +331,12 @@ async function main() {
           report.fail.push(originalName || file);
         }
 
-        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${file}`);
+        console.log(`\n${noUrl ? '🈚️' : '❌'} ${originalName || ''}\n${filePath}`);
         console.error(e.message);
 
         if (fromUrlScheme) {
           const alert = new Alert();
-          alert.title = `❌ ${originalName || ''}\n${file}`;
+          alert.title = `❌ ${originalName || ''}\n${filePath}`;
           alert.message = `${e.message || e}`;
           alert.addCancelAction('关闭');
           await alert.presentAlert();
@@ -309,8 +366,18 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+// 延迟函数
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+// 更新脚本
+async function update() {
+  console.log('更新脚本');
+}
+
+// 执行主函数
+await main();
 
 
 // @key Think @wuhu.
