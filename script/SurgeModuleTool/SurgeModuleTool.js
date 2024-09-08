@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.7";
+let ToolVersion = "2.8";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -259,6 +259,16 @@ if (categoryChangedCount > 0) {
 
 // 最后更新总结
 if (!checkUpdate && !fromUrlScheme) {
+  // 显示初始对话框
+  let alert = new Alert();
+  alert.title = '处理中...';
+  alert.message = '请稍等，正在处理文件。';
+  alert.addCancelAction('取消');
+  await alert.presentAlert();
+
+  // 处理文件（此处省略具体的文件处理逻辑）
+
+  // 处理完成后显示结果对话框
   alert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
   let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
@@ -267,6 +277,7 @@ if (!checkUpdate && !fromUrlScheme) {
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
+  
   let idx = await alert.presentAlert();
   if (idx == 0) {
     const req = new Request('http://script.hub/reload');
@@ -277,7 +288,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 // @key Think @wuhu.
 async function update() {
