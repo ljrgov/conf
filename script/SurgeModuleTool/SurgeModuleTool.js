@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.2";
+let ToolVersion = "2.3";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -117,203 +117,225 @@ let report = {
   noUrl: 0,
 }
 
+let categoryChangeInfo = ''; // 用于跟踪分类变更信息
+let categoryChangedCount = 0;
+
 for await (const [index, file] of files.entries()) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName
-    let originalDesc
-    let originalCategory
-    let noUrl
+    let originalName;
+    let originalDesc;
+    let noUrl;
+    let originalCategory; // 记录原来的分类
+    let selectedCategory; // 记录新选择的分类
+
     try {
-      let content
-      let filePath
+      let content;
+      let filePath;
       if (contents.length > 0) {
-        content = contents[index]
+        content = contents[index];
       } else {
-        filePath = `${folderPath}/${file}`
-        content = fm.readString(filePath)
+        filePath = `${folderPath}/${file}`;
+        content = fm.readString(filePath);
       }
 
-      // Handle #!category
-      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im)
-      let selectedCategory = originalCategory
-      if (categoryMatched) {
-        originalCategory = categoryMatched[1]
-        selectedCategory = originalCategory  // 如果匹配到分类，赋值为原分类
-      } else {
-        // Prompt the user to select a category
-        let categoryAlert = new Alert()
-        categoryAlert.title = '选择模块分类'
-        categoryAlert.addAction('去广告')
-        categoryAlert.addAction('功能模块')
-        categoryAlert.addAction('面板模块')
-        categoryAlert.addCancelAction('取消')
-        let categoryIdx = await categoryAlert.presentAlert()
-
-        switch (categoryIdx) {
-          case 0:
-            selectedCategory = '去广告'
-            break
-          case 1:
-            selectedCategory = '功能模块'
-            break
-          case 2:
-            selectedCategory = '面板模块'
-            break
-          default:
-            selectedCategory = '未分类'
-        }
-
-        // Add #!category to the content if it doesn't exist
-        content = `#!category=${selectedCategory}\n${content}`
-      }
-
-      // Compare original and selected category
-      let categoryInfo = `${originalCategory || ''}`
-      if (selectedCategory && selectedCategory !== originalCategory) {
-        categoryInfo = `${originalCategory || '未分类'} -> ${selectedCategory}`
-      }
-
-      // Process name and desc
-      const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im)
+      // 处理 #!name 和 #!desc
+      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
       if (originalNameMatched) {
-        originalName = originalNameMatched[1]
+        originalName = originalNameMatched[1];
       }
-      const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im)
+      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
       if (originalDescMatched) {
-        originalDesc = originalDescMatched[1]
+        originalDesc = originalDescMatched[1];
         if (originalDesc) {
-          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '')
+          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '');
         }
       }
-      const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im)
+
+      // 处理订阅链接
+      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
       if (!matched) {
-        noUrl = true
-        throw new Error('无订阅链接')
+        noUrl = true;
+        throw new Error('无订阅链接');
       }
-      const subscribed = matched[0]
-      const url = matched[1]
+      const subscribed = matched[0];
+      const url = matched[1];
       if (!url) {
-        noUrl = true
-        throw new Error('无订阅链接')
+        noUrl = true;
+        throw new Error('无订阅链接');
       }
 
-      const req = new Request(url)
-      req.timeoutInterval = 10
-      req.method = 'GET'
-      let res = await req.loadString()
-      const statusCode = req.response.statusCode
+      // 发送请求获取模块内容
+      const req = new Request(url);
+      req.timeoutInterval = 10;
+      req.method = 'GET';
+      let res = await req.loadString();
+      const statusCode = req.response.statusCode;
       if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`)
+        throw new Error(`statusCode: ${statusCode}`);
       }
       if (!res) {
-        throw new Error(`未获取到模块内容`)
+        throw new Error(`未获取到模块内容`);
       }
 
-      const nameMatched = res.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im)
+      // 验证模块内容是否合法
+      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
       if (!nameMatched) {
-        throw new Error(`不是合法的模块内容`)
+        throw new Error(`不是合法的模块内容`);
       }
-      const name = nameMatched[1]
+      const name = nameMatched[1];
       if (!name) {
-        throw new Error('模块无名称字段')
+        throw new Error('模块无名称字段');
       }
-      const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im)
-      let desc
+
+      // 处理 #!desc
+      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      let desc;
       if (descMatched) {
-        desc = descMatched[1]
+        desc = descMatched[1];
       }
       if (!desc) {
-        res = `#!desc=\n${res}`
+        res = `#!desc=\n${res}`;
       }
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
-      content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
 
-      // Write updated content
-      if (filePath) {
-        fm.writeString(filePath, content)
+      // 去掉旧的订阅链接，添加新的链接
+      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
+      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
+
+      // 处理 #!category 字段
+      let categoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+      selectedCategory = '未分类'; // 默认分类
+      if (categoryMatched) {
+        originalCategory = categoryMatched[1];
+        selectedCategory = originalCategory;
       } else {
-        await DocumentPicker.exportString(content, file)
+        // 如果没有 #!category，则添加
+        content = `#!category=未分类\n${content}`;
       }
 
-      // Generate name, desc, and category information
-      let nameInfo = `${name}`
-      let descInfo = `${desc}`
+      // 提示用户选择分类
+      let categoryAlert = new Alert();
+      categoryAlert.title = '选择模块分类';
+      categoryAlert.addAction('去广告');
+      categoryAlert.addAction('功能模块');
+      categoryAlert.addAction('面板模块');
+      categoryAlert.addCancelAction('取消');
+      let categoryIdx = await categoryAlert.presentAlert();
+
+      // 根据选择更新分类
+      switch (categoryIdx) {
+        case 0:
+          selectedCategory = '去广告';
+          break;
+        case 1:
+          selectedCategory = '功能模块';
+          break;
+        case 2:
+          selectedCategory = '面板模块';
+          break;
+        default:
+          selectedCategory = originalCategory || '未分类';
+      }
+
+      // 如果分类有变化，记录变更信息
+      if (selectedCategory && selectedCategory !== originalCategory) {
+        categoryChangedCount += 1;
+        if (categoryMatched) {
+          content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${selectedCategory}\n`);
+        } else {
+          content = `#!category=${selectedCategory}\n${content}`;
+        }
+      }
+
+      // 保存文件内容
+      if (filePath) {
+        fm.writeString(filePath, content);
+      } else {
+        await DocumentPicker.exportString(content, file);
+      }
+
+      // 输出更新结果
+      let nameInfo = `${name}`;
+      let descInfo = `${desc}`;
       if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`
+        nameInfo = `${originalName} -> ${name}`;
       }
       if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`
+        descInfo = `${originalDesc} -> ${desc}`;
       }
+      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
+      report.success += 1;
+      await delay(1 * 1000);
 
-      console.log(`名称变更: ${nameInfo}`)
-      console.log(`描述变更: ${descInfo}`)
-      console.log(`分类变更: ${categoryInfo}`)
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
-      report.success += 1
-      await delay(1 * 1000)
+      // 从 URL 启动的额外操作
       if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `✅ ${nameInfo}`
-        alert.message = `${descInfo}\n${file}`
-        alert.addDestructiveAction('重载 Surge')
-        alert.addAction('打开 Surge')
-        alert.addCancelAction('关闭')
-        idx = await alert.presentAlert()
+        alert = new Alert();
+        alert.title = `✅ ${nameInfo}`;
+        alert.message = `${descInfo}\n${file}`;
+        alert.addDestructiveAction('重载 Surge');
+        alert.addAction('打开 Surge');
+        alert.addCancelAction('关闭');
+        idx = await alert.presentAlert();
         if (idx == 0) {
-          const req = new Request('http://script.hub/reload')
-          req.timeoutInterval = 10
-          req.method = 'GET'
-          let res = await req.loadString()
+          const req = new Request('http://script.hub/reload');
+          req.timeoutInterval = 10;
+          req.method = 'GET';
+          let res = await req.loadString();
         } else if (idx == 1) {
-          Safari.open('surge://')
+          Safari.open('surge://');
         }
       }
     } catch (e) {
       if (noUrl) {
-        report.noUrl += 1
+        report.noUrl += 1;
       } else {
-        report.fail.push(originalName || file)
+        report.fail.push(originalName || file);
       }
 
       if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
-        console.log(e)
+        console.log(`\n🈚️ ${originalName || ''}\n${file}`);
+        console.log(e);
       } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`)
-        console.error(`Error processing file ${file}: ${e}`)
+        console.log(`\n❌ ${originalName || ''}\n${file}`);
+        console.error(`${originalName || file}: ${e}`);
       }
       if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `❌ ${originalName || ''}\n${file}`
-        alert.message = `${e.message || e}`
-        alert.addCancelAction('关闭')
-        await alert.presentAlert()
+        alert = new Alert();
+        alert.title = `❌ ${originalName || ''}\n${file}`;
+        alert.message = `${e.message || e}`;
+        alert.addCancelAction('关闭');
+        await alert.presentAlert();
       }
     }
   }
 }
+
+// 记录分类变更信息
+if (categoryChangedCount > 0) {
+  categoryChangeInfo = `\n🔄 分类变更: ${categoryChangedCount}`;
+}
+
+// 最后更新总结
 if (!checkUpdate && !fromUrlScheme) {
-  alert = new Alert()
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
-    report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`
-  alert.addDestructiveAction('重载 Surge')
-  alert.addAction('打开 Surge')
-  alert.addCancelAction('关闭')
-  idx = await alert.presentAlert()
+  alert = new Alert();
+  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
+  let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}${categoryChangeInfo}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
+  alert.addDestructiveAction('重载 Surge');
+  alert.addAction('打开 Surge');
+  alert.addCancelAction('关闭');
+  idx = await alert.presentAlert();
   if (idx == 0) {
-    const req = new Request('http://script.hub/reload')
-    req.timeoutInterval = 10
-    req.method = 'GET'
-    let res = await req.loadString()
+    const req = new Request('http://script.hub/reload');
+    req.timeoutInterval = 10;
+    req.method = 'GET';
+    let res = await req.loadString();
   } else if (idx == 1) {
-    Safari.open('surge://')
+    Safari.open('surge://');
   }
 }
+
 
 
 // @key Think @wuhu.
