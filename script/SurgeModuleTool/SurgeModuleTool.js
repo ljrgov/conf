@@ -6,42 +6,41 @@
 let ToolVersion = "2.7";
 
 async function delay(milliseconds) {
-  var before = Date.now();
-  while (Date.now() < before + milliseconds) {}
+  const start = Date.now();
+  while (Date.now() - start < milliseconds) {
+    await new Promise(resolve => setTimeout(resolve, 10)); // 允许事件循环运行，减少 CPU 占用
+  }
   return true;
 }
 
 function convertToValidFileName(str) {
   // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g;
-  const validFileName = str.replace(invalidCharsRegex, '_');
+  let validFileName = str.replace(invalidCharsRegex, '_');
 
   // 删除多余的点号
-  const multipleDotsRegex = /\.{2,}/g;
-  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
+  validFileName = validFileName.replace(/\.{2,}/g, '.');
 
   // 删除文件名开头和结尾的点号和空格
-  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
-  const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
+  validFileName = validFileName.trim().replace(/^[.]+|[.]+$/g, '');
 
-  return finalFileName;
+  return validFileName;
 }
 
 function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm;
   const matchArray = text.match(regex);
-  const lastIndex = matchArray ? matchArray.length - 1 : -1;
 
-  if (lastIndex >= 0) {
-    const lastMatch = matchArray[lastIndex];
-    const insertIndex = text.indexOf(lastMatch) + lastMatch.length;
-    const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex);
-    return newText;
+  if (matchArray && matchArray.length > 0) {
+    const lastMatch = matchArray[matchArray.length - 1];
+    const insertIndex = text.lastIndexOf(lastMatch) + lastMatch.length;
+    return text.slice(0, insertIndex) + addition + text.slice(insertIndex);
   }
 
-  return text;
+  return text + addition;  // 如果没有找到任何匹配项，直接在文本末尾添加
 }
 
+// 主代码逻辑
 let idx;
 let fromUrlScheme = false;  // 初始化为 false
 let checkUpdate = false;    // 初始化为 false
@@ -290,6 +289,7 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
 
 
 // @key Think @wuhu.
