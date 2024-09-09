@@ -154,7 +154,6 @@ async function processFile(filePath, content) {
   }
 }
 
-
 // 主逻辑：选择模式和处理文件
 let idx;
 let fromUrlScheme;
@@ -260,65 +259,63 @@ if (!checkUpdate && !fromUrlScheme) {
   }
 }
 
-
-
-
 async function update() {
-  const fm = FileManager.iCloud()
-  const dict = fm.documentsDirectory()
+  const fm = FileManager.iCloud();
+  const dict = fm.documentsDirectory();
   // const scriptName = Script.name()
-  const scriptName = 'SurgeModuleTool'
-  let version
-  let resp
+  const scriptName = 'SurgeModuleTool';
+  let version;
+  let resp;
   try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now()
-    let req = new Request(url)
-    req.method = 'GET'
+    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now();
+    let req = new Request(url);
+    req.method = 'GET';
     req.headers = {
       'Cache-Control': 'no-cache',
       Pragma: 'no-cache',
-    }
-    resp = await req.loadString()
+    };
+    resp = await req.loadString();
 
-    const regex = /let ToolVersion = "([\d.]+)"/
-    const match = resp.match(regex)
-    version = match ? match[1] : ''
+    const regex = /let ToolVersion = "([\d.]+)"/;
+    const match = resp.match(regex);
+    version = match ? match[1] : '';
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 
   if (!version) {
-    let alert = new Alert()
-    alert.title = 'Surge 模块工具'
-    alert.message = '无法获取在线版本'
-    alert.addCancelAction('关闭')
-    await alert.presentAlert()
-    return
+    let alert = new Alert();
+    alert.title = 'Surge 模块工具';
+    alert.message = '无法获取在线版本';
+    alert.addCancelAction('关闭');
+    await alert.presentAlert();
+    return;
   } else {
-    let needUpdate = version > ToolVersion
+    let needUpdate = version > ToolVersion;
     if (!needUpdate) {
-      let alert = new Alert()
-      alert.title = 'Surge 模块工具'
-      alert.message = 当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新
-      alert.addDestructiveAction('强制更新')
-      alert.addCancelAction('关闭')
-      idx = await alert.presentAlert()
+      let alert = new Alert();
+      alert.title = 'Surge 模块工具';
+      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
+      alert.addDestructiveAction('强制更新');
+      alert.addCancelAction('关闭');
+      idx = await alert.presentAlert();
       if (idx === 0) {
-        needUpdate = true
+        needUpdate = true;
       }
     }
     if (needUpdate) {
-      fm.writeString(${dict}/${scriptName}.js, resp)
-      console.log('更新成功: ' + version)
-      let notification = new Notification()
-      notification.title = 'Surge 模块工具 更新成功: ' + version
-      notification.subtitle = '点击通知跳转'
-      notification.sound = 'default'
-      notification.openURL = scriptable:///open/${scriptName}
-      notification.addAction('打开脚本', scriptable:///open/${scriptName}, false)
-      await notification.schedule()
+      fm.writeString(`${dict}/${scriptName}.js`, resp);
+      console.log('更新成功: ' + version);
+      let notification = new Notification();
+      notification.title = 'Surge 模块工具 更新成功: ' + version;
+      notification.subtitle = '点击通知跳转';
+      notification.sound = 'default';
+      notification.openURL = `scriptable:///open/${scriptName}`;
+      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
+      await notification.schedule();
     }
   }
 }
+
 
 
