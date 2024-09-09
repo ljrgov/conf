@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.9";
+let ToolVersion = "2.0";
 
 async function delay(milliseconds) {
   var before = Date.now();
@@ -248,6 +248,8 @@ if (idx == 1 || idx == 2 || idx == 3) {
             categoryReplaceSuccess += 1;
           }
         } else {
+          // 如果没有原始分类，并且没有用户选择新分类，则使用默认分类
+          res = addLineAfterLastOccurrence(res, `#!category=${category}\n`);
           categoryReplaceSuccess += 1;
         }
 
@@ -341,8 +343,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
-
 
 
 // @key Think @wuhu.
