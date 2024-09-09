@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.5";
+let ToolVersion = "1.6";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -156,11 +156,14 @@ for await (const [index, file] of files.entries()) {
       if (!originalCategory) {
         const lines = content.split('\n');
         if (lines.length >= 2) {
-          lines.splice(2, 0, `#!category=📁`);
+          lines.splice(2, 0, `#!category=📁`);  // 确保单独插入为一行
           content = lines.join('\n');
         } else {
-          content = `#!category=📁\n${content}`;
+          content = `#!category=📁\n${content}`;  // 确保在文件开头插入
         }
+      } else {
+        // 替换已存在的类别字段，确保独立一行
+        content = content.replace(/^#\!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
       }
 
       const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
@@ -235,7 +238,7 @@ for await (const [index, file] of files.entries()) {
             break;
         }
         if (category !== originalCategory) {
-          res = res.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}`);
+          res = res.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
           categoryReplaceSuccess += 1;
         }
       } else {
@@ -333,8 +336,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
-
 
 
 
