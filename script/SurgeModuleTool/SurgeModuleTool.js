@@ -248,8 +248,8 @@ if (!checkUpdate && !fromUrlScheme) {
 
   alert.title = `📦 处理模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = resultMessage;
-  alert.addAction('打开 Surge');
   alert.addDestructiveAction('重载 Surge');
+  alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
   
   const idx = await alert.presentAlert();
