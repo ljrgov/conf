@@ -70,11 +70,18 @@ if (fromUrlScheme) {
   if (idx === -1) return;  // 用户取消操作，直接退出
 }
 
-if (idx == 0) {  // 用户选择了“更新本脚本”
+// 如果选择了“更新本脚本”，直接退出
+if (idx == 0) {
   console.log('检查更新');
   checkUpdate = true;
   await update();
   return;  // 直接退出，不打开文件管理器
+}
+
+// 弹出文件夹选择器（仅在 idx 为 1、2、3 时需要）
+if (!folderPath && idx != 0) {
+  folderPath = await DocumentPicker.openFolder();
+  if (!folderPath) return;  // 用户未选择文件夹，退出
 }
 
 if (idx == 1) {  // "从链接创建"
