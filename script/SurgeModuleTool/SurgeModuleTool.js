@@ -54,9 +54,9 @@ async function showCategoryDialog(currentCategory) {
 async function processFile(filePath, content) {
   try {
     // 提取 name 和 desc
-    const nameMatch = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-    const descMatch = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-    const categoryMatch = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+    const nameMatch = content.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    const descMatch = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    const categoryMatch = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
 
     let name = nameMatch ? nameMatch[1] : 'Untitled';
     let desc = descMatch ? descMatch[1] : '';
@@ -69,7 +69,7 @@ async function processFile(filePath, content) {
       content = content + `#!category=${category}\n`;
     } else {
       category = await showCategoryDialog(category);
-      content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+      content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
     }
     
     // 从 #SUBSCRIBED 中提取 URL 并请求模块内容
@@ -91,12 +91,12 @@ async function processFile(filePath, content) {
       throw new Error('未获取到模块内容');
     }
     
-    const nameMatched = res.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    const nameMatched = res.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
     if (!nameMatched) {
       throw new Error('不是合法的模块内容');
     }
     name = nameMatched[1];
-    const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    const descMatched = res.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
     desc = descMatched ? descMatched[1] : '';
 
     if (!desc) {
@@ -104,7 +104,7 @@ async function processFile(filePath, content) {
     }
     res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
     res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${urlMatch[0].replace(/\n/g, '')}\n`);
-    content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
+    content = `${res}`.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
     
     const fm = FileManager.iCloud();
     fm.writeString(filePath, content);
@@ -211,12 +211,12 @@ if (idx == 3) {
         name = fullname.replace(/\.sgmodule$/, '');
       }
       if (!name) {
-        name = untitled-${new Date().toLocaleString()};
+        name = `untitled-${new Date().toLocaleString()}`;
       }
     }
     name = convertToValidFileName(name);
-    files = [${name}.sgmodule];
-    contents = [#SUBSCRIBED ${url}];
+    files = [`${name}.sgmodule`];
+    contents = [`#SUBSCRIBED ${url}`];
   }
 } else if (idx == 0) {
   console.log('检查更新');
@@ -233,7 +233,7 @@ let report = {
 
 for await (const file of files) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let filePath = ${folderPath}/${file};
+    let filePath = `${folderPath}/${file}`;
     let content = fm.readString(filePath);
     await processFile(filePath, content);
   }
@@ -242,10 +242,10 @@ for await (const file of files) {
 // 最终报告
 if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
-  let upErrk = report.fail.length > 0 ? ❌ 更新失败: ${report.fail.length} : '',
-      noUrlErrk = report.noUrl > 0 ? 🈚️ 无链接: ${report.noUrl} : '';
-  alert.title = 📦 模块总数: ${report.success + report.fail.length + report.noUrl};
-  alert.message = ${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? \n${report.fail.join(', ')} : ''};
+  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
+      noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
@@ -259,6 +259,10 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
+
+
+
 async function update() {
   const fm = FileManager.iCloud()
   const dict = fm.documentsDirectory()
