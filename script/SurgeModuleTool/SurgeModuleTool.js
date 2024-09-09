@@ -4,7 +4,7 @@
 
 
 // prettier-ignore
-let ToolVersion = "1.9";
+let ToolVersion = "2.0";
 
 // 工具函数：延迟函数
 async function delay(milliseconds) {
