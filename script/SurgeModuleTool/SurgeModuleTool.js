@@ -135,49 +135,7 @@ let report = {
 let categoryReplaceSuccess = 0;
 let categoryReplaceFail = 0;
 
-if (idx == 1) {
-  let url;
-  let name;
-
-  if (fromUrlScheme) {
-    url = args.queryParameters.url;
-    name = args.queryParameters.name;
-  } else {
-    let alert = new Alert();
-    alert.title = '将自动添加后缀 .sgmodule';
-    alert.addTextField('链接(必填)', '');
-    alert.addTextField('名称(选填)', '');
-    alert.addAction('下载');
-    alert.addCancelAction('取消');
-    
-    idx = await alert.presentAlert();
-
-    if (idx === -1) return;
-
-    url = alert.textFieldValue(0);
-    name = alert.textFieldValue(1);
-
-    if (!url) {
-      console.log('链接为空，退出操作');
-      return;
-    }
-  }
-
-  if (!name) {
-    const plainUrl = url.split('?')[0];
-    const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-    if (fullname) {
-      name = fullname.replace(/\.sgmodule$/, '');
-    }
-    if (!name) {
-      name = `untitled-${new Date().toLocaleString()}`;
-    }
-  }
-
-  name = convertToValidFileName(name);
-  files = [`${name}.sgmodule`];
-  contents = [`#SUBSCRIBED ${url}`];
-
+if (idx == 1 || idx == 2 || idx == 3) {
   for await (const [index, file] of files.entries()) {
     if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
       let originalName, originalDesc, originalCategory, noUrl;
@@ -383,6 +341,7 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
 
 
 
