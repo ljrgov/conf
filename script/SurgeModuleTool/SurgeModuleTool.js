@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.1";
+let ToolVersion = "1.2";
 
 // 辅助函数：延迟执行
 async function delay(milliseconds) {
@@ -38,17 +38,17 @@ function addLineAfterLastOccurrence(text, addition) {
 
 // 辅助函数：显示分类选择对话框
 async function showCategoryDialog(currentCategory) {
-  const categories = ['广告模块', '功能模块', '面板模块', '默认不变'];
+  const categories = ['📕广告模块', '📗功能模块', '📘面板模块', '📚默认分类'];
   const alert = new Alert();
   alert.title = '选择分类';
   categories.forEach(category => alert.addAction(category));
   alert.addCancelAction('取消');
-  
+
   const idx = await alert.presentAlert();
-  if (idx === -1) return currentCategory; // Cancel button clicked, return current category
-  
+  if (idx === -1) return currentCategory; // 取消按钮被点击，返回当前分类
+
   const selectedCategory = categories[idx];
-  return selectedCategory === '默认不变' ? currentCategory : selectedCategory;
+  return selectedCategory === '📚默认分类' ? currentCategory : selectedCategory;
 }
 
 // 辅助函数：处理文件内容
@@ -61,27 +61,42 @@ async function processFile(filePath, content) {
 
     let name = nameMatch ? nameMatch[1] : 'Untitled';
     let desc = descMatch ? descMatch[1] : '';
-    let category = categoryMatch ? categoryMatch[1] : '未分类';
+    let category = categoryMatch ? categoryMatch[1] : '📚未分类';
     let originalCategory = category;
-    
-    // 如果没有 category，弹出对话框选择
-    if (!categoryMatch) {
-      category = await showCategoryDialog(category);
-      content = content + `#!category=${category}\n`;
+
+    const fm = FileManager.iCloud();
+
+    // 如果已有 category，则替换为“📚未分类”
+    if (categoryMatch) {
+      content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=📚未分类\n`);
+      category = '📚未分类';
     } else {
-      category = await showCategoryDialog(category);
-      if (category !== originalCategory) {
-        content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+      // 如果没有 category，则在第三行添加
+      const lines = content.split('\n');
+      if (lines.length < 2) {
+        // 如果文件内容少于2行，直接添加
+        content += `\n#!category=📚未分类\n`;
+      } else {
+        // 在第三行添加
+        lines.splice(2, 0, `#!category=📚未分类`);
+        content = lines.join('\n');
       }
     }
-    
+
+    // 弹出分类选择对话框
+    category = await showCategoryDialog(category);
+    if (category !== originalCategory) {
+      // 更新 category
+      content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+    }
+
     // 从 #SUBSCRIBED 中提取 URL 并请求模块内容
     const urlMatch = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
     if (!urlMatch) {
       throw new Error('无订阅链接');
     }
     const url = urlMatch[1];
-    
+
     const req = new Request(url);
     req.timeoutInterval = 10;
     req.method = 'GET';
@@ -93,7 +108,7 @@ async function processFile(filePath, content) {
     if (!res) {
       throw new Error('未获取到模块内容');
     }
-    
+
     const nameMatched = res.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
     if (!nameMatched) {
       throw new Error('不是合法的模块内容');
@@ -108,18 +123,17 @@ async function processFile(filePath, content) {
     res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
     res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${urlMatch[0].replace(/\n/g, '')}\n`);
     content = `${res}`.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
-    
-    const fm = FileManager.iCloud();
+
     fm.writeString(filePath, content);
-    
+
     let nameInfo = `${name}`;
     let descInfo = `${desc}`;
     let categoryInfo = originalCategory === category ? '默认不变' : `更新为 ${category}`;
-    
+
     console.log(`\n✅ ${nameInfo}\n${descInfo}\n分类: ${categoryInfo}\n${filePath}`);
     report.success += 1;
     await delay(1 * 1000);
-    
+
     // 从 URL Scheme 模式显示结果对话框
     if (fromUrlScheme) {
       const resultAlert = new Alert();
@@ -130,10 +144,10 @@ async function processFile(filePath, content) {
       resultAlert.addCancelAction('关闭');
       const idx = await resultAlert.presentAlert();
       if (idx === 0) {
-        const req = new Request('http://script.hub/reload');
-        req.timeoutInterval = 10;
-        req.method = 'GET';
-        await req.loadString();
+        const reloadReq = new Request('http://script.hub/reload');
+        reloadReq.timeoutInterval = 10;
+        reloadReq.method = 'GET';
+        await reloadReq.loadString();
       } else if (idx === 1) {
         Safari.open('surge://');
       }
@@ -175,7 +189,7 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块');
   alert.addCancelAction('取消');
   idx = await alert.presentAlert();
-  if (idx === -1) return; // Cancel button clicked, exit script
+  if (idx === -1) return; // 取消按钮被点击，退出脚本
 }
 
 let folderPath;
@@ -203,7 +217,7 @@ if (idx === 3) {
     alert.addAction('下载');
     alert.addCancelAction('取消');
     const response = await alert.presentAlert();
-    if (response === -1) return; // Cancel button clicked, exit script
+    if (response === -1) return; // 取消按钮被点击，退出脚本
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
   }
@@ -246,20 +260,20 @@ for await (const file of files) {
 // 最终报告
 if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-      noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '';
+  let noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
-  const idx = await alert.presentAlert();
-  if (idx === 0) {
-    const req = new Request('http://script.hub/reload');
-    req.timeoutInterval = 10;
-    req.method = 'GET';
-    await req.loadString();
-  } else if (idx === 1) {
+  const finalIdx = await alert.presentAlert();
+  if (finalIdx === 0) {
+    const reloadReq = new Request('http://script.hub/reload');
+    reloadReq.timeoutInterval = 10;
+    reloadReq.method = 'GET';
+    await reloadReq.loadString();
+  } else if (finalIdx === 1) {
     Safari.open('surge://');
   }
 }
