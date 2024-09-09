@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.5";
+let ToolVersion = "2.6";
 
 async function delay(milliseconds) {
   var before = Date.now();
@@ -60,20 +60,21 @@ if (fromUrlScheme) {
 } else {
   let alert = new Alert();
   alert.title = 'Surge 模块工具';
-  alert.addDestructiveAction('更新本脚本');
-  alert.addAction('从链接创建');
-  alert.addAction('更新单个模块');
-  alert.addAction('更新全部模块');
+  alert.addDestructiveAction('更新本脚本');  // idx = 0
+  alert.addAction('从链接创建');            // idx = 1
+  alert.addAction('更新单个模块');          // idx = 2
+  alert.addAction('更新全部模块');          // idx = 3
   alert.addCancelAction('取消');
   
   idx = await alert.presentAlert();
   if (idx === -1) return;  // 用户取消操作，直接退出
 }
 
-// 只弹出一次文件夹选择
-if (!folderPath) {
-  folderPath = await DocumentPicker.openFolder();
-  if (!folderPath) return;  // 用户未选择文件夹，退出
+if (idx == 0) {  // 用户选择了“更新本脚本”
+  console.log('检查更新');
+  checkUpdate = true;
+  await update();
+  return;  // 直接退出，不打开文件管理器
 }
 
 if (idx == 1) {  // "从链接创建"
@@ -100,29 +101,34 @@ if (idx == 1) {  // "从链接创建"
       console.log('链接为空，退出操作');
       return;
     }
-  }
 
-  if (!name) {
-    const plainUrl = url.split('?')[0];
-    const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-    name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
-  }
+    if (!name) {
+      const plainUrl = url.split('?')[0];
+      const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
+      name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
+    }
 
-  name = convertToValidFileName(name);  // 确保名称合法
-  files = [`${name}.sgmodule`];
-  contents = [`#SUBSCRIBED ${url}`];
+    name = convertToValidFileName(name);  // 确保名称合法
+    files = [`${name}.sgmodule`];
+    contents = [`#SUBSCRIBED ${url}`];
+
+    // 弹出文件夹选择器
+    folderPath = await DocumentPicker.openFolder();
+    if (!folderPath) return;  // 用户未选择文件夹，退出
+  }
 
 } else if (idx == 2) {  // "更新单个模块"
-  const filePath = await DocumentPicker.openFile();
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+  const filePath = await DocumentPicker.openFile();  // 先选择文件
+  if (!filePath) return;  // 用户取消选择，退出
+  
+  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));  // 提取文件夹路径
+  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];  // 获取文件名
 
 } else if (idx == 3) {  // "更新全部模块"
-  files = fm.listContents(folderPath);
+  folderPath = await DocumentPicker.openFolder();  // 直接选择文件夹
+  if (!folderPath) return;  // 用户取消选择，退出
 
-} else if (idx == 0) {  // "更新本脚本"
-  console.log('检查更新');
-  checkUpdate = true;
-  await update();
+  files = fm.listContents(folderPath);  // 列出文件夹中的所有文件
 }
 
 // 开始处理文件并进行分类选择
