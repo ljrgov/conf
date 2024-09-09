@@ -41,45 +41,17 @@ function addLineAfterLastOccurrence(text, addition) {
   return text;
 }
 
-async function handleCategory(content) {
+async function handleCategory(content, defaultCategory) {
   const categoryRegex = /^#\!category\s*?=\s*(.*?)\s*(\n|$)/im;
   const categoryMatch = content.match(categoryRegex);
-  let categoryValue = "📚未分类";
 
-  // 如果有category字段，替换为 "📚未分类"
   if (categoryMatch) {
-    content = content.replace(categoryRegex, `#!category=${categoryValue}\n`);
+    content = content.replace(categoryRegex, `#!category=${defaultCategory}\n`);
   } else {
-    // 如果没有category字段，添加到第三行
     const lines = content.split("\n");
-    lines.splice(2, 0, `#!category=${categoryValue}`);
+    lines.splice(2, 0, `#!category=${defaultCategory}`);
     content = lines.join("\n");
   }
-
-  // 弹出选择对话框
-  const alert = new Alert();
-  alert.title = "选择分类";
-  alert.addAction("📕 广告模块");
-  alert.addAction("📗 功能模块");
-  alert.addAction("📘 面板模块");
-  alert.addAction("📚 默认分类");
-  alert.addCancelAction("取消");
-
-  const idx = await alert.presentAlert();
-
-  // 用户选择的分类
-  if (idx === -1) {
-    return null; // 用户取消选择
-  }
-  if (idx === 0) {
-    categoryValue = "📕 广告模块";
-  } else if (idx === 1) {
-    categoryValue = "📗 功能模块";
-  } else if (idx === 2) {
-    categoryValue = "📘 面板模块";
-  }
-  // 如果选择默认分类，不修改categoryValue，保持“📚未分类”或原值
-  content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${categoryValue}\n`);
 
   return content;
 }
@@ -113,6 +85,7 @@ async function main() {
   let folderPath;
   let files = [];
   let contents = [];
+  let categoryValue = "📚未分类";
   const fm = FileManager.iCloud();
 
   if (idx == 3) {
@@ -165,6 +138,28 @@ async function main() {
     checkUpdate = true;
     await update();
     return; // 更新完成后结束脚本
+  } else if (idx == 3) {
+    let alert = new Alert();
+    alert.title = "选择分类";
+    alert.addAction("📕 广告模块");
+    alert.addAction("📗 功能模块");
+    alert.addAction("📘 面板模块");
+    alert.addAction("📚 默认分类");
+    alert.addCancelAction("取消");
+
+    const categoryIndex = await alert.presentAlert();
+
+    if (categoryIndex === -1) {
+      return; // 用户取消操作
+    }
+
+    if (categoryIndex === 0) {
+      categoryValue = "📕 广告模块";
+    } else if (categoryIndex === 1) {
+      categoryValue = "📗 功能模块";
+    } else if (categoryIndex === 2) {
+      categoryValue = "📘 面板模块";
+    }
   }
 
   let report = {
@@ -172,6 +167,8 @@ async function main() {
     fail: [],
     noUrl: 0,
   };
+
+  const startTime = Date.now();
 
   for await (const [index, file] of files.entries()) {
     if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
@@ -240,7 +237,7 @@ async function main() {
         content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
         
         // 处理category部分
-        content = await handleCategory(content);
+        content = await handleCategory(content, categoryValue);
         if (content === null) {
           return; // 用户取消操作
         }
@@ -328,6 +325,9 @@ async function main() {
 
   // 最终报告
   if (!checkUpdate && !fromUrlScheme) {
+    const endTime = Date.now();
+    const elapsedTime = (endTime - startTime) / 1000; // 时间单位为秒
+
     let alert = new Alert();
     
     // 根据失败和无链接的情况组织最终报告的内容
@@ -338,7 +338,7 @@ async function main() {
     alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
     alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
       report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-    }`;
+    }\n\n更新用时: ${elapsedTime.toFixed(2)}秒`;
 
     alert.addDestructiveAction('重载 Surge');
     alert.addAction('打开 Surge');
@@ -365,6 +365,7 @@ async function main() {
 
 // 执行主函数
 await main();
+
 
 
 
