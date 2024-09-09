@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.6";
+let ToolVersion = "2.7";
 
 async function delay(milliseconds) {
   var before = Date.now();
@@ -115,6 +115,21 @@ if (idx == 1) {  // "从链接创建"
     // 弹出文件夹选择器
     folderPath = await DocumentPicker.openFolder();
     if (!folderPath) return;  // 用户未选择文件夹，退出
+  } else {
+    // 从链接下载文件
+    const req = new Request(url);
+    req.timeoutInterval = 30;
+    const fileContent = await req.loadString();
+    if (!fileContent) {
+      console.log('下载内容为空，退出操作');
+      return;
+    }
+
+    // 创建文件路径
+    const filePath = `${folderPath}/${name}.sgmodule`;
+    fm.writeString(filePath, fileContent);
+    files = [`${name}.sgmodule`];
+    contents = [fileContent];
   }
 
 } else if (idx == 2) {  // "更新单个模块"
@@ -268,7 +283,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 
 // @key Think @wuhu.
