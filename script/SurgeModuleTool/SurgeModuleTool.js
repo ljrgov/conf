@@ -167,10 +167,10 @@ if (idx == 1 || idx == 2 || idx == 3) {
         if (!originalCategory) {
           const lines = content.split('\n');
           if (lines.length >= 2) {
-            lines.splice(2, 0, '#!category=📁');
+            lines.splice(2, 0, '#!category=📚');
             content = lines.join('\n');
           } else {
-            content = `#!category=📁\n${content}`;
+            content = `#!category=📚\n${content}`;
           }
         } else {
           content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
@@ -221,26 +221,26 @@ if (idx == 1 || idx == 2 || idx == 3) {
           const alert = new Alert();
           alert.title = '选择新的分类';
           alert.message = `当前分类: ${originalCategory}`;
-          alert.addAction('🚫去广告');
-          alert.addAction('🛠️功能');
-          alert.addAction('📗面板');
-          alert.addAction('默认不变');
+          alert.addAction('📕去广告模块');
+          alert.addAction('📘功能模块');
+          alert.addAction('📗面板模块');
+          alert.addAction('📚默认不变');
           const idx = await alert.presentAlert();
           switch (idx) {
             case 0:
-              category = '🚫去广告';
+              category = '📕去广告模块';
               break;
             case 1:
-              category = '🛠️功能';
+              category = '📘功能模块';
               break;
             case 2:
-              category = '📗面板';
+              category = '📗面板模块';
               break;
             case 3:
               category = originalCategory;
               break;
             default:
-              category = '📁';
+              category = '📚';
               break;
           }
           if (category !== originalCategory) {
@@ -327,7 +327,7 @@ if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
   const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
   const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
-  const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📁 类别替换成功: ${categoryReplaceSuccess}` : '';
+  const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
   alert.addDestructiveAction('重载 Surge');
