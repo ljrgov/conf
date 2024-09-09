@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.7";
+let ToolVersion = "2.8";
 
 async function delay(milliseconds) {
   const start = Date.now();
@@ -123,19 +123,30 @@ if (idx == 1) {  // "从链接创建"
     if (!folderPath) return;  // 用户未选择文件夹，退出
   } else {
     // 从链接下载文件
-    const req = new Request(url);
-    req.timeoutInterval = 30;
-    const fileContent = await req.loadString();
-    if (!fileContent) {
-      console.log('下载内容为空，退出操作');
+    if (!url) {
+      console.log('URL 未定义，退出操作');
       return;
     }
 
-    // 创建文件路径
-    const filePath = `${folderPath}/${name}.sgmodule`;
-    fm.writeString(filePath, fileContent);
-    files = [`${name}.sgmodule`];
-    contents = [fileContent];
+    const req = new Request(url);
+    req.timeoutInterval = 30;
+
+    try {
+      const fileContent = await req.loadString();
+      if (!fileContent) {
+        console.log('下载内容为空，退出操作');
+        return;
+      }
+
+      // 创建文件路径
+      const filePath = `${folderPath}/${name}.sgmodule`;
+      fm.writeString(filePath, fileContent);
+      files = [`${name}.sgmodule`];
+      contents = [fileContent];
+    } catch (err) {
+      console.log(`下载失败: ${err.message}`);
+      return;
+    }
   }
 
 } else if (idx == 2) {  // "更新单个模块"
@@ -234,6 +245,7 @@ for await (const [index, file] of files.entries()) {
           content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
           categoryReplaceSuccess += 1; // 替换成功计数
         } else {
+          content = addLineAfterLastOccurrence(content, `#!category=${category}\n`);
           categoryReplaceFail += 1; // 替换失败计数
         }
       }
