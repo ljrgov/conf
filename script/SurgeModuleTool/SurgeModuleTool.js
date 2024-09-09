@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.3";
+let ToolVersion = "2.4";
 
 async function delay(milliseconds) {
   var before = Date.now();
@@ -158,47 +158,65 @@ for await (const [index, file] of files.entries()) {
       let originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
       let originalCategory = originalCategoryMatched ? originalCategoryMatched[1] : null;
 
-      // 如果没有分类，默认添加
-      if (!originalCategory) {
-        const lines = content.split('\n');
-        if (lines.length >= 2) {
-          lines.splice(2, 0, '#!category=📚未分类');
-          content = lines.join('\n');
-          originalCategory = '📚未分类'; // 设置默认值
-        } else {
-          content = `#!category=📚未分类\n${content}`;
-          originalCategory = '📚未分类';
-        }
-      }
+     // 如果没有分类，默认添加
+if (!originalCategory) {
+  const lines = content.split('\n');
+  if (lines.length >= 2) {
+    lines.splice(2, 0, '#!category=📚未分类');
+    content = lines.join('\n');
+    originalCategory = '📚未分类'; // 设置默认值
+  } else {
+    content = `#!category=📚未分类\n${content}`;
+    originalCategory = '📚未分类';
+  }
+}
 
-      // 弹出对话框让用户选择新的分类
-      const alert = new Alert();
-      alert.title = '选择新的分类';
-      alert.message = `当前分类: ${originalCategory}`;
-      alert.addAction('📕去广告模块');
-      alert.addAction('📘功能模块');
-      alert.addAction('📗面板模块');
-      alert.addAction('📚默认不变');
-      const categoryIdx = await alert.presentAlert();
+// 弹出对话框让用户选择新的分类
+const alert = new Alert();
+alert.title = '选择新的分类';
+alert.message = `当前分类: ${originalCategory}`;
+alert.addAction('📕去广告模块');
+alert.addAction('📘功能模块');
+alert.addAction('📗面板模块');
+alert.addAction('📚默认不变');
+const categoryIdx = await alert.presentAlert();
 
-      let category = originalCategory;
-      switch (categoryIdx) {
-        case 0: category = '📕去广告模块'; break;
-        case 1: category = '📘功能模块'; break;
-        case 2: category = '📗面板模块'; break;
-        case 3: categoryKeepDefaultCount += 1; break; // 保持原始分类
-        default: category = originalCategory; break;
-      }
+// 默认保持原始分类
+let category = originalCategory;
 
-      // 替换分类字段
-      if (category !== originalCategory && categoryIdx !== 3) {
-        if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
-          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
-          categoryReplaceSuccess += 1;
-        } else {
-          categoryReplaceFail += 1; // 替换失败
-        }
-      }
+switch (categoryIdx) {
+  case 0:
+    category = '📕去广告模块';
+    break;
+  case 1:
+    category = '📘功能模块';
+    break;
+  case 2:
+    category = '📗面板模块';
+    break;
+  case 3:
+    categoryKeepDefaultCount += 1; // 选择默认不变，计数增加
+    break;
+  default:
+    category = originalCategory; // 保持原始分类
+    break;
+}
+
+// 替换分类字段
+if (category !== originalCategory) {
+  if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
+    // 正确替换 category 字段
+    content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
+    categoryReplaceSuccess += 1; // 替换成功计数
+  } else {
+    // 如果没有正确匹配，记录为替换失败
+    categoryReplaceFail += 1;
+  }
+} else if (categoryIdx !== 3) {
+  // 如果没有选择默认不变且没有进行替换，记录为替换失败
+  categoryReplaceFail += 1;
+}
+
 
       // 查找链接
       const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
@@ -262,40 +280,42 @@ for await (const [index, file] of files.entries()) {
 // 输出更新结果
 if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
-
+  
   // 检查报告中的失败和无链接模块
   const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
   const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
   const categoryKeepDefaultInfo = categoryKeepDefaultCount > 0 ? `🗂️ 类别保持默认: ${categoryKeepDefaultCount}` : '';
-  const categoryReplaceFailInfo = categoryReplaceFail > 0 ? `❌ 类别替换失败: ${categoryReplaceFail}` : '';
+  const categoryReplaceFailInfo = categoryReplaceFail > 0 ? `❗ 类别替换失败: ${categoryReplaceFail}` : '';
 
-  // 显示成功、失败和无链接信息
-  let updateResultInfo = '';
-  if (report.success > 0) {
-    updateResultInfo = `✅ 模块更新成功: ${report.success}`;
-  } else {
-    updateResultInfo = `⚠️ 无模块更新成功`;
-  }
+  // 组织结果信息，确保布局美观，无过多间距
+  const resultMessage = [
+    noUrlErrk,
+    `✅ 模块更新成功: ${report.success}`,
+    upErrk + (report.fail.length > 0 ? `\n失败的模块: ${report.fail.join(', ')}` : ''),
+    categoryReplaceInfo,
+    categoryKeepDefaultInfo,
+    categoryReplaceFailInfo
+  ].filter(Boolean).join('\n');
 
   // 设置弹窗标题和信息
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${updateResultInfo}\n${noUrlErrk}\n${upErrk}${report.fail.length > 0 ? `\n失败的模块:\n${report.fail.join('\n')}` : ''}\n${categoryReplaceInfo}\n${categoryKeepDefaultInfo}\n${categoryReplaceFailInfo}`;
+  alert.title = `📦 处理模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert.message = resultMessage;
 
   // 添加按钮操作
-  alert.addDestructiveAction('重载 Surge');
-  alert.addAction('打开 Surge');
+  alert.addAction('打开 Surge');  // 将打开 Surge 放在首位
+  alert.addDestructiveAction('重载 Surge');  // 将重载 Surge 放在次要位置
   alert.addCancelAction('关闭');
 
   // 显示弹窗并根据用户选择执行相应操作
   const idx = await alert.presentAlert();
 
-  if (idx == 0) {
+  if (idx == 1) {  // 选择了 "重载 Surge"
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
     req.method = 'GET';
     await req.loadString();
-  } else if (idx == 1) {
+  } else if (idx == 0) {  // 选择了 "打开 Surge"
     Safari.open('surge://');
   }
 }
