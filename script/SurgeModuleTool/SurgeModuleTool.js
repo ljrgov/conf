@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "2.1";
+let ToolVersion = "2.2";
 
 async function delay(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -100,7 +100,7 @@ if (idx == 1) {  // "从链接创建"
 
     // 保存下载文件到指定文件夹
     const filePath = `${folderPath}/${files[0]}`;
-    await DocumentPicker.exportString(contents[0], filePath);
+    fm.writeString(filePath, contents[0]);
     console.log(`文件已保存到 ${filePath}`);
     
     return; // 下载完成后退出
@@ -256,7 +256,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 // @key Think @wuhu.
 async function update() {
