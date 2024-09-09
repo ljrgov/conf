@@ -124,14 +124,16 @@ if (idx == 1) { // “从链接创建” 选项
   await update();
 }
 
+// 定义报告数据
 let report = {
   success: 0,
   fail: [],
   noUrl: 0,
 };
 
-let categoryReplaceSuccess = 0;
-let categoryReplaceFail = 0;
+let categoryReplaceSuccess = 0;  // 用于记录选择“替换成功”的次数
+let categoryKeepDefaultCount = 0; // 用于记录选择“默认不变”的次数
+let categoryReplaceFail = 0;  // 用于记录选择“替换失败”的次数
 
 if (idx == 1 || idx == 2 || idx == 3) {
   for await (const [index, file] of files.entries()) {
@@ -167,7 +169,28 @@ if (idx == 1 || idx == 2 || idx == 3) {
             content = `#!category=📚未分类\n${content}`;
           }
         } else {
-          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
+          // 弹出对话框让用户选择新的分类
+          const alert = new Alert();
+          alert.title = '选择新的分类';
+          alert.message = `当前分类: ${originalCategory}`;
+          alert.addAction('📕去广告模块');
+          alert.addAction('📘功能模块');
+          alert.addAction('📗面板模块');
+          alert.addAction('📚默认不变');
+          const categoryIdx = await alert.presentAlert();
+          let category = originalCategory;
+          switch (categoryIdx) {
+            case 0: category = '📕去广告模块'; break;
+            case 1: category = '📘功能模块'; break;
+            case 2: category = '📗面板模块'; break;
+            case 3: category = originalCategory; break;
+            default: category = '📚未分类'; break;
+          }
+          // 替换分类字段
+          if (category !== originalCategory) {
+            content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
+            categoryReplaceSuccess += 1;
+          }
         }
 
         const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
@@ -204,30 +227,7 @@ if (idx == 1 || idx == 2 || idx == 3) {
         let desc = descMatched ? descMatched[1] : '';
         if (!desc) res = `#!desc=\n${res}`;
 
-        let category = originalCategory;
-        if (originalCategory) {
-          const alert = new Alert();
-          alert.title = '选择新的分类';
-          alert.message = `当前分类: ${originalCategory}`;
-          alert.addAction('📕去广告模块');
-          alert.addAction('📘功能模块');
-          alert.addAction('📗面板模块');
-          alert.addAction('📚默认不变');
-          const categoryIdx = await alert.presentAlert();
-          switch (categoryIdx) {
-            case 0: category = '📕去广告模块'; break;
-            case 1: category = '📘功能模块'; break;
-            case 2: category = '📗面板模块'; break;
-            case 3: category = originalCategory; break;
-            default: category = '📚未分类'; break;
-          }
-          if (category !== originalCategory) {
-            res = res.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
-            categoryReplaceSuccess += 1;
-          }
-        }
-
-        // 更新描述、链接信息
+        // 更新描述和链接信息
         res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
         res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
         content = res.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
@@ -238,53 +238,39 @@ if (idx == 1 || idx == 2 || idx == 3) {
         } else {
           await DocumentPicker.exportString(content, file);
         }
-
-        // 输出处理成功信息
-        console.log(`✅ ${name}\n${desc}\n类别: ${category}\n${file}`);
-        report.success += 1;
-
-        if (fromUrlScheme) {
-          const alert = new Alert();
-          alert.title = `✅ ${name}`;
-          alert.message = `${desc}\n类别: ${category}\n${file}`;
-          alert.addDestructiveAction('重载 Surge');
-          alert.addAction('打开 Surge');
-          alert.addCancelAction('关闭');
-          const userChoice = await alert.presentAlert();
-          if (userChoice === 0) {
-            const req = new Request('http://script.hub/reload');
-            req.timeoutInterval = 10;
-            req.method = 'GET';
-            await req.loadString();
-          } else if (userChoice === 1) {
-            Safari.open('surge://');
-          }
+      } catch (error) {
+        console.log(`处理模块 ${file} 时出错: ${error.message}`);
+        if (noUrl) {
+          report.noUrl += 1;
+        } else {
+          report.fail.push(file);
         }
-      } catch (e) {
-        if (noUrl) report.noUrl += 1;
-        else report.fail.push(originalName || file);
-
-        console.log(e.message || e);
       }
     }
   }
 }
 
+// 输出更新结果
 // 显示最终处理结果
 if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
   
+  // 检查报告中的失败和无链接模块
   const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
   const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
-  
+  const categoryKeepDefaultInfo = categoryKeepDefaultCount > 0 ? `🗂️ 类别保持默认: ${categoryKeepDefaultCount}` : '';
+
+  // 设置弹窗标题和信息
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n失败的模块: ${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}`;
+  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n失败的模块: ${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}\n${categoryKeepDefaultInfo}`;
   
+  // 添加按钮操作
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
   
+  // 显示弹窗并根据用户选择执行相应操作
   const idx = await alert.presentAlert();
   
   if (idx == 0) {
