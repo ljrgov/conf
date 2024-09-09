@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.0";
+let ToolVersion = "1.1";
 
 // 辅助函数：延迟执行
 async function delay(milliseconds) {
@@ -45,8 +45,9 @@ async function showCategoryDialog(currentCategory) {
   alert.addCancelAction('取消');
   
   const idx = await alert.presentAlert();
-  const selectedCategory = categories[idx];
+  if (idx === -1) return currentCategory; // Cancel button clicked, return current category
   
+  const selectedCategory = categories[idx];
   return selectedCategory === '默认不变' ? currentCategory : selectedCategory;
 }
 
@@ -69,7 +70,9 @@ async function processFile(filePath, content) {
       content = content + `#!category=${category}\n`;
     } else {
       category = await showCategoryDialog(category);
-      content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+      if (category !== originalCategory) {
+        content = content.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+      }
     }
     
     // 从 #SUBSCRIBED 中提取 URL 并请求模块内容
@@ -126,12 +129,12 @@ async function processFile(filePath, content) {
       resultAlert.addAction('打开 Surge');
       resultAlert.addCancelAction('关闭');
       const idx = await resultAlert.presentAlert();
-      if (idx == 0) {
+      if (idx === 0) {
         const req = new Request('http://script.hub/reload');
         req.timeoutInterval = 10;
         req.method = 'GET';
         await req.loadString();
-      } else if (idx == 1) {
+      } else if (idx === 1) {
         Safari.open('surge://');
       }
     }
@@ -172,20 +175,21 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块');
   alert.addCancelAction('取消');
   idx = await alert.presentAlert();
+  if (idx === -1) return; // Cancel button clicked, exit script
 }
 
 let folderPath;
 let files = [];
 let contents = [];
 const fm = FileManager.iCloud();
-if (idx == 3) {
+if (idx === 3) {
   folderPath = await DocumentPicker.openFolder();
   files = fm.listContents(folderPath);
-} else if (idx == 2) {
+} else if (idx === 2) {
   const filePath = await DocumentPicker.openFile();
   folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
   files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-} else if (idx == 1) {
+} else if (idx === 1) {
   let url;
   let name;
   if (fromUrlScheme) {
@@ -198,7 +202,8 @@ if (idx == 3) {
     alert.addTextField('名称(选填)', '');
     alert.addAction('下载');
     alert.addCancelAction('取消');
-    await alert.presentAlert();
+    const response = await alert.presentAlert();
+    if (response === -1) return; // Cancel button clicked, exit script
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
   }
@@ -217,7 +222,7 @@ if (idx == 3) {
     files = [`${name}.sgmodule`];
     contents = [`#SUBSCRIBED ${url}`];
   }
-} else if (idx == 0) {
+} else if (idx === 0) {
   console.log('检查更新');
   checkUpdate = true;
   await update();
@@ -249,12 +254,12 @@ if (!checkUpdate && !fromUrlScheme) {
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
   const idx = await alert.presentAlert();
-  if (idx == 0) {
+  if (idx === 0) {
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
     req.method = 'GET';
     await req.loadString();
-  } else if (idx == 1) {
+  } else if (idx === 1) {
     Safari.open('surge://');
   }
 }
