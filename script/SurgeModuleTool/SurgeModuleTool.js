@@ -6,25 +6,21 @@
 let ToolVersion = "2.9";
 
 async function delay(milliseconds) {
-  const start = Date.now();
-  while (Date.now() - start < milliseconds) {
-    await new Promise(resolve => setTimeout(resolve, 10)); // 允许事件循环运行，减少 CPU 占用
-  }
-  return true;
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 function convertToValidFileName(str) {
-  const invalidCharsRegex = /[\/:*?"<>|]/g;
-  let validFileName = str.replace(invalidCharsRegex, '_');
-  validFileName = validFileName.replace(/\.{2,}/g, '.');
-  validFileName = validFileName.trim().replace(/^[.]+|[.]+$/g, '');
-  return validFileName;
+  return str
+    .replace(/[\/:*?"<>|]/g, '_')
+    .replace(/\.{2,}/g, '.')
+    .trim()
+    .replace(/^[.]+|[.]+$/g, '');
 }
 
 function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm;
   const matchArray = text.match(regex);
-  if (matchArray && matchArray.length > 0) {
+  if (matchArray) {
     const lastMatch = matchArray[matchArray.length - 1];
     const insertIndex = text.lastIndexOf(lastMatch) + lastMatch.length;
     return text.slice(0, insertIndex) + addition + text.slice(insertIndex);
@@ -32,9 +28,8 @@ function addLineAfterLastOccurrence(text, addition) {
   return text + addition;
 }
 
-// 使用 DocumentPicker.openFile() 来选择单个文件
 async function selectFile() {
-  let filePath = await DocumentPicker.openFile();
+  const filePath = await DocumentPicker.openFile();
   if (!filePath) {
     console.log('未选择文件，退出操作');
     return null;
@@ -42,9 +37,8 @@ async function selectFile() {
   return filePath;
 }
 
-// 使用 DocumentPicker.openFolder() 来选择文件夹
 async function selectFolder() {
-  let folderPath = await DocumentPicker.openFolder();
+  const folderPath = await DocumentPicker.openFolder();
   if (!folderPath) {
     console.log('未选择文件夹，退出操作');
     return null;
@@ -52,37 +46,37 @@ async function selectFolder() {
   return folderPath;
 }
 
+async function showAlert(title, message, actions) {
+  let alert = new Alert();
+  alert.title = title;
+  alert.message = message;
+  actions.forEach(action => alert.addAction(action));
+  alert.addCancelAction('取消');
+  return await alert.presentAlert();
+}
+
 // 主代码逻辑
-let idx;
-let fromUrlScheme = false;  // 初始化为 false
-let checkUpdate = false;    // 初始化为 false
-let filePath;  // 文件路径
-let folderPath;  // 文件夹路径
+let idx = -1;
+let fromUrlScheme = !!args.queryParameters.url;
+let checkUpdate = false;
+let filePath, folderPath;
 let files = [];
 let contents = [];
 const fm = FileManager.iCloud();
 
-// 检查是否从 URL scheme 启动
-if (args.queryParameters.url) {
-  fromUrlScheme = true;
-}
-
 if (fromUrlScheme) {
-  idx = 1;  // 直接进入“从链接创建”流程
+  idx = 1;
 } else {
-  let alert = new Alert();
-  alert.title = 'Surge 模块工具';
-  alert.addDestructiveAction('更新本脚本');  // idx = 0
-  alert.addAction('从链接创建');            // idx = 1
-  alert.addAction('更新单个模块');          // idx = 2
-  alert.addAction('更新全部模块');          // idx = 3
-  alert.addCancelAction('取消');
-  
-  idx = await alert.presentAlert();
-  if (idx === -1) return;  // 用户取消操作，直接退出
+  idx = await showAlert('Surge 模块工具', '', [
+    '更新本脚本',
+    '从链接创建',
+    '更新单个模块',
+    '更新全部模块'
+  ]);
 }
 
-// 如果选择了“更新本脚本”，直接退出
+if (idx === -1) return;
+
 if (idx == 0) {
   console.log('检查更新');
   checkUpdate = true;
@@ -90,84 +84,54 @@ if (idx == 0) {
   return;
 }
 
-// 处理文件选择逻辑
-if (idx == 2) {  // "更新单个模块"
-  filePath = await selectFile();
-  if (!filePath) return;  // 用户未选择文件，退出
-
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-} else if (idx == 3) {  // "更新全部模块"
-  folderPath = await selectFolder();  // 选择文件夹
-  if (!folderPath) return;  // 用户未选择文件夹，退出
-
-  files = fm.listContents(folderPath).filter(file => /\.(conf|txt|js|list)$/i.test(file));  // 只保留模块文件
-}
-
-// 处理从链接创建的情况
-if (idx == 1) {  
+if (idx == 1) {
   let url, name;
-  
-  // 从 URL Scheme 启动
   if (fromUrlScheme) {
     url = args.queryParameters.url;
     name = args.queryParameters.name;
   } else {
-    // 手动输入链接和名称
-    let alert = new Alert();
-    alert.title = '将自动添加后缀 .sgmodule';
-    alert.addTextField('链接(必填)', '');
-    alert.addTextField('名称(选填)', '');
-    alert.addAction('下载');
-    alert.addCancelAction('取消');
-    
-    let downloadIdx = await alert.presentAlert();
-    if (downloadIdx === -1) return;  // 用户取消操作，退出
+    const inputIdx = await showAlert('将自动添加后缀 .sgmodule', '', [
+      '下载'
+    ]);
+    if (inputIdx === -1) return;
 
-    url = alert.textFieldValue(0);
-    name = alert.textFieldValue(1);
-
-    if (!url) {
-      console.log('链接为空，退出操作');
-      return;
-    }
-
-    if (!name) {
-      const plainUrl = url.split('?')[0];
-      const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-      name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
-    }
-
-    name = convertToValidFileName(name);  // 确保名称合法
-    files = [`${name}.sgmodule`];
-    contents = [`#SUBSCRIBED ${url}`];
-    
-    filePath = await selectFile();
-    if (!filePath) return;  // 用户未选择文件，退出
+    url = prompt('链接(必填)');
+    name = prompt('名称(选填)');
   }
 
-  // 下载文件逻辑
-  const req = new Request(url);
-  req.timeoutInterval = 30;
+  if (url) {
+    name = name || url.split('?')[0].split('/').pop().replace(/\.sgmodule$/, '') || `untitled-${new Date().toLocaleString()}`;
+    name = convertToValidFileName(name);
 
-  try {
-    const fileContent = await req.loadString();
-    if (!fileContent) {
-      console.log('下载内容为空，退出操作');
+    folderPath = await selectFolder();
+    if (!folderPath) return;
+
+    try {
+      const req = new Request(url);
+      req.timeoutInterval = 30;
+      const fileContent = await req.loadString();
+      if (!fileContent) throw new Error('下载内容为空');
+
+      const filePath = `${folderPath}/${name}.sgmodule`;
+      fm.writeString(filePath, fileContent);
+      files = [`${name}.sgmodule`];
+      contents = [fileContent];
+    } catch (err) {
+      console.log(`下载失败: ${err.message}`);
       return;
     }
-
-    const filePath = `${folderPath}/${name}.sgmodule`;
-    fm.writeString(filePath, fileContent);
-    files = [`${name}.sgmodule`];
-    contents = [fileContent];
-  } catch (err) {
-    console.log(`下载失败: ${err.message}`);
-    return;
   }
+} else if (idx == 2) {
+  filePath = await selectFile();
+  if (!filePath) return;
+  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+} else if (idx == 3) {
+  folderPath = await selectFolder();
+  if (!folderPath) return;
+  files = fm.listContents(folderPath).filter(file => /\.(conf|txt|js|list)$/i.test(file));
 }
 
-// 处理文件和更新
 let report = {
   success: 0,
   fail: [],
@@ -182,25 +146,15 @@ for await (const [index, file] of files.entries()) {
     let originalName, originalDesc, originalCategory, noUrl;
 
     try {
-      let content, filePath;
-      if (contents.length > 0) {
-        content = contents[index];
-      } else {
-        filePath = `${folderPath}/${file}`;
-        content = fm.readString(filePath);
-      }
-
-      // 处理模块元数据
+      let content = contents.length > 0 ? contents[index] : fm.readString(`${folderPath}/${file}`);
       const originalNameMatched = content.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
       if (originalNameMatched) originalName = originalNameMatched[1];
-
       const originalDescMatched = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
       if (originalDescMatched) originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
-
+      
       let originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
       let originalCategory = originalCategoryMatched ? originalCategoryMatched[1] : null;
 
-      // 如果没有分类，默认添加
       if (!originalCategory) {
         const lines = content.split('\n');
         if (lines.length >= 2) {
@@ -213,17 +167,13 @@ for await (const [index, file] of files.entries()) {
         }
       }
 
-      // 弹出对话框让用户选择新的分类
-      const alert = new Alert();
-      alert.title = '选择新的分类';
-      alert.message = `当前分类: ${originalCategory}`;
-      alert.addAction('📕去广告模块');
-      alert.addAction('📘功能模块');
-      alert.addAction('📗面板模块');
-      alert.addAction('📚默认不变');
-      const categoryIdx = await alert.presentAlert();
+      const categoryIdx = await showAlert('选择新的分类', `当前分类: ${originalCategory}`, [
+        '📕去广告模块',
+        '📘功能模块',
+        '📗面板模块',
+        '📚默认不变'
+      ]);
 
-      // 默认保持原始分类
       let category = originalCategory;
       switch (categoryIdx) {
         case 0:
@@ -236,75 +186,63 @@ for await (const [index, file] of files.entries()) {
           category = '📗面板模块';
           break;
         case 3:
-          categoryKeepDefaultCount += 1; // 选择默认不变，计数增加
+          categoryKeepDefaultCount += 1;
           break;
         default:
-          category = originalCategory; // 保持原始分类
+          category = originalCategory;
           break;
       }
 
-      // 替换分类字段
       if (category !== originalCategory) {
         if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
           content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}$1`);
-          categoryReplaceSuccess += 1; // 成功替换
+          categoryReplaceSuccess += 1;
         } else {
           content = addLineAfterLastOccurrence(content, `\n#!category=${category}`);
-          categoryReplaceFail += 1; // 替换失败
+          categoryReplaceFail += 1;
         }
       }
 
-      // 保存文件
       if (filePath) {
         fm.writeString(filePath, content);
       }
 
-      report.success += 1; // 记录更新成功
+      report.success += 1;
     } catch (error) {
       console.log(`处理模块 ${file} 时出错: ${error.message}`);
       if (noUrl) {
         report.noUrl += 1;
       } else {
-        report.fail.push(`${file}: ${error.message}`); // 将失败原因加入报告
+        report.fail.push(`${file}: ${error.message}`);
       }
     }
   }
 }
 
-// 输出处理结果
 if (!checkUpdate && !fromUrlScheme) {
-  const alert = new Alert();
-  const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
-  const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
-  const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
-  const categoryKeepDefaultInfo = categoryKeepDefaultCount > 0 ? `🗂️ 类别保持默认: ${categoryKeepDefaultCount}` : '';
-  const categoryReplaceFailInfo = categoryReplaceFail > 0 ? `❗ 类别替换失败: ${categoryReplaceFail}` : '';
-
   const resultMessage = [
-    noUrlErrk,
-    `✅ 模块更新成功: ${report.success}`,
-    upErrk,
-    categoryReplaceInfo,
-    categoryKeepDefaultInfo,
-    categoryReplaceFailInfo
+    categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '',
+    categoryKeepDefaultCount > 0 ? `📚 类别保持默认: ${categoryKeepDefaultCount}` : '',
+    categoryReplaceFail > 0 ? `📚 类别替换失败: ${categoryReplaceFail}` : '',
+    report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '',
+    report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : ''
   ].filter(Boolean).join('\n');
 
-  alert.title = `📦 处理模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = resultMessage;
-  alert.addDestructiveAction('重载 Surge');
-  alert.addAction('打开 Surge');
-  alert.addCancelAction('关闭');
-  
-  const idx = await alert.presentAlert();
-  if (idx == 1) {
+  const alertIdx = await showAlert(`📦 处理模块总数: ${report.success + report.fail.length + report.noUrl}`, resultMessage, [
+    '重载 Surge',
+    '打开 Surge',
+    '关闭'
+  ]);
+
+  if (alertIdx == 0) {
     const req = new Request('http://script.hub/reload');
     req.timeoutInterval = 10;
-    req.method = 'GET';
     await req.loadString();
-  } else if (idx == 0) {
+  } else if (alertIdx == 1) {
     Safari.open('surge://');
   }
 }
+
 
 
 
