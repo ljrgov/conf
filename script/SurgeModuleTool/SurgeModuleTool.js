@@ -43,8 +43,8 @@ function addLineAfterLastOccurrence(text, addition) {
 }
 
 let idx;
-let fromUrlScheme;
-let checkUpdate;
+let fromUrlScheme = false;  // 初始化为 false
+let checkUpdate = false;    // 初始化为 false
 let folderPath;  // 定义文件夹路径
 let files = [];
 let contents = [];
@@ -74,7 +74,7 @@ if (fromUrlScheme) {
 if (idx == 0) {
   console.log('检查更新');
   checkUpdate = true;
-  await update();
+  await update();  // 确保 update() 已定义
   return;  // 直接退出，不打开文件管理器
 }
 
