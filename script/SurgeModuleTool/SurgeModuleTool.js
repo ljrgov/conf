@@ -66,10 +66,10 @@ async function processFile(filePath, content) {
     // 如果没有 category，弹出对话框选择
     if (!categoryMatch) {
       category = await showCategoryDialog(category);
-      content = content + #!category=${category}\n;
+      content = content + `#!category=${category}\n`;
     } else {
       category = await showCategoryDialog(category);
-      content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, #!category=${category}\n);
+      content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
     }
     
     // 从 #SUBSCRIBED 中提取 URL 并请求模块内容
@@ -85,7 +85,7 @@ async function processFile(filePath, content) {
     let res = await req.loadString();
     const statusCode = req.response.statusCode;
     if (statusCode < 200 || statusCode >= 400) {
-      throw new Error(statusCode: ${statusCode});
+      throw new Error(`statusCode: ${statusCode}`);
     }
     if (!res) {
       throw new Error('未获取到模块内容');
@@ -100,28 +100,28 @@ async function processFile(filePath, content) {
     desc = descMatched ? descMatched[1] : '';
 
     if (!desc) {
-      res = #!desc=\n${res};
+      res = `#!desc=\n${res}`;
     }
     res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-    res = addLineAfterLastOccurrence(res, \n\n# 🔗 模块链接\n${urlMatch[0].replace(/\n/g, '')}\n);
-    content = ${res}.replace(/^#\!desc\s*?=\s*/im, #!desc=🔗 [${new Date().toLocaleString()}] );
+    res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${urlMatch[0].replace(/\n/g, '')}\n`);
+    content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
     
     const fm = FileManager.iCloud();
     fm.writeString(filePath, content);
     
-    let nameInfo = ${name};
-    let descInfo = ${desc};
-    let categoryInfo = originalCategory === category ? '默认不变' : 更新为 ${category};
+    let nameInfo = `${name}`;
+    let descInfo = `${desc}`;
+    let categoryInfo = originalCategory === category ? '默认不变' : `更新为 ${category}`;
     
-    console.log(\n✅ ${nameInfo}\n${descInfo}\n分类: ${categoryInfo}\n${filePath});
+    console.log(`\n✅ ${nameInfo}\n${descInfo}\n分类: ${categoryInfo}\n${filePath}`);
     report.success += 1;
     await delay(1 * 1000);
     
     // 从 URL Scheme 模式显示结果对话框
     if (fromUrlScheme) {
       const resultAlert = new Alert();
-      resultAlert.title = ✅ ${nameInfo};
-      resultAlert.message = ${descInfo}\n分类: ${categoryInfo}\n${filePath};
+      resultAlert.title = `✅ ${nameInfo}`;
+      resultAlert.message = `${descInfo}\n分类: ${categoryInfo}\n${filePath}`;
       resultAlert.addDestructiveAction('重载 Surge');
       resultAlert.addAction('打开 Surge');
       resultAlert.addCancelAction('关闭');
@@ -144,15 +144,16 @@ async function processFile(filePath, content) {
 
     if (fromUrlScheme) {
       const errorAlert = new Alert();
-      errorAlert.title = ❌ ${filePath};
-      errorAlert.message = ${e.message || e};
+      errorAlert.title = `❌ ${filePath}`;
+      errorAlert.message = `${e.message || e}`;
       errorAlert.addCancelAction('关闭');
       await errorAlert.presentAlert();
     } else {
-      console.error(${filePath}: ${e});
+      console.error(`${filePath}: ${e}`);
     }
   }
 }
+
 
 // 主逻辑：选择模式和处理文件
 let idx;
