@@ -167,10 +167,10 @@ if (idx == 1 || idx == 2 || idx == 3) {
         if (!originalCategory) {
           const lines = content.split('\n');
           if (lines.length >= 2) {
-            lines.splice(2, 0, '#!category=📚');
+            lines.splice(2, 0, '#!category=📚未分类');
             content = lines.join('\n');
           } else {
-            content = `#!category=📚\n${content}`;
+            content = `#!category=📚未分类\n${content}`;
           }
         } else {
           content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
@@ -240,7 +240,7 @@ if (idx == 1 || idx == 2 || idx == 3) {
               category = originalCategory;
               break;
             default:
-              category = '📚';
+              category = '📚未分类';
               break;
           }
           if (category !== originalCategory) {
