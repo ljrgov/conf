@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.5";
+let ToolVersion = "1.6";
 
 // 工具函数：延迟函数
 async function delay(milliseconds) {
@@ -65,7 +65,7 @@ async function handleCategory(content) {
   alert.addCancelAction("取消");
 
   const idx = await alert.presentAlert();
-  
+
   // 用户选择的分类
   if (idx === -1) {
     return null; // 用户取消选择
@@ -134,9 +134,10 @@ async function main() {
       alert.addTextField('名称(选填)', '');
       alert.addAction('下载');
       alert.addCancelAction('取消');
-      await alert.presentAlert();
       
-      if (alert.presentAlert() === -1) {
+      idx = await alert.presentAlert();
+
+      if (idx === -1) {
         return; // 用户取消操作
       }
       
@@ -240,13 +241,14 @@ async function main() {
         // 处理category部分
         content = await handleCategory(content);
         if (content === null) {
-          return; // 用户在处理分类时取消
+          return; // 用户取消操作
         }
 
-        if (filePath) {
+        if (!noUrl) {
+          if (originalName || originalDesc) {
+            content = addLineAfterLastOccurrence(content, `\n\n#📝 原名称: ${originalName || ''}\n#📝 原描述: ${originalDesc || ''}`);
+          }
           fm.writeString(filePath, content);
-        } else {
-          await DocumentPicker.exportString(content, file);
         }
 
         let nameInfo = name;
@@ -269,7 +271,7 @@ async function main() {
 
         // 如果从 URL Scheme 启动
         if (fromUrlScheme) {
-          alert = new Alert();
+          let alert = new Alert();
           alert.title = `✅ ${nameInfo}`;
           alert.message = `${descInfo}\n${file}`;
           alert.addDestructiveAction('重载 Surge');
@@ -313,7 +315,7 @@ async function main() {
 
         // 如果从 URL Scheme 启动，弹出错误对话框
         if (fromUrlScheme) {
-          alert = new Alert();
+          let alert = new Alert();
           alert.title = `❌ ${originalName || ''}\n${file}`;
           alert.message = `${e.message || e}`;
           alert.addCancelAction('关闭');
@@ -325,7 +327,7 @@ async function main() {
 
   // 最终报告
   if (!checkUpdate && !fromUrlScheme) {
-    alert = new Alert();
+    let alert = new Alert();
     
     // 根据失败和无链接的情况组织最终报告的内容
     let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
@@ -362,6 +364,7 @@ async function main() {
 
 // 执行主函数
 await main();
+
 
 
 // @key Think @wuhu.
