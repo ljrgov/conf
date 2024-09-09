@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "2.2";
+let ToolVersion = "2.3";
 
 async function delay(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -102,8 +102,11 @@ if (idx == 1) {  // "从链接创建"
     const filePath = `${folderPath}/${files[0]}`;
     fm.writeString(filePath, contents[0]);
     console.log(`文件已保存到 ${filePath}`);
-    
-    return; // 下载完成后退出
+
+    // 下载文件后立即处理
+    await processFile(filePath, contents[0]); // 调用处理函数
+
+    return; // 下载和处理完成后退出
   }
 } else if (idx == 2) {  // "更新单个模块"
   const filePath = await DocumentPicker.openFile();  // 先选择文件
@@ -119,120 +122,99 @@ if (idx == 1) {  // "从链接创建"
   files = fm.listContents(folderPath);  // 列出文件夹中的所有文件
 }
 
-// 开始处理文件并进行分类选择
-let report = {
-  success: 0,
-  fail: [],
-  noUrl: 0,
-};
-let categoryReplaceSuccess = 0;
-let categoryKeepDefaultCount = 0;
-let categoryReplaceFail = 0;
+// 定义处理文件的主逻辑
+async function processFile(filePath, content) {
+  let report = {
+    success: 0,
+    fail: [],
+    noUrl: 0,
+  };
+  let categoryReplaceSuccess = 0;
+  let categoryKeepDefaultCount = 0;
+  let categoryReplaceFail = 0;
 
-for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName, originalDesc, originalCategory, noUrl;
+  let originalName, originalDesc, originalCategory;
 
-    try {
-      let content, filePath;
-      if (contents.length > 0) {
-        content = contents[index];
+  try {
+    // 处理模块元数据
+    const originalNameMatched = content.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
+    if (originalNameMatched) originalName = originalNameMatched[1];
+
+    const originalDescMatched = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+    if (originalDescMatched) originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
+
+    let originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
+    originalCategory = originalCategoryMatched ? originalCategoryMatched[1] : null;
+
+    // 如果没有分类，默认添加
+    if (!originalCategory) {
+      const lines = content.split('\n');
+      if (lines.length >= 2) {
+        lines.splice(2, 0, '#!category=📚未分类');
+        content = lines.join('\n');
+        originalCategory = '📚未分类';
       } else {
-        filePath = `${folderPath}/${file}`;
-        content = fm.readString(filePath);
-      }
-
-      // 处理模块元数据
-      const originalNameMatched = content.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalNameMatched) originalName = originalNameMatched[1];
-
-      const originalDescMatched = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
-      if (originalDescMatched) originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
-
-      let originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
-      let originalCategory = originalCategoryMatched ? originalCategoryMatched[1] : null;
-
-      // 如果没有分类，默认添加
-      if (!originalCategory) {
-        const lines = content.split('\n');
-        if (lines.length >= 2) {
-          lines.splice(2, 0, '#!category=📚未分类');
-          content = lines.join('\n');
-          originalCategory = '📚未分类';
-        } else {
-          content = `#!category=📚未分类\n${content}`;
-          originalCategory = '📚未分类';
-        }
-      }
-
-      // 弹出对话框让用户选择新的分类
-      const alert = new Alert();
-      alert.title = '选择新的分类';
-      alert.message = `当前分类: ${originalCategory}`;
-      alert.addAction('📕去广告模块');
-      alert.addAction('📘功能模块');
-      alert.addAction('📗面板模块');
-      alert.addAction('📚默认不变');
-      const categoryIdx = await alert.presentAlert();
-
-      // 默认保持原始分类
-      let category = originalCategory;
-      switch (categoryIdx) {
-        case 0:
-          category = '📕去广告模块';
-          break;
-        case 1:
-          category = '📘功能模块';
-          break;
-        case 2:
-          category = '📗面板模块';
-          break;
-        case 3:
-          categoryKeepDefaultCount += 1; // 选择默认不变，计数增加
-          break;
-        default:
-          category = originalCategory; // 保持原始分类
-          break;
-      }
-
-      // 替换分类字段
-      if (category !== originalCategory) {
-        if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
-          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
-          categoryReplaceSuccess += 1; // 替换成功计数
-        } else {
-          categoryReplaceFail += 1; // 替换失败计数
-        }
-      }
-
-      // 保存文件
-      if (filePath) {
-        fm.writeString(filePath, content);
-      }
-
-      report.success += 1; // 记录更新成功
-    } catch (error) {
-      console.log(`处理模块 ${file} 时出错: ${error.message}`);
-      if (noUrl) {
-        report.noUrl += 1;
-      } else {
-        report.fail.push(`${file}: ${error.message}`); // 将失败原因加入报告
+        content = `#!category=📚未分类\n${content}`;
+        originalCategory = '📚未分类';
       }
     }
-  }
-}
 
-// 输出处理结果
-if (!checkUpdate && !fromUrlScheme) {
+    // 弹出对话框让用户选择新的分类
+    const alert = new Alert();
+    alert.title = '选择新的分类';
+    alert.message = `当前分类: ${originalCategory}`;
+    alert.addAction('📕去广告模块');
+    alert.addAction('📘功能模块');
+    alert.addAction('📗面板模块');
+    alert.addAction('📚默认不变');
+    const categoryIdx = await alert.presentAlert();
+
+    // 默认保持原始分类
+    let category = originalCategory;
+    switch (categoryIdx) {
+      case 0:
+        category = '📕去广告模块';
+        break;
+      case 1:
+        category = '📘功能模块';
+        break;
+      case 2:
+        category = '📗面板模块';
+        break;
+      case 3:
+        categoryKeepDefaultCount += 1; // 选择默认不变，计数增加
+        break;
+      default:
+        category = originalCategory; // 保持原始分类
+        break;
+    }
+
+    // 替换分类字段
+    if (category !== originalCategory) {
+      if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
+        content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
+        categoryReplaceSuccess += 1; // 替换成功计数
+      } else {
+        categoryReplaceFail += 1; // 替换失败计数
+      }
+    }
+
+    // 保存文件
+    fm.writeString(filePath, content);
+    report.success += 1; // 记录更新成功
+  } catch (error) {
+    console.log(`处理模块 ${filePath} 时出错: ${error.message}`);
+    report.fail.push(`${filePath}: ${error.message}`); // 将失败原因加入报告
+  }
+
+  // 输出处理结果
   const alert = new Alert();
   const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
-  const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
   const categoryKeepDefaultInfo = categoryKeepDefaultCount > 0 ? `🗂️ 类别保持默认: ${categoryKeepDefaultCount}` : '';
   const categoryReplaceFailInfo = categoryReplaceFail > 0 ? `❗ 类别替换失败: ${categoryReplaceFail}` : '';
 
   const resultMessage = [
-    noUrlErrk,
     `✅ 模块更新成功: ${report.success}`,
     upErrk,
     categoryReplaceInfo,
@@ -240,12 +222,12 @@ if (!checkUpdate && !fromUrlScheme) {
     categoryReplaceFailInfo
   ].filter(Boolean).join('\n');
 
-  alert.title = `📦 处理模块总数: ${report.success + report.fail.length + report.noUrl}`;
+  alert.title = `📦 处理模块结果`;
   alert.message = resultMessage;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
-  
+
   const idx = await alert.presentAlert();
   if (idx == 1) {
     const req = new Request('http://script.hub/reload');
@@ -256,6 +238,7 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
 
 // @key Think @wuhu.
 async function update() {
