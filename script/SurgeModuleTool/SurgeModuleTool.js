@@ -97,8 +97,14 @@ if (idx == 1) {  // "从链接创建"
     // 弹出文件夹选择器
     folderPath = await DocumentPicker.openFolder();
     if (!folderPath) return;  // 用户未选择文件夹，退出
-  }
 
+    // 保存下载文件到指定文件夹
+    const filePath = `${folderPath}/${files[0]}`;
+    await DocumentPicker.exportString(contents[0], filePath);
+    console.log(`文件已保存到 ${filePath}`);
+    
+    return; // 下载完成后退出
+  }
 } else if (idx == 2) {  // "更新单个模块"
   const filePath = await DocumentPicker.openFile();  // 先选择文件
   if (!filePath) return;  // 用户取消选择，退出
