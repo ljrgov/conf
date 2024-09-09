@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.4";
+let ToolVersion = "1.5";
 
 async function delay(milliseconds) {
   var before = Date.now()
