@@ -3,7 +3,7 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.8";
+let ToolVersion = "2.9";
 
 async function delay(milliseconds) {
   const start = Date.now();
@@ -14,37 +14,50 @@ async function delay(milliseconds) {
 }
 
 function convertToValidFileName(str) {
-  // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g;
   let validFileName = str.replace(invalidCharsRegex, '_');
-
-  // 删除多余的点号
   validFileName = validFileName.replace(/\.{2,}/g, '.');
-
-  // 删除文件名开头和结尾的点号和空格
   validFileName = validFileName.trim().replace(/^[.]+|[.]+$/g, '');
-
   return validFileName;
 }
 
 function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm;
   const matchArray = text.match(regex);
-
   if (matchArray && matchArray.length > 0) {
     const lastMatch = matchArray[matchArray.length - 1];
     const insertIndex = text.lastIndexOf(lastMatch) + lastMatch.length;
     return text.slice(0, insertIndex) + addition + text.slice(insertIndex);
   }
+  return text + addition;
+}
 
-  return text + addition;  // 如果没有找到任何匹配项，直接在文本末尾添加
+// 使用 DocumentPicker.openFile() 来选择单个文件
+async function selectFile() {
+  let filePath = await DocumentPicker.openFile();
+  if (!filePath) {
+    console.log('未选择文件，退出操作');
+    return null;
+  }
+  return filePath;
+}
+
+// 使用 DocumentPicker.openFolder() 来选择文件夹
+async function selectFolder() {
+  let folderPath = await DocumentPicker.openFolder();
+  if (!folderPath) {
+    console.log('未选择文件夹，退出操作');
+    return null;
+  }
+  return folderPath;
 }
 
 // 主代码逻辑
 let idx;
 let fromUrlScheme = false;  // 初始化为 false
 let checkUpdate = false;    // 初始化为 false
-let folderPath;  // 定义文件夹路径
+let filePath;  // 文件路径
+let folderPath;  // 文件夹路径
 let files = [];
 let contents = [];
 const fm = FileManager.iCloud();
@@ -74,22 +87,33 @@ if (idx == 0) {
   console.log('检查更新');
   checkUpdate = true;
   await update();  // 确保 update() 已定义
-  return;  // 直接退出，不打开文件管理器
+  return;
 }
 
-// 弹出文件夹选择器（仅在 idx 为 1、2、3 时需要）
-if (!folderPath && idx != 0) {
-  folderPath = await DocumentPicker.openFolder();
+// 处理文件选择逻辑
+if (idx == 2) {  // "更新单个模块"
+  filePath = await selectFile();
+  if (!filePath) return;  // 用户未选择文件，退出
+
+  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+} else if (idx == 3) {  // "更新全部模块"
+  folderPath = await selectFolder();  // 选择文件夹
   if (!folderPath) return;  // 用户未选择文件夹，退出
+
+  files = fm.listContents(folderPath).filter(file => /\.(conf|txt|js|list)$/i.test(file));  // 只保留模块文件
 }
 
-if (idx == 1) {  // "从链接创建"
+// 处理从链接创建的情况
+if (idx == 1) {  
   let url, name;
-
+  
+  // 从 URL Scheme 启动
   if (fromUrlScheme) {
     url = args.queryParameters.url;
     name = args.queryParameters.name;
   } else {
+    // 手动输入链接和名称
     let alert = new Alert();
     alert.title = '将自动添加后缀 .sgmodule';
     alert.addTextField('链接(必填)', '');
@@ -117,53 +141,33 @@ if (idx == 1) {  // "从链接创建"
     name = convertToValidFileName(name);  // 确保名称合法
     files = [`${name}.sgmodule`];
     contents = [`#SUBSCRIBED ${url}`];
-
-    // 弹出文件夹选择器
-    folderPath = await DocumentPicker.openFolder();
-    if (!folderPath) return;  // 用户未选择文件夹，退出
-  } else {
-    // 从链接下载文件
-    if (!url) {
-      console.log('URL 未定义，退出操作');
-      return;
-    }
-
-    const req = new Request(url);
-    req.timeoutInterval = 30;
-
-    try {
-      const fileContent = await req.loadString();
-      if (!fileContent) {
-        console.log('下载内容为空，退出操作');
-        return;
-      }
-
-      // 创建文件路径
-      const filePath = `${folderPath}/${name}.sgmodule`;
-      fm.writeString(filePath, fileContent);
-      files = [`${name}.sgmodule`];
-      contents = [fileContent];
-    } catch (err) {
-      console.log(`下载失败: ${err.message}`);
-      return;
-    }
+    
+    filePath = await selectFile();
+    if (!filePath) return;  // 用户未选择文件，退出
   }
 
-} else if (idx == 2) {  // "更新单个模块"
-  const filePath = await DocumentPicker.openFile();  // 先选择文件
-  if (!filePath) return;  // 用户取消选择，退出
-  
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));  // 提取文件夹路径
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];  // 获取文件名
+  // 下载文件逻辑
+  const req = new Request(url);
+  req.timeoutInterval = 30;
 
-} else if (idx == 3) {  // "更新全部模块"
-  folderPath = await DocumentPicker.openFolder();  // 直接选择文件夹
-  if (!folderPath) return;  // 用户取消选择，退出
+  try {
+    const fileContent = await req.loadString();
+    if (!fileContent) {
+      console.log('下载内容为空，退出操作');
+      return;
+    }
 
-  files = fm.listContents(folderPath);  // 列出文件夹中的所有文件
+    const filePath = `${folderPath}/${name}.sgmodule`;
+    fm.writeString(filePath, fileContent);
+    files = [`${name}.sgmodule`];
+    contents = [fileContent];
+  } catch (err) {
+    console.log(`下载失败: ${err.message}`);
+    return;
+  }
 }
 
-// 开始处理文件并进行分类选择
+// 处理文件和更新
 let report = {
   success: 0,
   fail: [],
@@ -174,7 +178,7 @@ let categoryKeepDefaultCount = 0;
 let categoryReplaceFail = 0;
 
 for await (const [index, file] of files.entries()) {
-  if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
+  if (file && /\.(conf|txt|js|list)$/i.test(file)) {
     let originalName, originalDesc, originalCategory, noUrl;
 
     try {
@@ -242,11 +246,11 @@ for await (const [index, file] of files.entries()) {
       // 替换分类字段
       if (category !== originalCategory) {
         if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
-          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
-          categoryReplaceSuccess += 1; // 替换成功计数
+          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}$1`);
+          categoryReplaceSuccess += 1; // 成功替换
         } else {
-          content = addLineAfterLastOccurrence(content, `#!category=${category}\n`);
-          categoryReplaceFail += 1; // 替换失败计数
+          content = addLineAfterLastOccurrence(content, `\n#!category=${category}`);
+          categoryReplaceFail += 1; // 替换失败
         }
       }
 
@@ -301,6 +305,7 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
 
 
 
