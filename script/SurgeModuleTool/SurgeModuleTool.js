@@ -3,41 +3,9 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.3";
+let ToolVersion = "1.4";
 
-async function delay(milliseconds) {
-  var before = Date.now();
-  while (Date.now() < before + milliseconds) {}
-  return true;
-}
-
-function convertToValidFileName(str) {
-  const invalidCharsRegex = /[\/:*?"<>|]/g;
-  const validFileName = str.replace(invalidCharsRegex, '_');
-
-  const multipleDotsRegex = /\.{2,}/g;
-  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
-
-  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
-  const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
-
-  return finalFileName;
-}
-
-function addLineAfterLastOccurrence(text, addition) {
-  const regex = /^#!.+?$/gm;
-  const matchArray = text.match(regex);
-  const lastIndex = matchArray ? matchArray.length - 1 : -1;
-
-  if (lastIndex >= 0) {
-    const lastMatch = matchArray[lastIndex];
-    const insertIndex = text.indexOf(lastMatch) + lastMatch.length;
-    const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex);
-    return newText;
-  }
-
-  return text;
-}
+let cancelled = false; // 标记是否已取消
 
 async function handleCategory(content) {
   const categoryRegex = /^#\!category\s*?=\s*(.*?)\s*(\n|$)/im;
@@ -65,6 +33,8 @@ async function handleCategory(content) {
 
   const idx = await alert.presentAlert();
   
+  if (cancelled) return content; // 如果已取消，直接返回原内容
+
   // 用户选择的分类
   if (idx !== -1) { // 如果用户点击了取消按钮则跳过
     if (idx === 0) {
@@ -81,13 +51,8 @@ async function handleCategory(content) {
   return content;
 }
 
-let idx;
-let fromUrlScheme;
-let checkUpdate;
+// 其他函数保持不变...
 
-if (args.queryParameters.url) {
-  fromUrlScheme = true;
-}
 if (fromUrlScheme) {
   idx = 1;
 } else {
@@ -99,6 +64,8 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块');
   alert.addCancelAction('取消');
   idx = await alert.presentAlert();
+  
+  if (cancelled) return; // 如果已取消，终止操作
 }
 
 let folderPath;
@@ -127,6 +94,9 @@ if (idx == 3) {
     alert.addAction('下载');
     alert.addCancelAction('取消');
     await alert.presentAlert();
+    
+    if (cancelled) return; // 如果已取消，终止操作
+
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
   }
@@ -149,6 +119,8 @@ if (idx == 3) {
   console.log('检查更新');
   checkUpdate = true;
   await update();
+  
+  if (cancelled) return; // 如果已取消，终止操作
 }
 
 let report = {
@@ -225,6 +197,8 @@ for await (const [index, file] of files.entries()) {
       
       // 处理category部分
       content = await handleCategory(content);
+      
+      if (cancelled) return; // 如果已取消，终止操作
 
       if (filePath) {
         fm.writeString(filePath, content);
@@ -262,6 +236,8 @@ for await (const [index, file] of files.entries()) {
         // 弹出对话框，等待用户选择
         idx = await alert.presentAlert();
         
+        if (cancelled) return; // 如果已取消，终止操作
+        
         // 根据用户选择，执行操作
         if (idx == 0) {
           const req = new Request('http://script.hub/reload');
@@ -297,6 +273,8 @@ for await (const [index, file] of files.entries()) {
         alert.message = `${e.message || e}`;
         alert.addCancelAction('关闭');
         await alert.presentAlert();
+        
+        if (cancelled) return; // 如果已取消，终止操作
       }
     }
   }
@@ -322,6 +300,8 @@ if (!checkUpdate && !fromUrlScheme) {
 
   // 等待用户选择操作
   idx = await alert.presentAlert();
+  
+  if (cancelled) return; // 如果已取消，终止操作
 
   // 根据用户选择，执行相应操作
   if (idx == 0) {
@@ -333,6 +313,13 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
+
+// 监听取消按钮
+function handleCancel() {
+  cancelled = true;
+}
+
+document.addEventListener('cancel', handleCancel);
 
 
 
