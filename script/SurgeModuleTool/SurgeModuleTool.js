@@ -2,15 +2,17 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
+
 // prettier-ignore
-let ToolVersion = "1.8";
+let ToolVersion = "1.9";
 
 // 工具函数：延迟函数
 async function delay(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
+  var before = Date.now();
+  while (Date.now() < before + milliseconds) {}
+  return true;
 }
 
-// 工具函数：处理文件名
 function convertToValidFileName(str) {
   const invalidCharsRegex = /[\/:*?"<>|]/g;
   const validFileName = str.replace(invalidCharsRegex, '_');
@@ -24,7 +26,6 @@ function convertToValidFileName(str) {
   return finalFileName;
 }
 
-// 工具函数：在匹配的最后一行后添加内容
 function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm;
   const matchArray = text.match(regex);
@@ -40,7 +41,6 @@ function addLineAfterLastOccurrence(text, addition) {
   return text;
 }
 
-// 工具函数：处理分类选择
 async function handleCategory(content) {
   const categoryRegex = /^#\!category\s*?=\s*(.*?)\s*(\n|$)/im;
   const categoryMatch = content.match(categoryRegex);
@@ -48,11 +48,11 @@ async function handleCategory(content) {
 
   // 如果有category字段，替换为 "📚未分类"
   if (categoryMatch) {
-    content = content.replace(categoryRegex, #!category=${categoryValue}\n);
+    content = content.replace(categoryRegex, `#!category=${categoryValue}\n`);
   } else {
     // 如果没有category字段，添加到第三行
     const lines = content.split("\n");
-    lines.splice(2, 0, #!category=${categoryValue});
+    lines.splice(2, 0, `#!category=${categoryValue}`);
     content = lines.join("\n");
   }
 
@@ -79,12 +79,11 @@ async function handleCategory(content) {
     categoryValue = "📘 面板模块";
   }
   // 如果选择默认分类，不修改categoryValue，保持“📚未分类”或原值
-  content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, #!category=${categoryValue}\n);
+  content = content.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${categoryValue}\n`);
 
   return content;
 }
 
-// 主函数：处理模块逻辑
 async function main() {
   let idx;
   let fromUrlScheme = false;
@@ -154,12 +153,12 @@ async function main() {
           name = fullname.replace(/\.sgmodule$/, '');
         }
         if (!name) {
-          name = untitled-${new Date().toLocaleString()};
+          name = `untitled-${new Date().toLocaleString()}`;
         }
       }
       name = convertToValidFileName(name);
-      files = [${name}.sgmodule];
-      contents = [#SUBSCRIBED ${url}];
+      files = [`${name}.sgmodule`];
+      contents = [`#SUBSCRIBED ${url}`];
     }
   } else if (idx == 0) {
     console.log('检查更新');
@@ -185,7 +184,7 @@ async function main() {
         if (contents.length > 0) {
           content = contents[index];
         } else {
-          filePath = ${folderPath}/${file};
+          filePath = `${folderPath}/${file}`;
           content = fm.readString(filePath);
         }
         const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
@@ -214,7 +213,7 @@ async function main() {
         let res = await req.loadString();
         const statusCode = req.response.statusCode;
         if (statusCode < 200 || statusCode >= 400) {
-          throw new Error(状态码: ${statusCode});
+          throw new Error(`状态码: ${statusCode}`);
         }
         if (!res) {
           throw new Error('未获取到模块内容');
@@ -234,11 +233,11 @@ async function main() {
           desc = descMatched[1];
         }
         if (!desc) {
-          res = #!desc=\n${res};
+          res = `#!desc=\n${res}`;
         }
         res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
-        res = addLineAfterLastOccurrence(res, \n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n);
-        content = res.replace(/^#\!desc\s*?=\s*/im, #!desc=🔗 [${new Date().toLocaleString()}] );
+        res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
+        content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
         
         // 处理category部分
         content = await handleCategory(content);
@@ -248,13 +247,54 @@ async function main() {
 
         if (!noUrl) {
           if (originalName || originalDesc) {
-            content = addLineAfterLastOccurrence(content, \n\n#!name=${originalName}\n#!desc=${originalDesc});
+            content = addLineAfterLastOccurrence(content, `\n\n#📝 原名称: ${originalName || ''}\n#📝 原描述: ${originalDesc || ''}`);
           }
           fm.writeString(filePath, content);
-          report.success++;
-        } else {
-          // 无订阅链接的模块
-          report.noUrl++;
+        }
+
+        let nameInfo = name;
+        let descInfo = desc;
+        
+        // 如果名称或描述有更新，显示变化
+        if (originalName && name !== originalName) {
+          nameInfo = `${originalName} -> ${name}`;
+        }
+        if (originalDesc && desc !== originalDesc) {
+          descInfo = `${originalDesc} -> ${desc}`;
+        }
+
+        // 成功处理后的日志输出
+        console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`);
+        report.success++;
+
+        // 延迟1秒
+        await delay(1 * 1000);
+
+        // 如果从 URL Scheme 启动
+        if (fromUrlScheme) {
+          let alert = new Alert();
+          alert.title = `✅ ${nameInfo}`;
+          alert.message = `${descInfo}\n${file}`;
+          alert.addDestructiveAction('重载 Surge');
+          alert.addAction('打开 Surge');
+          alert.addCancelAction('关闭');
+          
+          // 弹出对话框，等待用户选择
+          idx = await alert.presentAlert();
+          
+          if (idx === -1) {
+            return; // 用户取消操作
+          }
+
+          // 根据用户选择，执行操作
+          if (idx == 0) {
+            const req = new Request('http://script.hub/reload');
+            req.timeoutInterval = 10;
+            req.method = 'GET';
+            await req.loadString();
+          } else if (idx == 1) {
+            Safari.open('surge://');
+          }
         }
       } catch (e) {
         // 如果没有 URL，增加到无链接计数
@@ -262,30 +302,27 @@ async function main() {
           report.noUrl++;
         } else {
           // 记录处理失败的模块
-          report.fail.push(${file} ${e});
+          report.fail.push(`${file} ${e}`);
         }
 
         // 记录具体错误信息
         if (noUrl) {
-          console.log(\n🈚️ ${originalName || ''}\n${file});
+          console.log(`\n🈚️ ${originalName || ''}\n${file}`);
           console.log(e);
         } else {
-          console.log(\n❌ ${originalName || ''}\n${file});
-          console.error(${originalName || file}: ${e});
+          console.log(`\n❌ ${originalName || ''}\n${file}`);
+          console.error(`${originalName || file}: ${e}`);
         }
 
         // 如果从 URL Scheme 启动，弹出错误对话框
         if (fromUrlScheme) {
           let alert = new Alert();
-          alert.title = ❌ ${originalName || ''}\n${file};
-          alert.message = ${e.message || e};
+          alert.title = `❌ ${originalName || ''}\n${file}`;
+          alert.message = `${e.message || e}`;
           alert.addCancelAction('关闭');
           await alert.presentAlert();
         }
       }
-
-      // 延迟1秒
-      await delay(1000);
     }
   }
 
@@ -294,12 +331,14 @@ async function main() {
     let alert = new Alert();
     
     // 根据失败和无链接的情况组织最终报告的内容
-    let upErrk = report.fail.length > 0 ? ❌ 更新失败: ${report.fail.length} : '',
-      noUrlErrk = report.noUrl > 0 ? 🈚️ 无链接: ${report.noUrl} : '';
+    let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
+      noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
 
     // 总的模块处理情况
-    alert.title = 📦 模块总数: ${report.success + report.fail.length + report.noUrl};
-    alert.message = ${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? \n${report.fail.join(', ')} : ''};
+    alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
+    alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
+      report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
+    }`;
 
     alert.addDestructiveAction('重载 Surge');
     alert.addAction('打开 Surge');
@@ -323,7 +362,10 @@ async function main() {
     }
   }
 }
+
+// 执行主函数
 await main();
+
 
 
 // @key Think @wuhu.
