@@ -3,49 +3,49 @@
 // icon-color: green; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.6";
+let ToolVersion = "1.7";
 
 async function delay(milliseconds) {
-  var before = Date.now()
+  var before = Date.now();
   while (Date.now() < before + milliseconds) {}
-  return true
+  return true;
 }
+
 function convertToValidFileName(str) {
   // 替换非法字符为下划线
-  const invalidCharsRegex = /[\/:*?"<>|]/g
-  const validFileName = str.replace(invalidCharsRegex, '_')
+  const invalidCharsRegex = /[\/:*?"<>|]/g;
+  const validFileName = str.replace(invalidCharsRegex, '_');
 
   // 删除多余的点号
-  const multipleDotsRegex = /\.{2,}/g
-  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.')
+  const multipleDotsRegex = /\.{2,}/g;
+  const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.');
 
   // 删除文件名开头和结尾的点号和空格
-  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g
-  const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '')
+  const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g;
+  const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '');
 
-  return finalFileName
+  return finalFileName;
 }
 
 function addLineAfterLastOccurrence(text, addition) {
-  const regex = /^#!.+?$/gm
-  const matchArray = text.match(regex)
-  const lastIndex = matchArray ? matchArray.length - 1 : -1
+  const regex = /^#!.+?$/gm;
+  const matchArray = text.match(regex);
+  const lastIndex = matchArray ? matchArray.length - 1 : -1;
 
   if (lastIndex >= 0) {
-    const lastMatch = matchArray[lastIndex]
-    const insertIndex = text.indexOf(lastMatch) + lastMatch.length
-    const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex)
-    return newText
+    const lastMatch = matchArray[lastIndex];
+    const insertIndex = text.indexOf(lastMatch) + lastMatch.length;
+    const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex);
+    return newText;
   }
 
-  return text
+  return text;
 }
 
 let idx;
 let fromUrlScheme;
 let checkUpdate;
 
-// if (args.queryParameters.url && args.queryParameters.name) {
 if (args.queryParameters.url) {
   fromUrlScheme = true;
 }
@@ -55,7 +55,6 @@ if (fromUrlScheme) {
 } else {
   let alert = new Alert();
   alert.title = 'Surge 模块工具';
-  // alert.addDestructiveAction("更新文件夹内全部文件")
   alert.addDestructiveAction('更新本脚本');
   alert.addAction('从链接创建');
   alert.addAction('更新单个模块');
@@ -64,7 +63,6 @@ if (fromUrlScheme) {
   
   idx = await alert.presentAlert();
 
-  // 如果用户点击了取消，idx 会返回 -1，直接退出流程
   if (idx === -1) return;
 }
 
@@ -97,21 +95,17 @@ if (idx == 3) {
     
     idx = await alert.presentAlert();
 
-    // 如果用户点击了取消，idx 会返回 -1，直接退出流程
     if (idx === -1) return;
 
-    // 获取输入的链接和名称
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
 
-    // 如果链接为空，直接退出流程
     if (!url) {
       console.log('链接为空，退出操作');
       return;
     }
   }
 
-  // 处理文件名
   if (!name) {
     const plainUrl = url.split('?')[0];
     const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
@@ -123,7 +117,6 @@ if (idx == 3) {
     }
   }
 
-  // 转换文件名并保存文件
   name = convertToValidFileName(name);
   files = [`${name}.sgmodule`];
   contents = [`#SUBSCRIBED ${url}`];
@@ -133,21 +126,16 @@ if (idx == 3) {
   await update();
 }
 
-// 初始化结果报告
 let report = {
   success: 0,
   fail: [],
   noUrl: 0,
 };
 
-// 后续的文件处理逻辑...
-
-
-// 添加记录类别字段替换结果的字段
 let categoryReplaceSuccess = 0;
 let categoryReplaceFail = 0;
 
-if (idx == 1) { // 用户点击了"下载"
+if (idx == 1) {
   let url;
   let name;
 
@@ -164,21 +152,17 @@ if (idx == 1) { // 用户点击了"下载"
     
     idx = await alert.presentAlert();
 
-    // 如果用户点击了取消，idx 会返回 -1，直接退出流程
     if (idx === -1) return;
 
-    // 获取输入的链接和名称
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
 
-    // 如果链接为空，直接退出流程
     if (!url) {
       console.log('链接为空，退出操作');
       return;
     }
   }
 
-  // 处理文件名
   if (!name) {
     const plainUrl = url.split('?')[0];
     const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
@@ -190,17 +174,14 @@ if (idx == 1) { // 用户点击了"下载"
     }
   }
 
-  // 转换文件名并保存文件
   name = convertToValidFileName(name);
   files = [`${name}.sgmodule`];
   contents = [`#SUBSCRIBED ${url}`];
 
-  // 开始处理下载后的文件
   for await (const [index, file] of files.entries()) {
-    // 调用你的处理逻辑来处理 `#!category` 和其他相关信息
     if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
       let originalName, originalDesc, originalCategory, noUrl;
-      
+
       try {
         let content, filePath;
         if (contents.length > 0) {
@@ -210,37 +191,31 @@ if (idx == 1) { // 用户点击了"下载"
           content = fm.readString(filePath);
         }
 
-        // 以下是处理 `#!category` 以及其他逻辑的部分
-        // 处理原始名称
-        const originalNameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+        const originalNameMatched = content.match(/^#!name\s*?=\s*(.*?)\s*(\n|$)/im);
         if (originalNameMatched) {
           originalName = originalNameMatched[1];
         }
 
-        // 处理原始描述
-        const originalDescMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+        const originalDescMatched = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
         if (originalDescMatched) {
           originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
         }
 
-        // 处理原始类别
-        const originalCategoryMatched = content.match(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im);
+        const originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
         if (originalCategoryMatched) {
           originalCategory = originalCategoryMatched[1];
         }
 
-        // 如果没有类别字段，将其添加到第三行
         if (!originalCategory) {
           const lines = content.split('\n');
           if (lines.length >= 2) {
-            lines.splice(2, 0, `#!category=📁`);  // 确保单独插入为一行
+            lines.splice(2, 0, '#!category=📁');
             content = lines.join('\n');
           } else {
-            content = `#!category=📁\n${content}`;  // 确保在文件开头插入
+            content = `#!category=📁\n${content}`;
           }
         } else {
-          // 替换已存在的类别字段，确保独立一行
-          content = content.replace(/^#\!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
+          content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${originalCategory}\n`);
         }
 
         const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
@@ -268,8 +243,7 @@ if (idx == 1) { // 用户点击了"下载"
           throw new Error('未获取到模块内容');
         }
 
-        // 获取新的模块名称
-        const nameMatched = res.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+        const nameMatched = res.match(/^#!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
         if (!nameMatched) {
           throw new Error('不是合法的模块内容');
         }
@@ -278,17 +252,14 @@ if (idx == 1) { // 用户点击了"下载"
           throw new Error('模块无名称字段');
         }
 
-        // 获取新的描述
-        const descMatched = res.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+        const descMatched = res.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
         let desc = descMatched ? descMatched[1] : '';
         if (!desc) {
           res = `#!desc=\n${res}`;
         }
 
-        // 处理类别字段
         let category = originalCategory;
         if (originalCategory) {
-          // 如果有原始类别字段，则通过对话框选择新的类别
           const alert = new Alert();
           alert.title = '选择新的分类';
           alert.message = `当前分类: ${originalCategory}`;
@@ -308,26 +279,24 @@ if (idx == 1) { // 用户点击了"下载"
               category = '📗面板';
               break;
             case 3:
-              category = originalCategory; // 默认不变
+              category = originalCategory;
               break;
             default:
               category = '📁';
               break;
           }
           if (category !== originalCategory) {
-            res = res.replace(/^#\!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
+            res = res.replace(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im, `#!category=${category}\n`);
             categoryReplaceSuccess += 1;
           }
         } else {
           categoryReplaceSuccess += 1;
         }
 
-        // 替换链接信息
         res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
         res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
 
-        // 更新描述字段
-        content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
+        content = res.replace(/^#!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
         if (filePath) {
           fm.writeString(filePath, content);
@@ -374,20 +343,21 @@ if (idx == 1) { // 用户点击了"下载"
           report.fail.push(originalName || file);
         }
 
-          if (noUrl) {
-        console.log(`⚠️ ${originalName || ''}\n${file}`);
-        console.log(e);
-      } else {
-        console.log(`❌ ${originalName || ''}\n${file}`);
-        console.error(`${originalName || file}: ${e}`);
-      }
+        if (noUrl) {
+          console.log(`⚠️ ${originalName || ''}\n${file}`);
+          console.log(e);
+        } else {
+          console.log(`❌ ${originalName || ''}\n${file}`);
+          console.error(`${originalName || file}: ${e}`);
+        }
 
-      if (fromUrlScheme) {
-        const alert = new Alert();
-        alert.title = `❌ ${originalName || ''}\n${file}`;
-        alert.message = `${e.message || e}`;
-        alert.addCancelAction('关闭');
-        await alert.presentAlert();
+        if (fromUrlScheme) {
+          const alert = new Alert();
+          alert.title = `❌ ${originalName || ''}\n${file}`;
+          alert.message = e.message || e;
+          alert.addCancelAction('关闭');
+          await alert.presentAlert();
+        }
       }
     }
   }
@@ -413,7 +383,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 
 
