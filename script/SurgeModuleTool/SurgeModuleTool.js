@@ -7,11 +7,10 @@ let ToolVersion = "1.7";
 
 // 工具函数：延迟函数
 async function delay(milliseconds) {
-  var before = Date.now();
-  while (Date.now() < before + milliseconds) {}
-  return true;
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
+// 工具函数：处理文件名
 function convertToValidFileName(str) {
   const invalidCharsRegex = /[\/:*?"<>|]/g;
   const validFileName = str.replace(invalidCharsRegex, '_');
@@ -25,6 +24,7 @@ function convertToValidFileName(str) {
   return finalFileName;
 }
 
+// 工具函数：在匹配的最后一行后添加内容
 function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm;
   const matchArray = text.match(regex);
@@ -40,6 +40,7 @@ function addLineAfterLastOccurrence(text, addition) {
   return text;
 }
 
+// 工具函数：处理分类选择
 async function handleCategory(content) {
   const categoryRegex = /^#\!category\s*?=\s*(.*?)\s*(\n|$)/im;
   const categoryMatch = content.match(categoryRegex);
@@ -83,6 +84,7 @@ async function handleCategory(content) {
   return content;
 }
 
+// 主函数：处理模块逻辑
 async function main() {
   let idx;
   let fromUrlScheme = false;
@@ -246,54 +248,13 @@ async function main() {
 
         if (!noUrl) {
           if (originalName || originalDesc) {
-            content = addLineAfterLastOccurrence(content, \n\n#📝 原名称: ${originalName || ''}\n#📝 原描述: ${originalDesc || ''});
+            content = addLineAfterLastOccurrence(content, \n\n#!name=${originalName}\n#!desc=${originalDesc});
           }
           fm.writeString(filePath, content);
-        }
-
-        let nameInfo = name;
-        let descInfo = desc;
-        
-        // 如果名称或描述有更新，显示变化
-        if (originalName && name !== originalName) {
-          nameInfo = ${originalName} -> ${name};
-        }
-        if (originalDesc && desc !== originalDesc) {
-          descInfo = ${originalDesc} -> ${desc};
-        }
-
-        // 成功处理后的日志输出
-        console.log(\n✅ ${nameInfo}\n${descInfo}\n${file});
-        report.success++;
-
-        // 延迟1秒
-        await delay(1 * 1000);
-
-        // 如果从 URL Scheme 启动
-        if (fromUrlScheme) {
-          let alert = new Alert();
-          alert.title = ✅ ${nameInfo};
-          alert.message = ${descInfo}\n${file};
-          alert.addDestructiveAction('重载 Surge');
-          alert.addAction('打开 Surge');
-          alert.addCancelAction('关闭');
-          
-          // 弹出对话框，等待用户选择
-          idx = await alert.presentAlert();
-          
-          if (idx === -1) {
-            return; // 用户取消操作
-          }
-
-          // 根据用户选择，执行操作
-          if (idx == 0) {
-            const req = new Request('http://script.hub/reload');
-            req.timeoutInterval = 10;
-            req.method = 'GET';
-            await req.loadString();
-          } else if (idx == 1) {
-            Safari.open('surge://');
-          }
+          report.success++;
+        } else {
+          // 无订阅链接的模块
+          report.noUrl++;
         }
       } catch (e) {
         // 如果没有 URL，增加到无链接计数
@@ -322,6 +283,9 @@ async function main() {
           await alert.presentAlert();
         }
       }
+
+      // 延迟1秒
+      await delay(1000);
     }
   }
 
@@ -335,9 +299,7 @@ async function main() {
 
     // 总的模块处理情况
     alert.title = 📦 模块总数: ${report.success + report.fail.length + report.noUrl};
-    alert.message = ${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
-      report.fail.length > 0 ? \n${report.fail.join(', ')} : ''
-    };
+    alert.message = ${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? \n${report.fail.join(', ')} : ''};
 
     alert.addDestructiveAction('重载 Surge');
     alert.addAction('打开 Surge');
@@ -361,8 +323,6 @@ async function main() {
     }
   }
 }
-
-// 执行主函数
 await main();
 
 
