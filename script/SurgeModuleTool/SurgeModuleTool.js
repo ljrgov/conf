@@ -156,8 +156,8 @@ if (idx == 1 || idx == 2 || idx == 3) {
         const originalDescMatched = content.match(/^#!desc\s*?=\s*(.*?)\s*(\n|$)/im);
         if (originalDescMatched) originalDesc = originalDescMatched[1].replace(/^🔗.*?]\s*/i, '');
 
-        const originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
-        if (originalCategoryMatched) originalCategory = originalCategoryMatched[1];
+        let originalCategoryMatched = content.match(/^#!category\s*?=\s*(.*?)\s*(\n|$)/im);
+        let originalCategory = originalCategoryMatched ? originalCategoryMatched[1] : null;
 
         // 如果没有分类，默认添加
         if (!originalCategory) {
@@ -165,31 +165,39 @@ if (idx == 1 || idx == 2 || idx == 3) {
           if (lines.length >= 2) {
             lines.splice(2, 0, '#!category=📚未分类');
             content = lines.join('\n');
+            originalCategory = '📚未分类'; // 设置默认值
           } else {
             content = `#!category=📚未分类\n${content}`;
+            originalCategory = '📚未分类';
           }
-        } else {
-          // 弹出对话框让用户选择新的分类
-          const alert = new Alert();
-          alert.title = '选择新的分类';
-          alert.message = `当前分类: ${originalCategory}`;
-          alert.addAction('📕去广告模块');
-          alert.addAction('📘功能模块');
-          alert.addAction('📗面板模块');
-          alert.addAction('📚默认不变');
-          const categoryIdx = await alert.presentAlert();
-          let category = originalCategory;
-          switch (categoryIdx) {
-            case 0: category = '📕去广告模块'; break;
-            case 1: category = '📘功能模块'; break;
-            case 2: category = '📗面板模块'; break;
-            case 3: category = originalCategory; break;
-            default: category = '📚未分类'; break;
-          }
-          // 替换分类字段
-          if (category !== originalCategory) {
+        } 
+
+        // 弹出对话框让用户选择新的分类
+        const alert = new Alert();
+        alert.title = '选择新的分类';
+        alert.message = `当前分类: ${originalCategory}`;
+        alert.addAction('📕去广告模块');
+        alert.addAction('📘功能模块');
+        alert.addAction('📗面板模块');
+        alert.addAction('📚默认不变');
+        const categoryIdx = await alert.presentAlert();
+
+        let category = originalCategory;
+        switch (categoryIdx) {
+          case 0: category = '📕去广告模块'; break;
+          case 1: category = '📘功能模块'; break;
+          case 2: category = '📗面板模块'; break;
+          case 3: categoryKeepDefaultCount += 1; break; // 保持原始分类
+          default: category = originalCategory; break;
+        }
+
+        // 替换分类字段
+        if (category !== originalCategory && categoryIdx !== 3) {
+          if (content.match(/^#!category\s*?=.*(\n|$)/im)) {
             content = content.replace(/^#!category\s*?=.*(\n|$)/im, `#!category=${category}\n`);
             categoryReplaceSuccess += 1;
+          } else {
+            categoryReplaceFail += 1; // 替换失败
           }
         }
 
@@ -251,19 +259,19 @@ if (idx == 1 || idx == 2 || idx == 3) {
 }
 
 // 输出更新结果
-// 显示最终处理结果
 if (!checkUpdate && !fromUrlScheme) {
   const alert = new Alert();
-  
+
   // 检查报告中的失败和无链接模块
   const upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '';
   const noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   const categoryReplaceInfo = categoryReplaceSuccess > 0 ? `📚 类别替换成功: ${categoryReplaceSuccess}` : '';
   const categoryKeepDefaultInfo = categoryKeepDefaultCount > 0 ? `🗂️ 类别保持默认: ${categoryKeepDefaultCount}` : '';
+  const categoryReplaceFailInfo = categoryReplaceFail > 0 ? `❌ 类别替换失败: ${categoryReplaceFail}` : '';
 
   // 设置弹窗标题和信息
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n失败的模块: ${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}\n${categoryKeepDefaultInfo}`;
+  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${report.fail.length > 0 ? `\n失败的模块: ${report.fail.join(', ')}` : ''}\n${categoryReplaceInfo}\n${categoryKeepDefaultInfo}\n${categoryReplaceFailInfo}`;
   
   // 添加按钮操作
   alert.addDestructiveAction('重载 Surge');
@@ -282,7 +290,6 @@ if (!checkUpdate && !fromUrlScheme) {
     Safari.open('surge://');
   }
 }
-
 
 // @key Think @wuhu.
 async function update() {
