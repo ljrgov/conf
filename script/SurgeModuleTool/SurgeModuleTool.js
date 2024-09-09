@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.7";
+let ToolVersion = "1.8";
 
 // 工具函数：延迟函数
 async function delay(milliseconds) {
