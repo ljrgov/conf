@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.2";
+let ToolVersion = "1.3";
 
 async function delay(milliseconds) {
   var before = Date.now()
