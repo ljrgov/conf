@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.1";
+let ToolVersion = "1.2";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -49,18 +49,18 @@ function processModuleContent(content) {
 async function showCategoryDialog(moduleName, currentCategory) {
   let alert = new Alert();
   alert.title = "选择分类";
-  alert.message = `当前模块：${moduleName}\n当前分类：${currentCategory}`;
-  alert.addAction("📙广告屏蔽");
-  alert.addAction("📗面板展示");
-  alert.addAction("📘功能集成");
+  alert.message = `模块：${moduleName}\n当前分类：${currentCategory}`;
+  alert.addAction("广告屏蔽");
+  alert.addAction("面板展示");
+  alert.addAction("功能集成");
   alert.addCancelAction("保持当前分类");
   
   let choice = await alert.presentAlert();
   
   switch(choice) {
-    case 0: return "📙广告屏蔽";
-    case 1: return "📗面板展示";
-    case 2: return "📘功能集成";
+    case 0: return "广告屏蔽";
+    case 1: return "面板展示";
+    case 2: return "功能集成";
     default: return null;
   }
 }
@@ -172,11 +172,11 @@ async function main() {
   } else {
     let alert = new Alert()
     alert.title = 'Surge 模块工具'
-    alert.addDestructiveAction('更新本脚本')
     alert.addAction('从链接创建')
     alert.addAction('更新单个模块')
     alert.addAction('更新全部模块')
     alert.addAction('生成分类列表')
+    alert.addDestructiveAction('更新本脚本')
     alert.addCancelAction('取消')
     idx = await alert.presentAlert()
   }
