@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.2";
+let ToolVersion = "1.3";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -121,6 +121,10 @@ if (idx == 3) {  // 更新全部模块
     name = convertToValidFileName(name)
     files = [`${name}.sgmodule`]
     contents = [`#SUBSCRIBED ${url}`]
+    folderPath = await DocumentPicker.openFolder()
+    if (!folderPath) {
+      isCancelled = true;
+    }
   }
 } else if (idx == 0) {
   console.log('检查更新')
@@ -140,250 +144,203 @@ let report = {
   noUrl: 0,
 }
 
-// 全局变量来存储最后处理的模块信息和类别选择结果
-let lastProcessedModuleName = "";
-let lastProcessedModuleCategory = "";
-let categoryUpdateResult = "";
-
 // 主要的模块处理函数
 async function processModule(folderPath, file) {
-  if (isCancelled) return;  // 检查是否取消
+  if (isCancelled) return null;
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    let originalName
-    let originalDesc
-    let noUrl
+    let currentName, currentDesc, currentCategory, noUrl;
     try {
-      let content
-      let filePath
+      let content;
+      let filePath = `${folderPath}/${file}`;
       if (contents.length > 0) {
-        content = contents[files.indexOf(file)]
+        content = contents[files.indexOf(file)];
       } else {
-        filePath = `${folderPath}/${file}`
-        content = fm.readString(filePath)
-      }
-      const originalNameMatched = `${content}`.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im)
-      if (originalNameMatched) {
-        originalName = originalNameMatched[1]
-      }
-      const originalDescMatched = `${content}`.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im)
-      if (originalDescMatched) {
-        originalDesc = originalDescMatched[1]
-        if (originalDesc) {
-          originalDesc = originalDesc.replace(/^🔗.*?]\s*/i, '')
-        }
-      }
-      const matched = `${content}`.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im)
-      if (!matched) {
-        noUrl = true
-        throw new Error('无订阅链接')
-      }
-      const subscribed = matched[0]
-      const url = matched[1]
-      if (!url) {
-        noUrl = true
-        throw new Error('无订阅链接')
+        content = fm.readString(filePath);
       }
 
-      const req = new Request(url)
-      req.timeoutInterval = 10
-      req.method = 'GET'
-      let res = await req.loadString()
-      const statusCode = req.response.statusCode
+      const nameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (nameMatched) {
+        currentName = nameMatched[1];
+      }
+
+      const descMatched = content.match(/^#\!desc\s*?=\s*(.*?)\s*(\n|$)/im);
+      if (descMatched) {
+        currentDesc = descMatched[1];
+        if (currentDesc) {
+          currentDesc = currentDesc.replace(/^🔗.*?]\s*/i, '');
+        }
+      }
+
+      const categoryRegex = /^#!category\s*?=\s*(.*?)\s*$/im;
+      const categoryMatch = content.match(categoryRegex);
+      if (categoryMatch) {
+        currentCategory = categoryMatch[1];
+      }
+
+      const matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+      if (!matched) {
+        noUrl = true;
+        throw new Error('无订阅链接');
+      }
+      const subscribed = matched[0];
+      const url = matched[1];
+      if (!url) {
+        noUrl = true;
+        throw new Error('无订阅链接');
+      }
+
+      const req = new Request(url);
+      req.timeoutInterval = 10;
+      req.method = 'GET';
+      let res = await req.loadString();
+      const statusCode = req.response.statusCode;
       if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`)
+        throw new Error(`statusCode: ${statusCode}`);
       }
       if (!res) {
-        throw new Error(`未获取到模块内容`)
+        throw new Error(`未获取到模块内容`);
       }
 
-      const nameMatched = `${res}`.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
-      if (!nameMatched) {
-        throw new Error(`不是合法的模块内容`)
+      const newNameMatched = res.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      if (!newNameMatched) {
+        throw new Error(`不是合法的模块内容`);
       }
-      const name = nameMatched[1]
-      if (!name) {
-        throw new Error('模块无名称字段')
-      }
-
-      // 处理 category
-      let category = "📚未分类";
-      const categoryRegex = /^#!category\s*?=\s*(.*?)\s*$/im;
-      const categoryMatch = res.match(categoryRegex);
-      if (categoryMatch) {
-        category = categoryMatch[1];
+      const newName = newNameMatched[1];
+      if (!newName) {
+        throw new Error('模块无名称字段');
       }
 
-      // 更新最后处理的模块信息
-      lastProcessedModuleName = name;
-      lastProcessedModuleCategory = category;
+      const newDescMatched = res.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
+      let newDesc = newDescMatched ? newDescMatched[1] : '';
 
-      if (!categoryRegex.test(res)) {
-        // 如果不存在 category，在 name 之后添加新的 category 行
-        res = res.replace(/^(#!name.*?)$/im, `$1\n#!category=${category}`)
+      if (!newDescMatched) {
+        res = `#!desc=\n${res}`;
       }
+      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '');
+      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
+      content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
-      const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
-      let desc
-      if (descMatched) {
-        desc = descMatched[1]
-      }
-      if (!desc) {
-        res = `#!desc=\n${res}`
-      }
-      res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
-      res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
-      content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
-      if (filePath) {
-        fm.writeString(filePath, content)
-      } else {
-        contents[files.indexOf(file)] = content
-      }
-
-      let nameInfo = `${name}`
-      let descInfo = `${desc}`
-      if (originalName && name !== originalName) {
-        nameInfo = `${originalName} -> ${name}`
-      }
-      if (originalDesc && desc !== originalDesc) {
-        descInfo = `${originalDesc} -> ${desc}`
-      }
-      console.log(`\n✅ ${nameInfo}\n${descInfo}\n${file}`)
-      report.success += 1
-      await delay(1 * 1000)
-      if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `✅ ${nameInfo}`
-        alert.message = `${descInfo}\n${file}`
-        alert.addDestructiveAction('重载 Surge')
-        alert.addAction('打开 Surge')
-        alert.addCancelAction('关闭')
-        idx = await alert.presentAlert()
-        if (idx == 0) {
-          const req = new Request('http://script.hub/reload')
-          req.timeoutInterval = 10
-          req.method = 'GET'
-          let res = await req.loadString()
-        } else if (idx == 1) {
-          Safari.open('surge://')
-        }
-      }
+      return {
+        content,
+        name: newName,
+        desc: newDesc,
+        category: currentCategory || "📚未分类",
+        filePath
+      };
     } catch (e) {
       if (noUrl) {
-        report.noUrl += 1
+        report.noUrl += 1;
       } else {
-        report.fail.push(originalName || file)
+        report.fail.push(currentName || file);
       }
 
       if (noUrl) {
-        console.log(`\n🈚️ ${originalName || ''}\n${file}`)
-        console.log(e)
+        console.log(`\n🈚️ ${currentName || ''}\n${file}`);
+        console.log(e);
       } else {
-        console.log(`\n❌ ${originalName || ''}\n${file}`)
-        console.error(`${originalName || file}: ${e}`)
+        console.log(`\n❌ ${currentName || ''}\n${file}`);
+        console.error(`${currentName || file}: ${e}`);
       }
       if (fromUrlScheme) {
-        alert = new Alert()
-        alert.title = `❌ ${originalName || ''}\n${file}`
-        alert.message = `${e.message || e}`
-        alert.addCancelAction('关闭')
-        await alert.presentAlert()
+        alert = new Alert();
+        alert.title = `❌ ${currentName || ''}\n${file}`;
+        alert.message = `${e.message || e}`;
+        alert.addCancelAction('关闭');
+        await alert.presentAlert();
       }
     }
   }
+  return null;
 }
 
 // 更新 category 的函数
-async function updateCategory(folderPath, file, newCategory) {
-  if (isCancelled) return;  // 检查是否取消
-  let content;
-  if (contents.length > 0) {
-    content = contents[files.indexOf(file)];
+function updateCategory(content, newCategory) {
+  const categoryRegex = /^#!category\s*?=.*?$/im;
+  if (categoryRegex.test(content)) {
+    return content.replace(categoryRegex, `#!category=${newCategory}`);
   } else {
-    const filePath = `${folderPath}/${file}`;
-    content = fm.readString(filePath);
-  }
-  
-  if (content) {
-    const categoryRegex = /^#!category\s*?=.*?$/im;
-    if (categoryRegex.test(content)) {
-      content = content.replace(categoryRegex, `#!category=${newCategory}`);
-    } else {
-      content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
-    }
-    
-    if (contents.length > 0) {
-      contents[files.indexOf(file)] = content;
-    } else {
-      fm.writeString(`${folderPath}/${file}`, content);
-    }
+    return content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
   }
 }
 
 // 简化的主处理逻辑
 async function processFiles() {
+  let processedModules = [];
   for (const file of files) {
     if (isCancelled) break;  // 检查是否取消
-    await processModule(folderPath, file);
+    const result = await processModule(folderPath, file);
+    if (result) {
+      processedModules.push(result);
+    }
   }
+  return processedModules;
 }
 
 // 执行主处理逻辑
 if (idx >= 1 && idx <= 3 && !isCancelled) {
-  await processFiles();
+  let processedModules = await processFiles();
 
-  if (!isCancelled && lastProcessedModuleName) {
-    // 添加类别选择对话框
-    let categoryAlert = new Alert()
-    categoryAlert.title = "选择模块类别"
-    categoryAlert.message = `当前模块：${lastProcessedModuleName}\n当前类别：${lastProcessedModuleCategory}`
-    categoryAlert.addAction("📙广告模块")
-    categoryAlert.addAction("📗功能模块")
-    categoryAlert.addAction("📘面板模块")
-    categoryAlert.addAction("📚默认不变")
-    categoryAlert.addCancelAction("取消")
-    let categoryChoice = await categoryAlert.presentAlert()
+  if (!isCancelled && processedModules.length > 0) {
+    // 直接写入处理后的内容到文件
+    for (const module of processedModules) {
+      fm.writeString(module.filePath, module.content)
+    }
+    console.log(`已更新 ${processedModules.length} 个文件`)
+    report.success = processedModules.length;
+
+    // 处理类别（Category）
+    let currentCategory = processedModules[0].category;
+    let currentName = processedModules[0].name;
+
+    let categoryAlert = new Alert();
+    categoryAlert.title = "选择模块类别";
+    categoryAlert.message = `处理的模块数：${processedModules.length}\n当前名称：${currentName}\n当前类别：${currentCategory}`;
+    categoryAlert.addAction("📙广告模块");
+    categoryAlert.addAction("📗功能模块");
+    categoryAlert.addAction("📘面板模块");
+    categoryAlert.addAction("📚默认不变");
+    categoryAlert.addCancelAction("取消");
+    let categoryChoice = await categoryAlert.presentAlert();
     
-    if (categoryChoice === -1) {  // 用户点击了取消
+    if (categoryChoice === -1) {
       isCancelled = true;
-    } else if (categoryChoice !== 3) { // 如果不是"默认不变"
+    } else if (categoryChoice !== 3) {
       let newCategory;
       switch(categoryChoice) {
-case 0:
-          newCategory = "📙广告模块"
-          break
-        case 1:
-          newCategory = "📗功能模块"
-          break
-        case 2:
-          newCategory = "📘面板模块"
-          break
+        case 0: newCategory = "📙广告模块"; break;
+        case 1: newCategory = "📗功能模块"; break;
+        case 2: newCategory = "📘面板模块"; break;
       }
-      for (const file of files) {
-        if (isCancelled) break;  // 检查是否取消
-        await updateCategory(folderPath, file, newCategory)
+      for (let module of processedModules) {
+        module.content = updateCategory(module.content, newCategory);
+        module.category = newCategory;
       }
-      categoryUpdateResult = `Category 更新成功：${newCategory}`
+      // 再次写入文件以更新类别
+      for (const module of processedModules) {
+        fm.writeString(module.filePath, module.content)
+      }
+      categoryUpdateResult = `Category 更新成功：${newCategory}`;
     } else {
-      categoryUpdateResult = `Category 保持不变：${lastProcessedModuleCategory}`
+      categoryUpdateResult = `Category 保持不变：${currentCategory}`;
     }
   } else {
-    categoryUpdateResult = "无法更新 Category：未处理任何模块"
+    categoryUpdateResult = "无法更新：未处理任何模块";
   }
 }
 
 // 结果报告逻辑
 if (!checkUpdate && !fromUrlScheme && !isCancelled) {
-  let alert = new Alert()
+  let alert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
-  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
+    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+  alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }\n\n${categoryUpdateResult}`  // 添加 category 更新结果
-  alert.addDestructiveAction('重载 Surge')
-  alert.addAction('打开 Surge')
-  alert.addCancelAction('关闭')
-  idx = await alert.presentAlert()
+  }\n\n${categoryUpdateResult}`;
+  alert.addDestructiveAction('重载 Surge');
+  alert.addAction('打开 Surge');
+  alert.addCancelAction('关闭');
+  idx = await alert.presentAlert();
   if (idx == 0) {
     const req = new Request('http://script.hub/reload')
     req.timeoutInterval = 10
@@ -405,7 +362,6 @@ if (isCancelled) {
 
 // 错误处理和日志记录
 try {
-  // 这里可以添加一些最终的清理工作或日志记录
   console.log("脚本执行完成");
 } catch (error) {
   console.error("脚本执行过程中发生错误:", error);
@@ -471,4 +427,6 @@ async function update() {
   }
 }
 
+// 确保脚本正确结束
+Script.complete();
 
