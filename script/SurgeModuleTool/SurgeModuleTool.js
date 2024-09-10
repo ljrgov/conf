@@ -49,18 +49,18 @@ function processModuleContent(content) {
 async function showCategoryDialog(moduleName, currentCategory) {
   let alert = new Alert();
   alert.title = "选择分类";
-  alert.message = `模块：${moduleName}\n当前分类：${currentCategory}`;
-  alert.addAction("广告屏蔽");
-  alert.addAction("面板展示");
-  alert.addAction("功能集成");
+  alert.message = `当前模块：${moduleName}\n当前分类：${currentCategory}`;
+  alert.addAction("📙广告屏蔽");
+  alert.addAction("📗面板展示");
+  alert.addAction("📘功能集成");
   alert.addCancelAction("保持当前分类");
   
   let choice = await alert.presentAlert();
   
   switch(choice) {
-    case 0: return "广告屏蔽";
-    case 1: return "面板展示";
-    case 2: return "功能集成";
+    case 0: return "📙广告屏蔽";
+    case 1: return "📗面板展示";
+    case 2: return "📘功能集成";
     default: return null;
   }
 }
