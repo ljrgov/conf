@@ -3,10 +3,20 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.6";
+let ToolVersion = "1.7";  // 版本号更新为 1.7
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
+
+// 统一的错误处理函数
+function handleError(error, context) {
+  console.error(`Error in ${context}: ${error.message}`);
+  let alert = new Alert();
+  alert.title = "错误";
+  alert.message = `${context}中发生错误：${error.message}`;
+  alert.addAction("确定");
+  alert.present();
+}
 
 // 优化的delay函数
 async function delay(milliseconds) {
@@ -36,6 +46,15 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+// 进度显示函数
+async function showProgress(total, current, message) {
+  let progress = current / total;
+  let width = 20;
+  let filledWidth = Math.round(width * progress);
+  let bar = '█'.repeat(filledWidth) + '░'.repeat(width - filledWidth);
+  console.log(`${bar} ${(progress * 100).toFixed(1)}% | ${message}`);
+}
+
 async function update() {
   const fm = FileManager.iCloud()
   const dict = fm.documentsDirectory()
@@ -55,7 +74,8 @@ async function update() {
     const match = resp.match(regex)
     version = match ? match[1] : ''
   } catch (e) {
-    console.error(e)
+    handleError(e, "检查更新");
+    return;
   }
   if (!version) {
     let alert = new Alert()
@@ -304,11 +324,7 @@ async function processModule(folderPath, file) {
         console.error(`${currentName || file}: ${e}`);
       }
       if (fromUrlScheme) {
-        alert = new Alert();
-        alert.title = `❌ ${currentName || ''}\n${file}`;
-        alert.message = `${e.message || e}`;
-        alert.addCancelAction('关闭');
-        await alert.presentAlert();
+        handleError(e, `处理模块 ${currentName || file}`);
       }
     }
   }
@@ -325,15 +341,16 @@ function updateCategory(content, newCategory) {
   }
 }
 
-// 简化的主处理逻辑
+// 优化的主处理逻辑
 async function processFiles() {
   let processedModules = [];
-  for (const file of files) {
+  for (let i = 0; i < files.length; i++) {
     if (isCancelled) break;  // 检查是否取消
-    const result = await processModule(folderPath, file);
+    const result = await processModule(folderPath, files[i]);
     if (result) {
       processedModules.push(result);
     }
+    await showProgress(files.length, i + 1, `处理模块 ${i + 1}/${files.length}`);
   }
   return processedModules;
 }
@@ -435,7 +452,7 @@ if (!checkUpdate && !fromUrlScheme && !isCancelled) {
       let res = await req.loadString()
       console.log("Surge 重载成功")
     } catch (error) {
-      console.error("Surge 重载失败:", error)
+      handleError(error, "重载 Surge");
     }
   } else if (idx == 1) {
     Safari.open('surge://')
@@ -450,7 +467,7 @@ if (isCancelled) {
 try {
   console.log("脚本执行完成");
 } catch (error) {
-  console.error("脚本执行过程中发生错误:", error);
+  handleError(error, "脚本执行");
 }
 
 // 确保脚本正确结束
