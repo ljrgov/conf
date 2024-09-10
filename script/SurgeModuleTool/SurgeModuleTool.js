@@ -1,9 +1,10 @@
 // prettier-ignore
-let ToolVersion = "202";
+let ToolVersion = "204";
 
 // 全局变量
 let isCancelled = false;
 let fromUrlScheme = false;
+let checkUpdate = false;
 let folderPath;
 let files = [];
 let contents = [];
@@ -363,6 +364,7 @@ async function showMainMenu() {
   alert.addAction('更新单个模块');
   alert.addAction('更新全部模块');
   alert.addAction('设置');
+  alert.addDestructiveAction('更新本脚本');
   alert.addCancelAction('取消');
   
   let idx = await alert.presentAlert();
@@ -379,6 +381,10 @@ async function showMainMenu() {
       break;
     case 3:
       await showSettingsMenu();
+      break;
+    case 4:
+      checkUpdate = true;
+      await update();
       break;
     default:
       isCancelled = true;
@@ -509,8 +515,10 @@ async function handleProcessedModules(processedModules) {
         module.category = newCategory;
         fm.writeString(module.filePath, module.content);
       }
+      categoryUpdateResult = `✅分类更新成功：${newCategory}`;
       log(`分类更新成功：${newCategory}`, 'info');
     } else {
+      categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
       log(`分类未更新：${currentCategory}`, 'info');
     }
   } else {
@@ -520,40 +528,50 @@ async function handleProcessedModules(processedModules) {
 }
 
 async function showReport() {
-  let alert = new Alert();
-  let totalModules = report.success + report.fail.length + report.noUrl;
-  
-  alert.title = `📦 模块总数: ${totalModules}`;
-  
-  let messageComponents = [''];
-  
-  if (report.success > 0) {
-    messageComponents.push(`✅ 模块更新成功: ${report.success}`, '');
-  }
-  
-  if (report.fail.length > 0) {
-    messageComponents.push(`❌ 模块更新失败: ${report.fail.length}`, '');
-  }
-  
-  if (report.noUrl > 0) {
-    messageComponents.push(`⚠️ 无链接: ${report.noUrl}`, '');
-  }
-  
-  if (messageComponents[messageComponents.length - 1] === '') {
-    messageComponents.pop();
-  }
+  if (!checkUpdate && !fromUrlScheme && !isCancelled) {
+    let alert = new Alert();
+    let totalModules = report.success + report.fail.length + report.noUrl;
+    
+    alert.title = `📦 模块总数: ${totalModules}`;
+    
+    let messageComponents = [''];  // 在开头添加一个空行
+    
+    if (report.success > 0) {
+      messageComponents.push(`✅ 模块更新成功: ${report.success}`, '');
+      if (categoryUpdateResult) {
+        messageComponents.push(categoryUpdateResult, '');
+      }
+    }
+    
+    if (report.fail.length > 0) {
+      messageComponents.push(`❌ 模块更新失败: ${report.fail.length}`, '');
+    }
+    
+    if (report.noUrl > 0) {
+      messageComponents.push(`⚠️ 无链接: ${report.noUrl}`, '');
+    }
+    
+    if (report.fail.length > 0) {
+      messageComponents.push(`⚠️ 无效链接:`, report.fail.join('\n'), '');
+    }
+    
+    // 移除最后一个空字符串，避免在消息末尾出现多余的空行
+    if (messageComponents[messageComponents.length - 1] === '') {
+      messageComponents.pop();
+    }
 
-  alert.message = messageComponents.join('\n');
+    alert.message = messageComponents.join('\n');
 
-  alert.addDestructiveAction('重载 Surge');
-  alert.addAction('打开 Surge');
-  alert.addCancelAction('关闭');
+    alert.addDestructiveAction('重载 Surge');
+    alert.addAction('打开 Surge');
+    alert.addCancelAction('关闭');
 
-  let idx = await alert.presentAlert();
-  if (idx == 0) {
-    await reloadSurge();
-  } else if (idx == 1) {
-    Safari.open('surge://');
+    let idx = await alert.presentAlert();
+    if (idx == 0) {
+      await reloadSurge();
+    } else if (idx == 1) {
+      Safari.open('surge://');
+    }
   }
 }
 
@@ -585,9 +603,7 @@ async function main() {
     return;
   }
 
-  if (!fromUrlScheme) {
-    await showReport();
-  }
+  await showReport();
 
   saveLogs();
   cleanupOldLogs();
@@ -599,8 +615,19 @@ let report = {
   noUrl: 0,
 };
 
+let categoryUpdateResult = '';
+
 // 运行主程序
-await main();
+try {
+  await main();
+  log("脚本执行完成", 'info');
+} catch (error) {
+  log("脚本执行过程中发生错误: " + error, 'error');
+}
+
+if (isCancelled) {
+  log("操作已取消", 'info');
+}
 
 // 确保脚本正确结束
 Script.complete();
