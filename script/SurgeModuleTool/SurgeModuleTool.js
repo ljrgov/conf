@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.4";
+let ToolVersion = "1.5";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -242,7 +242,7 @@ async function processModule(folderPath, file) {
       }
 
       if (noUrl) {
-        console.log(`\n🈚️ ${currentName || ''}\n${file}`);
+        console.log(`\n⚠️ ${currentName || ''}\n${file}`);
         console.log(e);
       } else {
         console.log(`\n❌ ${currentName || ''}\n${file}`);
@@ -345,9 +345,9 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
         for (const module of processedModules) {
           fm.writeString(module.filePath, module.content)
         }
-        categoryUpdateResult = `Category 更新成功：${newCategory}`;
+        categoryUpdateResult = `🔄️ 分类更新成功：${newCategory}`;
       } else {
-        categoryUpdateResult = `Category 保持不变：${currentCategory}`;
+        categoryUpdateResult = `↩️ 分类初始值：${currentCategory}`;
       }
     } else {
       console.log("用户取消了替换操作")
@@ -362,7 +362,7 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
 if (!checkUpdate && !fromUrlScheme && !isCancelled) {
   let alert = new Alert();
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
-    noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : '';
+    noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
