@@ -36,11 +36,11 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
-// 新增：生成唯一文件名的函数
+// 改进的生成唯一文件名的函数
 function generateUniqueFileName(folderPath, baseName, extension) {
-  let counter = 1;
   let fileName = `${baseName}.${extension}`;
   let filePath = `${folderPath}/${fileName}`;
+  let counter = 1;
   
   while (fm.fileExists(filePath)) {
     fileName = `${baseName}_${counter}.${extension}`;
@@ -360,35 +360,55 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
   let processedModules = await processFiles();
 
   if (!isCancelled && processedModules.length > 0) {
-    // 只有在从链接创建时才显示替换确认对话框
-    if (idx == 1) {
-      for (let module of processedModules) {
-        if (fm.fileExists(module.filePath)) {
-          const existingContent = fm.readString(module.filePath);
-          const existingNameMatch = existingContent.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
-          const existingUrlMatch = existingContent.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
-          
-          const existingName = existingNameMatch ? existingNameMatch[1] : '';
-          const existingUrl = existingUrlMatch ? existingUrlMatch[1] : '';
+    // 处理文件命名和替换确认
+    for (let module of processedModules) {
+      let baseName;
+      if (idx == 1 && name) {  // 从链接创建，且用户输入了名称
+        baseName = name;
+      } else {  // 使用模块内的名称
+        baseName = module.name.replace(/\.sgmodule$/, '');
+      }
+      
+      let originalFilePath = module.filePath;
+      let newFileName = generateUniqueFileName(folderPath, baseName, 'sgmodule');
+      let newFilePath = `${folderPath}/${newFileName}`;
+      
+      if (idx == 1 && fm.fileExists(originalFilePath)) {  // 只在从链接创建时检查替换
+        const existingContent = fm.readString(originalFilePath);
+        const existingNameMatch = existingContent.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+        const existingUrlMatch = existingContent.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+        const existingName = existingNameMatch ? existingNameMatch[1] : '';
+        const existingUrl = existingUrlMatch ? existingUrlMatch[1] : '';
 
-          if (existingName === module.currentName || existingUrl === module.currentUrl) {
-            let confirmAlert = new Alert()
-            confirmAlert.title = "确认替换"
-            confirmAlert.message = `文件 "${module.name}" 已存在，且模块名称或订阅链接匹配。是否替换？`
-            confirmAlert.addAction("替换")
-            confirmAlert.addCancelAction("取消")
-            let confirmResult = await confirmAlert.presentAlert()
+        const nameMatches = existingName === module.currentName;
+        const urlMatches = existingUrl === module.currentUrl;
 
-            if (confirmResult === -1) {  // 用户选择取消
-              // 使用新的文件命名逻辑
-              let baseName = module.name.replace(/\.sgmodule$/, '');
-              let newFileName = generateUniqueFileName(folderPath, baseName, 'sgmodule');
-              let newFilePath = `${folderPath}/${newFileName}`;
-              module.filePath = newFilePath;
-              console.log(`文件重命名为: ${newFileName}`);
-            }
+        if (nameMatches && urlMatches) {
+          let confirmAlert = new Alert()
+          confirmAlert.title = "确认替换"
+          confirmAlert.message = `文件 "${module.name}" 已存在，且模块名称和订阅链接都匹配。是否替换？`
+          confirmAlert.addAction("替换")
+          confirmAlert.addCancelAction("取消")
+          let confirmResult = await confirmAlert.presentAlert()
+
+          if (confirmResult === -1) {  // 用户选择取消
+            module.filePath = newFilePath;
+            console.log(`文件重命名为: ${newFileName}`);
+          } else {
+            // 用户选择替换，保持原文件路径
+            module.filePath = originalFilePath;
           }
+        } else {
+          // 如果名称或链接不匹配，自动使用新文件名
+          module.filePath = newFilePath;
+          console.log(`文件重命名为: ${newFileName}`);
         }
+      } else if (fm.fileExists(originalFilePath)) {
+        // 对于更新单个模块或更新全部模块，如果文件存在，直接覆盖
+        module.filePath = originalFilePath;
+      } else {
+        // 如果文件不存在，使用新文件名
+        module.filePath = newFilePath;
       }
     }
 
