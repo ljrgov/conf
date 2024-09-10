@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.1";
+let ToolVersion = "1.2";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -236,7 +236,7 @@ async function processModule(folderPath, file) {
       if (filePath) {
         fm.writeString(filePath, content)
       } else {
-        await DocumentPicker.exportString(content, file)
+        contents[files.indexOf(file)] = content
       }
 
       let nameInfo = `${name}`
@@ -295,15 +295,28 @@ async function processModule(folderPath, file) {
 // 更新 category 的函数
 async function updateCategory(folderPath, file, newCategory) {
   if (isCancelled) return;  // 检查是否取消
-  const filePath = `${folderPath}/${file}`
-  let content = fm.readString(filePath)
-  const categoryRegex = /^#!category\s*?=.*?$/im
-  if (categoryRegex.test(content)) {
-    content = content.replace(categoryRegex, `#!category=${newCategory}`)
+  let content;
+  if (contents.length > 0) {
+    content = contents[files.indexOf(file)];
   } else {
-    content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`)
+    const filePath = `${folderPath}/${file}`;
+    content = fm.readString(filePath);
   }
-  fm.writeString(filePath, content)
+  
+  if (content) {
+    const categoryRegex = /^#!category\s*?=.*?$/im;
+    if (categoryRegex.test(content)) {
+      content = content.replace(categoryRegex, `#!category=${newCategory}`);
+    } else {
+      content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
+    }
+    
+    if (contents.length > 0) {
+      contents[files.indexOf(file)] = content;
+    } else {
+      fm.writeString(`${folderPath}/${file}`, content);
+    }
+  }
 }
 
 // 简化的主处理逻辑
@@ -318,7 +331,7 @@ async function processFiles() {
 if (idx >= 1 && idx <= 3 && !isCancelled) {
   await processFiles();
 
-  if (!isCancelled) {
+  if (!isCancelled && lastProcessedModuleName) {
     // 添加类别选择对话框
     let categoryAlert = new Alert()
     categoryAlert.title = "选择模块类别"
@@ -333,9 +346,9 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
     if (categoryChoice === -1) {  // 用户点击了取消
       isCancelled = true;
     } else if (categoryChoice !== 3) { // 如果不是"默认不变"
-      let newCategory
+      let newCategory;
       switch(categoryChoice) {
-        case 0:
+case 0:
           newCategory = "📙广告模块"
           break
         case 1:
@@ -353,12 +366,12 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
     } else {
       categoryUpdateResult = `Category 保持不变：${lastProcessedModuleCategory}`
     }
+  } else {
+    categoryUpdateResult = "无法更新 Category：未处理任何模块"
   }
 }
 
-// ... (前面的代码保持不变)
-
-// 结果报告逻辑 (继续)
+// 结果报告逻辑
 if (!checkUpdate && !fromUrlScheme && !isCancelled) {
   let alert = new Alert()
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
