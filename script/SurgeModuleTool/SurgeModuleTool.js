@@ -1,10 +1,9 @@
 // prettier-ignore
-let ToolVersion = "204";
+let ToolVersion = "205";
 
 // 全局变量
 let isCancelled = false;
 let fromUrlScheme = false;
-let checkUpdate = false;
 let folderPath;
 let files = [];
 let contents = [];
@@ -170,13 +169,6 @@ async function update() {
   if (needUpdate) {
     fm.writeString(`${dict}/${scriptName}.js`, resp);
     log('更新成功: ' + version, 'info');
-    let notification = new Notification();
-    notification.title = 'Surge 模块工具 更新成功: ' + version;
-    notification.subtitle = '点击通知跳转';
-    notification.sound = 'default';
-    notification.openURL = `scriptable:///open/${scriptName}`;
-    notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
-    await notification.schedule();
     return version;
   }
   
@@ -329,13 +321,15 @@ async function showSettingsMenu() {
   switch(idx) {
     case 0:
       await showLogs();
-      break;
+      return;
     case 1:
       await clearLogs();
-      break;
+      return;
     case 2:
       await updateScript();
-      break;
+      return;
+    default:
+      return;
   }
 }
 
@@ -347,7 +341,11 @@ async function updateScript() {
     alert.title = '更新成功';
     alert.message = `脚本已更新到版本: ${updateResult}`;
     alert.addAction('确定');
-    await alert.presentAlert();
+    alert.addAction('打开脚本');
+    let choice = await alert.presentAlert();
+    if (choice === 1) {
+      Safari.open(`scriptable:///open/${Script.name()}`);
+    }
   } else {
     let alert = new Alert();
     alert.title = '更新失败';
@@ -364,7 +362,6 @@ async function showMainMenu() {
   alert.addAction('更新单个模块');
   alert.addAction('更新全部模块');
   alert.addAction('设置');
-  alert.addDestructiveAction('更新本脚本');
   alert.addCancelAction('取消');
   
   let idx = await alert.presentAlert();
@@ -381,10 +378,6 @@ async function showMainMenu() {
       break;
     case 3:
       await showSettingsMenu();
-      break;
-    case 4:
-      checkUpdate = true;
-      await update();
       break;
     default:
       isCancelled = true;
@@ -528,7 +521,7 @@ async function handleProcessedModules(processedModules) {
 }
 
 async function showReport() {
-  if (!checkUpdate && !fromUrlScheme && !isCancelled) {
+  if (!fromUrlScheme && !isCancelled) {
     let alert = new Alert();
     let totalModules = report.success + report.fail.length + report.noUrl;
     
