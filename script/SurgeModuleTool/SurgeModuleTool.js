@@ -1,5 +1,5 @@
 // prettier-ignore
-let ToolVersion = "201";
+let ToolVersion = "202";
 
 // 全局变量
 let isCancelled = false;
@@ -388,9 +388,6 @@ async function showMainMenu() {
 
 // 主要功能函数
 async function createFromLink(url, name) {
-  if (!url) {
-    let alert</antArtifact>
-    async function createFromLink(url, name) {
   if (!url) {
     let alert = new Alert();
     alert.title = '将自动添加后缀 .sgmodule';
