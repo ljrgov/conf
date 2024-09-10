@@ -3,7 +3,10 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.0";
+let ToolVersion = "1.1";
+
+// 全局变量来标记是否取消操作
+let isCancelled = false;
 
 // 优化的delay函数
 async function delay(milliseconds) {
@@ -51,6 +54,15 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块')
   alert.addCancelAction('取消')
   idx = await alert.presentAlert()
+  if (idx === -1) {  // 用户点击了取消
+    isCancelled = true;
+  }
+}
+
+if (isCancelled) {
+  console.log("操作已取消");
+  Script.complete();
+  return;
 }
 
 let folderPath
@@ -61,11 +73,19 @@ const fm = FileManager.iCloud()
 // 更新主菜单逻辑
 if (idx == 3) {  // 更新全部模块
   folderPath = await DocumentPicker.openFolder()
-  files = fm.listContents(folderPath)
+  if (!folderPath) {
+    isCancelled = true;
+  } else {
+    files = fm.listContents(folderPath)
+  }
 } else if (idx == 2) {  // 更新单个模块
   const filePath = await DocumentPicker.openFile()
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'))
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)]
+  if (!filePath) {
+    isCancelled = true;
+  } else {
+    folderPath = filePath.substring(0, filePath.lastIndexOf('/'))
+    files = [filePath.substring(filePath.lastIndexOf('/') + 1)]
+  }
 } else if (idx == 1) {
   let url
   let name
@@ -79,11 +99,15 @@ if (idx == 3) {  // 更新全部模块
     alert.addTextField('名称(选填)', '')
     alert.addAction('下载')
     alert.addCancelAction('取消')
-    await alert.presentAlert()
-    url = alert.textFieldValue(0)
-    name = alert.textFieldValue(1)
+    let result = await alert.presentAlert()
+    if (result === -1) {  // 用户点击了取消
+      isCancelled = true;
+    } else {
+      url = alert.textFieldValue(0)
+      name = alert.textFieldValue(1)
+    }
   }
-  if (url) {
+  if (!isCancelled && url) {
     if (!name) {
       const plainUrl = url.split('?')[0]
       const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1)
@@ -104,6 +128,12 @@ if (idx == 3) {  // 更新全部模块
   await update()
 }
 
+if (isCancelled) {
+  console.log("操作已取消");
+  Script.complete();
+  return;
+}
+
 let report = {
   success: 0,
   fail: [],
@@ -117,6 +147,7 @@ let categoryUpdateResult = "";
 
 // 主要的模块处理函数
 async function processModule(folderPath, file) {
+  if (isCancelled) return;  // 检查是否取消
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
     let originalName
     let originalDesc
@@ -263,6 +294,7 @@ async function processModule(folderPath, file) {
 
 // 更新 category 的函数
 async function updateCategory(folderPath, file, newCategory) {
+  if (isCancelled) return;  // 检查是否取消
   const filePath = `${folderPath}/${file}`
   let content = fm.readString(filePath)
   const categoryRegex = /^#!category\s*?=.*?$/im
@@ -277,49 +309,57 @@ async function updateCategory(folderPath, file, newCategory) {
 // 简化的主处理逻辑
 async function processFiles() {
   for (const file of files) {
+    if (isCancelled) break;  // 检查是否取消
     await processModule(folderPath, file);
   }
 }
 
 // 执行主处理逻辑
-if (idx >= 1 && idx <= 3) {
+if (idx >= 1 && idx <= 3 && !isCancelled) {
   await processFiles();
 
-  // 添加类别选择对话框
-  let categoryAlert = new Alert()
-  categoryAlert.title = "选择模块类别"
-  categoryAlert.message = `当前模块：${lastProcessedModuleName}\n当前类别：${lastProcessedModuleCategory}`
-  categoryAlert.addAction("📙广告模块")
-  categoryAlert.addAction("📗功能模块")
-  categoryAlert.addAction("📘面板模块")
-  categoryAlert.addAction("📚默认不变")
-  let categoryChoice = await categoryAlert.presentAlert()
-
-  // 根据用户选择更新 category
-  if (categoryChoice !== 3) { // 如果不是"默认不变"
-    let newCategory
-    switch(categoryChoice) {
-      case 0:
-        newCategory = "📙广告模块"
-        break
-      case 1:
-        newCategory = "📗功能模块"
-        break
-      case 2:
-        newCategory = "📘面板模块"
-        break
+  if (!isCancelled) {
+    // 添加类别选择对话框
+    let categoryAlert = new Alert()
+    categoryAlert.title = "选择模块类别"
+    categoryAlert.message = `当前模块：${lastProcessedModuleName}\n当前类别：${lastProcessedModuleCategory}`
+    categoryAlert.addAction("📙广告模块")
+    categoryAlert.addAction("📗功能模块")
+    categoryAlert.addAction("📘面板模块")
+    categoryAlert.addAction("📚默认不变")
+    categoryAlert.addCancelAction("取消")
+    let categoryChoice = await categoryAlert.presentAlert()
+    
+    if (categoryChoice === -1) {  // 用户点击了取消
+      isCancelled = true;
+    } else if (categoryChoice !== 3) { // 如果不是"默认不变"
+      let newCategory
+      switch(categoryChoice) {
+        case 0:
+          newCategory = "📙广告模块"
+          break
+        case 1:
+          newCategory = "📗功能模块"
+          break
+        case 2:
+          newCategory = "📘面板模块"
+          break
+      }
+      for (const file of files) {
+        if (isCancelled) break;  // 检查是否取消
+        await updateCategory(folderPath, file, newCategory)
+      }
+      categoryUpdateResult = `Category 更新成功：${newCategory}`
+    } else {
+      categoryUpdateResult = `Category 保持不变：${lastProcessedModuleCategory}`
     }
-    for (const file of files) {
-      await updateCategory(folderPath, file, newCategory)
-    }
-    categoryUpdateResult = `Category 更新成功：${newCategory}`
-  } else {
-    categoryUpdateResult = `Category 保持不变：${lastProcessedModuleCategory}`
   }
 }
 
-// 结果报告逻辑
-if (!checkUpdate && !fromUrlScheme) {
+// ... (前面的代码保持不变)
+
+// 结果报告逻辑 (继续)
+if (!checkUpdate && !fromUrlScheme && !isCancelled) {
   let alert = new Alert()
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
     noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
@@ -335,11 +375,31 @@ if (!checkUpdate && !fromUrlScheme) {
     const req = new Request('http://script.hub/reload')
     req.timeoutInterval = 10
     req.method = 'GET'
-    let res = await req.loadString()
+    try {
+      let res = await req.loadString()
+      console.log("Surge 重载成功")
+    } catch (error) {
+      console.error("Surge 重载失败:", error)
+    }
   } else if (idx == 1) {
     Safari.open('surge://')
   }
 }
+
+if (isCancelled) {
+  console.log("操作已取消");
+}
+
+// 错误处理和日志记录
+try {
+  // 这里可以添加一些最终的清理工作或日志记录
+  console.log("脚本执行完成");
+} catch (error) {
+  console.error("脚本执行过程中发生错误:", error);
+}
+
+// 确保脚本正确结束
+Script.complete();
 
 async function update() {
   const fm = FileManager.iCloud()
@@ -348,7 +408,7 @@ async function update() {
   let version
   let resp
   try {
-    const url = 'https://raw.ain/SurgeModuleTool.js?v=' + Date.now()
+    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now()
     let req = new Request(url)
     req.method = 'GET'
     req.headers = {
