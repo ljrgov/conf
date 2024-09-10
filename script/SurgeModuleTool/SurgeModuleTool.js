@@ -110,56 +110,10 @@ let report = {
   noUrl: 0,
 }
 
-// 优化的进度显示逻辑
-class ProgressDisplay {
-  constructor(total) {
-    this.total = total;
-    this.completed = 0;
-    this.alert = new Alert();
-    this.alert.title = "处理进度";
-    this.alert.message = "0% (0/" + total + ")";
-    this.alert.addAction("取消");
-    this.alertPromise = this.alert.presentAlert();
-  }
-
-  update(increment = 1) {
-    this.completed += increment;
-    const progress = (this.completed / this.total * 100).toFixed(2);
-    console.log(`进度: ${progress}% (${this.completed}/${this.total})`);
-    this.alert.message = `${progress}% (${this.completed}/${this.total})`;
-  }
-
-  async finish() {
-    this.alert.message = `100% (${this.total}/${this.total})`;
-    await delay(1000);
-    Timer.schedule(0.1, false, () => {
-      this.alert.title = "处理完成";
-      this.alert.message = "所有模块已更新";
-      this.alert.presentAlert();
-    });
-  }
-}
-
-// 优化的批量处理函数
-async function processBatch(files, folderPath, concurrency = 5) {
-  const total = files.length;
-  const chunks = [];
-  const progressDisplay = new ProgressDisplay(total);
-
-  for (let i = 0; i < files.length; i += concurrency) {
-    chunks.push(files.slice(i, i + concurrency));
-  }
-
-  for (const chunk of chunks) {
-    await Promise.all(chunk.map(async (file) => {
-      await processModule(folderPath, file);
-      progressDisplay.update();
-    }));
-    await delay(100);
-  }
-
-  await progressDisplay.finish();
-}
+// 全局变量来存储最后处理的模块信息和类别选择结果
+let lastProcessedModuleName = "";
+let lastProcessedModuleCategory = "";
+let categoryUpdateResult = "";
 
 // 主要的模块处理函数
 async function processModule(folderPath, file) {
@@ -219,6 +173,24 @@ async function processModule(folderPath, file) {
       if (!name) {
         throw new Error('模块无名称字段')
       }
+
+      // 处理 category
+      let category = "📚未分类";
+      const categoryRegex = /^#!category\s*?=\s*(.*?)\s*$/im;
+      const categoryMatch = res.match(categoryRegex);
+      if (categoryMatch) {
+        category = categoryMatch[1];
+      }
+
+      // 更新最后处理的模块信息
+      lastProcessedModuleName = name;
+      lastProcessedModuleCategory = category;
+
+      if (!categoryRegex.test(res)) {
+        // 如果不存在 category，在 name 之后添加新的 category 行
+        res = res.replace(/^(#!name.*?)$/im, `$1\n#!category=${category}`)
+      }
+
       const descMatched = `${res}`.match(/^#\!desc\s*?=\s*?\s*(.*?)\s*(\n|$)/im)
       let desc
       if (descMatched) {
@@ -289,17 +261,61 @@ async function processModule(folderPath, file) {
   }
 }
 
-// 修改主处理逻辑
-if (idx == 3) {  // 更新全部模块
-  await processBatch(files, folderPath);
-} else if (idx == 2) {  // 更新单个模块
-  const progressDisplay = new ProgressDisplay(1);
-  await processModule(folderPath, files[0]);
-  await progressDisplay.finish();
-} else if (idx == 1) {  // 从链接创建
-  const progressDisplay = new ProgressDisplay(1);
-  await processModule(folderPath, files[0]);
-  await progressDisplay.finish();
+// 更新 category 的函数
+async function updateCategory(folderPath, file, newCategory) {
+  const filePath = `${folderPath}/${file}`
+  let content = fm.readString(filePath)
+  const categoryRegex = /^#!category\s*?=.*?$/im
+  if (categoryRegex.test(content)) {
+    content = content.replace(categoryRegex, `#!category=${newCategory}`)
+  } else {
+    content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`)
+  }
+  fm.writeString(filePath, content)
+}
+
+// 简化的主处理逻辑
+async function processFiles() {
+  for (const file of files) {
+    await processModule(folderPath, file);
+  }
+}
+
+// 执行主处理逻辑
+if (idx >= 1 && idx <= 3) {
+  await processFiles();
+
+  // 添加类别选择对话框
+  let categoryAlert = new Alert()
+  categoryAlert.title = "选择模块类别"
+  categoryAlert.message = `当前模块：${lastProcessedModuleName}\n当前类别：${lastProcessedModuleCategory}`
+  categoryAlert.addAction("📙广告模块")
+  categoryAlert.addAction("📗功能模块")
+  categoryAlert.addAction("📘面板模块")
+  categoryAlert.addAction("📚默认不变")
+  let categoryChoice = await categoryAlert.presentAlert()
+
+  // 根据用户选择更新 category
+  if (categoryChoice !== 3) { // 如果不是"默认不变"
+    let newCategory
+    switch(categoryChoice) {
+      case 0:
+        newCategory = "📙广告模块"
+        break
+      case 1:
+        newCategory = "📗功能模块"
+        break
+      case 2:
+        newCategory = "📘面板模块"
+        break
+    }
+    for (const file of files) {
+      await updateCategory(folderPath, file, newCategory)
+    }
+    categoryUpdateResult = `Category 更新成功：${newCategory}`
+  } else {
+    categoryUpdateResult = `Category 保持不变：${lastProcessedModuleCategory}`
+  }
 }
 
 // 结果报告逻辑
@@ -310,7 +326,7 @@ if (!checkUpdate && !fromUrlScheme) {
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
   alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }`
+  }\n\n${categoryUpdateResult}`  // 添加 category 更新结果
   alert.addDestructiveAction('重载 Surge')
   alert.addAction('打开 Surge')
   alert.addCancelAction('关闭')
