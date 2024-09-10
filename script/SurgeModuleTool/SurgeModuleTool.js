@@ -3,20 +3,10 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.8";
+let ToolVersion = "1.7";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
-
-// 统一的错误处理函数
-function handleError(error, context) {
-  console.error(`Error in ${context}: ${error.message}`);
-  let alert = new Alert();
-  alert.title = "错误";
-  alert.message = `${context}中发生错误：${error.message}`;
-  alert.addAction("确定");
-  alert.present();
-}
 
 // 优化的delay函数
 async function delay(milliseconds) {
@@ -46,33 +36,6 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
-async function showProgressBar(total, current, message) {
-  const width = 300;
-  const height = 15;
-  const percent = current / total;
-  const draw = new DrawContext();
-  draw.size = new Size(width, height);
-  draw.opaque = false;
-  
-  // 绘制背景
-  draw.setFillColor(new Color("#E0E0E0"));
-  draw.fillRect(new Rect(0, 0, width, height));
-  
-  // 绘制进度
-  draw.setFillColor(new Color("#4CAF50"));
-  draw.fillRect(new Rect(0, 0, width * percent, height));
-  
-  // 添加文字
-  draw.setFont(Font.mediumSystemFont(12));
-  draw.setTextAlignedCenter();
-  draw.setTextColor(new Color("#000000"));
-  draw.drawTextInRect(`${message} (${Math.round(percent * 100)}%)`, new Rect(0, 0, width, height));
-  
-  const image = draw.getImage();
-  QuickLook.present(image, true);
-  await delay(100);  // 短暂延迟以确保UI更新
-}
-
 async function update() {
   const fm = FileManager.iCloud()
   const dict = fm.documentsDirectory()
@@ -92,8 +55,7 @@ async function update() {
     const match = resp.match(regex)
     version = match ? match[1] : ''
   } catch (e) {
-    handleError(e, "检查更新");
-    return;
+    console.error(e)
   }
   if (!version) {
     let alert = new Alert()
@@ -276,13 +238,13 @@ async function processModule(folderPath, file) {
         throw new Error('无订阅链接');
       }
       const subscribed = matched[0];
-      const url = matched[1];
-      if (!url) {
+      const currentUrl = matched[1];
+      if (!currentUrl) {
         noUrl = true;
         throw new Error('无订阅链接');
       }
 
-      const req = new Request(url);
+      const req = new Request(currentUrl);
       req.timeoutInterval = 10;
       req.method = 'GET';
       let res = await req.loadString();
@@ -325,7 +287,9 @@ async function processModule(folderPath, file) {
         name: newName,
         desc: newDesc,
         category: "📚未分类",
-        filePath
+        filePath,
+        currentName,
+        currentUrl
       };
     } catch (e) {
       if (noUrl) {
@@ -342,7 +306,11 @@ async function processModule(folderPath, file) {
         console.error(`${currentName || file}: ${e}`);
       }
       if (fromUrlScheme) {
-        handleError(e, `处理模块 ${currentName || file}`);
+        alert = new Alert();
+        alert.title = `❌ ${currentName || ''}\n${file}`;
+        alert.message = `${e.message || e}`;
+        alert.addCancelAction('关闭');
+        await alert.presentAlert();
       }
     }
   }
@@ -359,20 +327,16 @@ function updateCategory(content, newCategory) {
   }
 }
 
-// 优化的主处理逻辑
+// 简化的主处理逻辑
 async function processFiles() {
   let processedModules = [];
-  for (let i = 0; i < files.length; i++) {
+  for (const file of files) {
     if (isCancelled) break;  // 检查是否取消
-    const result = await processModule(folderPath, files[i]);
+    const result = await processModule(folderPath, file);
     if (result) {
       processedModules.push(result);
     }
-    await showProgressBar(files.length, i + 1, `处理模块 ${i + 1}/${files.length}`);
   }
-  // 文件处理完成后关闭进度条
-  QuickLook.present(null);
-  await delay(500);  // 稍作延迟，确保进度条被关闭
   return processedModules;
 }
 
@@ -383,20 +347,29 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
   if (!isCancelled && processedModules.length > 0) {
     let shouldWrite = true;
     
-// 只有在从链接创建时才显示替换确认对话框
+    // 只有在从链接创建时才显示替换确认对话框
     if (idx == 1) {
       for (const module of processedModules) {
         if (fm.fileExists(module.filePath)) {
-          let confirmAlert = new Alert()
-          confirmAlert.title = "确认替换"
-          confirmAlert.message = `文件 "${module.name}" 已存在。是否替换？`
-          confirmAlert.addAction("替换")
-          confirmAlert.addCancelAction("取消")
-          let confirmResult = await confirmAlert.presentAlert()
+          const existingContent = fm.readString(module.filePath);
+          const existingNameMatch = existingContent.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
+          const existingUrlMatch = existingContent.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+          
+          const existingName = existingNameMatch ? existingNameMatch[1] : '';
+          const existingUrl = existingUrlMatch ? existingUrlMatch[1] : '';
 
-          if (confirmResult === -1) {  // 用户选择取消
-            shouldWrite = false;
-            break;
+          if (existingName === module.currentName || existingUrl === module.currentUrl) {
+            let confirmAlert = new Alert()
+            confirmAlert.title = "确认替换"
+            confirmAlert.message = `文件 "${module.name}" 已存在，且模块名称或订阅链接匹配。是否替换？`
+            confirmAlert.addAction("替换")
+            confirmAlert.addCancelAction("取消")
+            let confirmResult = await confirmAlert.presentAlert()
+
+            if (confirmResult === -1) {  // 用户选择取消
+              shouldWrite = false;
+              break;
+            }
           }
         }
       }
@@ -407,7 +380,7 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
       for (const module of processedModules) {
         fm.writeString(module.filePath, module.content)
       }
-      console.log(`已更新 ${processedModules.length} 个文件`)
+            console.log(`已更新 ${processedModules.length} 个文件`)
       report.success = processedModules.length;
 
       // 处理类别（Category）
@@ -473,7 +446,7 @@ if (!checkUpdate && !fromUrlScheme && !isCancelled) {
       let res = await req.loadString()
       console.log("Surge 重载成功")
     } catch (error) {
-      handleError(error, "重载 Surge");
+      console.error("Surge 重载失败:", error)
     }
   } else if (idx == 1) {
     Safari.open('surge://')
@@ -488,7 +461,7 @@ if (isCancelled) {
 try {
   console.log("脚本执行完成");
 } catch (error) {
-  handleError(error, "脚本执行");
+  console.error("脚本执行过程中发生错误:", error);
 }
 
 // 确保脚本正确结束
