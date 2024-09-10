@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.6";
+let ToolVersion = "1.7";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -84,7 +84,7 @@ async function update() {
     if (!needUpdate) {
       let alert = new Alert()
       alert.title = 'Surge 模块工具'
-      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`
+      alert.message = `当前版本: ${ToolVersion}\n最新版本: ${version}\n无需更新`
       alert.addDestructiveAction('强制更新')
       alert.addCancelAction('关闭')
       idx = await alert.presentAlert()
@@ -450,7 +450,7 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
       }
       categoryUpdateResult = `💯分类更新成功：${newCategory}`;
     } else {
-      categoryUpdateResult = `⁉️分类未更新：${currentCategory}`;
+      categoryUpdateResult = `‼️分类未更新：${currentCategory}`;
     }
   } else {
     categoryUpdateResult = "❌类别无法分类：未处理任何模块";
@@ -465,7 +465,7 @@ if (!checkUpdate && !fromUrlScheme && !isCancelled) {
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
   alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
-  }\n\n${categoryUpdateResult}`;
+  }\n${categoryUpdateResult}`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
   alert.addCancelAction('关闭');
