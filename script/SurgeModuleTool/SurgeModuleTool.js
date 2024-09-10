@@ -370,7 +370,5 @@ async function update() {
     if (needUpdate) {
       fm.writeString(`${dict}/${scriptName}.js`, resp)
       console.log('更新成功: ' + version)
-      let notification = new Notification()
-      notification.title
 
 
