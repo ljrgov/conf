@@ -5,23 +5,18 @@
 // prettier-ignore
 let ToolVersion = "2.03";
 
+// 优化的delay函数
 async function delay(milliseconds) {
   return new Promise(resolve => Timer.schedule(milliseconds / 1000, false, () => resolve()));
 }
 
 function convertToValidFileName(str) {
-  // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g
   const validFileName = str.replace(invalidCharsRegex, '_')
-
-  // 删除多余的点号
   const multipleDotsRegex = /\.{2,}/g
   const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.')
-
-  // 删除文件名开头和结尾的点号和空格
   const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g
   const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '')
-
   return finalFileName
 }
 
@@ -29,14 +24,12 @@ function addLineAfterLastOccurrence(text, addition) {
   const regex = /^#!.+?$/gm
   const matchArray = text.match(regex)
   const lastIndex = matchArray ? matchArray.length - 1 : -1
-
   if (lastIndex >= 0) {
     const lastMatch = matchArray[lastIndex]
     const insertIndex = text.indexOf(lastMatch) + lastMatch.length
     const newText = text.slice(0, insertIndex) + addition + text.slice(insertIndex)
     return newText
   }
-
   return text
 }
 
@@ -66,11 +59,14 @@ let files = []
 let contents = []
 const fm = FileManager.iCloud()
 
+// 更新主菜单逻辑以适应新的选项
 if (idx == 4) {  // 更新全部模块
   folderPath = await DocumentPicker.openFolder()
   files = fm.listContents(folderPath)
 } else if (idx == 3) {  // 更新指定模块
-  files = await updateSpecificModules()
+  const selectedFiles = await DocumentPicker.openFiles();
+  folderPath = fm.directory(selectedFiles[0]);
+  files = selectedFiles.map(file => fm.fileName(file));
 } else if (idx == 2) {  // 更新单个模块
   const filePath = await DocumentPicker.openFile()
   folderPath = filePath.substring(0, filePath.lastIndexOf('/'))
@@ -119,14 +115,19 @@ let report = {
   noUrl: 0,
 }
 
+// 新增: 进度显示相关变量和函数
 let progressAlert;
 
-async function updateSpecificModules() {
-  const selectedFiles = await DocumentPicker.openFiles();
-  folderPath = FileManager.iCloud().directory(selectedFiles[0]);
-  return selectedFiles.map(file => FileManager.iCloud().fileName(file));
+function updateProgress(completed, total) {
+  const progress = (completed / total * 100).toFixed(2);
+  console.log(`进度: ${progress}% (${completed}/${total})`);
+  
+  if (progressAlert) {
+    progressAlert.message = `${progress}% (${completed}/${total})`;
+  }
 }
 
+// 新增: 批量处理函数
 async function processBatch(files, folderPath, concurrency = 5) {
   const total = files.length;
   let completed = 0;
@@ -137,7 +138,6 @@ async function processBatch(files, folderPath, concurrency = 5) {
   progressAlert.message = "0% (0/" + total + ")";
   progressAlert.addAction("取消");
   
-  // 在后台显示 Alert
   let alertPromise = progressAlert.presentAlert();
 
   for (let i = 0; i < files.length; i += concurrency) {
@@ -158,15 +158,7 @@ async function processBatch(files, folderPath, concurrency = 5) {
   progressAlert.dismiss();
 }
 
-function updateProgress(completed, total) {
-  const progress = (completed / total * 100).toFixed(2);
-  console.log(`进度: ${progress}% (${completed}/${total})`);
-  
-  if (progressAlert) {
-    progressAlert.message = `${progress}% (${completed}/${total})`;
-  }
-}
-
+// 主要的模块处理函数，保留原有逻辑
 async function processModule(folderPath, file) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
     let originalName
@@ -294,6 +286,7 @@ async function processModule(folderPath, file) {
   }
 }
 
+// 修改主处理逻辑以使用新的批处理功能
 if (idx == 3 || idx == 4) {  // 更新指定模块或更新全部模块
   await processBatch(files, folderPath);
 } else {
@@ -370,5 +363,15 @@ async function update() {
     if (needUpdate) {
       fm.writeString(`${dict}/${scriptName}.js`, resp)
       console.log('更新成功: ' + version)
+      let notification = new Notification()
+      notification.title = 'Surge 模块工具 更新成功: ' + version
+      notification.subtitle = '点击通知跳转'
+      notification.sound = 'default'
+      notification.openURL = `scriptable:///open/${scriptName}`
+      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false)
+      await notification.schedule()
+    }
+  }
+}
 
 
