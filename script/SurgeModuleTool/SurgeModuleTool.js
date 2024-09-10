@@ -48,7 +48,6 @@ if (fromUrlScheme) {
   alert.addDestructiveAction('更新本脚本')
   alert.addAction('从链接创建')
   alert.addAction('更新单个模块')
-  alert.addAction('更新指定模块')
   alert.addAction('更新全部模块')
   alert.addCancelAction('取消')
   idx = await alert.presentAlert()
@@ -59,14 +58,10 @@ let files = []
 let contents = []
 const fm = FileManager.iCloud()
 
-// 更新主菜单逻辑以适应新的选项
-if (idx == 4) {  // 更新全部模块
+// 更新主菜单逻辑
+if (idx == 3) {  // 更新全部模块
   folderPath = await DocumentPicker.openFolder()
   files = fm.listContents(folderPath)
-} else if (idx == 3) {  // 更新指定模块
-  folderPath = await DocumentPicker.openFolder()
-  const selectedFiles = await DocumentPicker.openPanel()
-  files = selectedFiles.map(file => fm.fileName(file))
 } else if (idx == 2) {  // 更新单个模块
   const filePath = await DocumentPicker.openFile()
   folderPath = filePath.substring(0, filePath.lastIndexOf('/'))
@@ -115,30 +110,41 @@ let report = {
   noUrl: 0,
 }
 
-// 进度显示相关变量和函数
-let progressAlert;
+// 优化的进度显示逻辑
+class ProgressDisplay {
+  constructor(total) {
+    this.total = total;
+    this.completed = 0;
+    this.alert = new Alert();
+    this.alert.title = "处理进度";
+    this.alert.message = "0% (0/" + total + ")";
+    this.alert.addAction("取消");
+    this.alertPromise = this.alert.presentAlert();
+  }
 
-function updateProgress(completed, total) {
-  const progress = (completed / total * 100).toFixed(2);
-  console.log(`进度: ${progress}% (${completed}/${total})`);
-  
-  if (progressAlert) {
-    progressAlert.message = `${progress}% (${completed}/${total})`;
+  update(increment = 1) {
+    this.completed += increment;
+    const progress = (this.completed / this.total * 100).toFixed(2);
+    console.log(`进度: ${progress}% (${this.completed}/${this.total})`);
+    this.alert.message = `${progress}% (${this.completed}/${this.total})`;
+  }
+
+  async finish() {
+    this.alert.message = `100% (${this.total}/${this.total})`;
+    await delay(1000);
+    Timer.schedule(0.1, false, () => {
+      this.alert.title = "处理完成";
+      this.alert.message = "所有模块已更新";
+      this.alert.presentAlert();
+    });
   }
 }
 
-// 批量处理函数
+// 优化的批量处理函数
 async function processBatch(files, folderPath, concurrency = 5) {
   const total = files.length;
-  let completed = 0;
   const chunks = [];
-
-  progressAlert = new Alert();
-  progressAlert.title = "处理进度";
-  progressAlert.message = "0% (0/" + total + ")";
-  progressAlert.addAction("取消");
-  
-  let alertPromise = progressAlert.presentAlert();
+  const progressDisplay = new ProgressDisplay(total);
 
   for (let i = 0; i < files.length; i += concurrency) {
     chunks.push(files.slice(i, i + concurrency));
@@ -147,19 +153,15 @@ async function processBatch(files, folderPath, concurrency = 5) {
   for (const chunk of chunks) {
     await Promise.all(chunk.map(async (file) => {
       await processModule(folderPath, file);
-      completed++;
-      updateProgress(completed, total);
+      progressDisplay.update();
     }));
     await delay(100);
   }
 
-  progressAlert.message = "100% (" + total + "/" + total + ")";
-  await delay(1000);
-  // Remove the dismiss() call as it's not supported
-  // Instead, we'll let the alert close naturally when the user taps "OK"
+  await progressDisplay.finish();
 }
 
-// 主要的模块处理函数，保留原有逻辑
+// 主要的模块处理函数
 async function processModule(folderPath, file) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
     let originalName
@@ -287,17 +289,22 @@ async function processModule(folderPath, file) {
   }
 }
 
-// 修改主处理逻辑以使用新的批处理功能
-if (idx == 3 || idx == 4) {  // 更新指定模块或更新全部模块
+// 修改主处理逻辑
+if (idx == 3) {  // 更新全部模块
   await processBatch(files, folderPath);
-} else {
-  for await (const [index, file] of files.entries()) {
-    await processModule(folderPath, file);
-  }
+} else if (idx == 2) {  // 更新单个模块
+  const progressDisplay = new ProgressDisplay(1);
+  await processModule(folderPath, files[0]);
+  await progressDisplay.finish();
+} else if (idx == 1) {  // 从链接创建
+  const progressDisplay = new ProgressDisplay(1);
+  await processModule(folderPath, files[0]);
+  await progressDisplay.finish();
 }
 
+// 结果报告逻辑
 if (!checkUpdate && !fromUrlScheme) {
-  alert = new Alert()
+  let alert = new Alert()
   let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
     noUrlErrk = report.noUrl > 0 ? `🈚️ 无链接: ${report.noUrl}` : ''
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`
