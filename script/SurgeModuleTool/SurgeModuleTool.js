@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.3";
+let ToolVersion = "1.4";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -220,11 +220,18 @@ async function processModule(folderPath, file) {
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
       content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
+      // 设置初始分类值
+      if (!categoryRegex.test(content)) {
+        content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=📚未分类`);
+      } else {
+        content = content.replace(categoryRegex, `#!category=📚未分类`);
+      }
+
       return {
         content,
         name: newName,
         desc: newDesc,
-        category: currentCategory || "📚未分类",
+        category: "📚未分类",
         filePath
       };
     } catch (e) {
@@ -281,47 +288,70 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
   let processedModules = await processFiles();
 
   if (!isCancelled && processedModules.length > 0) {
-    // 直接写入处理后的内容到文件
-    for (const module of processedModules) {
-      fm.writeString(module.filePath, module.content)
-    }
-    console.log(`已更新 ${processedModules.length} 个文件`)
-    report.success = processedModules.length;
-
-    // 处理类别（Category）
-    let currentCategory = processedModules[0].category;
-    let currentName = processedModules[0].name;
-
-    let categoryAlert = new Alert();
-    categoryAlert.title = "选择模块类别";
-    categoryAlert.message = `处理的模块数：${processedModules.length}\n当前名称：${currentName}\n当前类别：${currentCategory}`;
-    categoryAlert.addAction("📙广告模块");
-    categoryAlert.addAction("📗功能模块");
-    categoryAlert.addAction("📘面板模块");
-    categoryAlert.addAction("📚默认不变");
-    categoryAlert.addCancelAction("取消");
-    let categoryChoice = await categoryAlert.presentAlert();
+    let shouldWrite = true;
     
-    if (categoryChoice === -1) {
-      isCancelled = true;
-    } else if (categoryChoice !== 3) {
-      let newCategory;
-      switch(categoryChoice) {
-        case 0: newCategory = "📙广告模块"; break;
-        case 1: newCategory = "📗功能模块"; break;
-        case 2: newCategory = "📘面板模块"; break;
+    // 只有在从链接创建时才显示替换确认对话框
+    if (idx == 1) {
+      for (const module of processedModules) {
+        if (fm.fileExists(module.filePath)) {
+          let confirmAlert = new Alert()
+          confirmAlert.title = "确认替换"
+          confirmAlert.message = `文件 "${module.name}" 已存在。是否替换？`
+          confirmAlert.addAction("替换")
+          confirmAlert.addCancelAction("取消")
+          let confirmResult = await confirmAlert.presentAlert()
+
+          if (confirmResult === -1) {  // 用户选择取消
+            shouldWrite = false;
+            break;
+          }
+        }
       }
-      for (let module of processedModules) {
-        module.content = updateCategory(module.content, newCategory);
-        module.category = newCategory;
-      }
-      // 再次写入文件以更新类别
+    }
+
+    if (shouldWrite) {
+      // 写入处理后的内容到文件
       for (const module of processedModules) {
         fm.writeString(module.filePath, module.content)
       }
-      categoryUpdateResult = `Category 更新成功：${newCategory}`;
+      console.log(`已更新 ${processedModules.length} 个文件`)
+      report.success = processedModules.length;
+
+      // 处理类别（Category）
+      let currentCategory = processedModules[0].category;
+      let currentName = processedModules[0].name;
+
+      let categoryAlert = new Alert();
+      categoryAlert.title = "选择模块类别";
+      categoryAlert.message = `处理的模块数：${processedModules.length}\n当前名称：${currentName}\n当前类别：${currentCategory}`;
+      categoryAlert.addAction("📙广告模块");
+      categoryAlert.addAction("📗功能模块");
+      categoryAlert.addAction("📘面板模块");
+      categoryAlert.addCancelAction("取消");
+      let categoryChoice = await categoryAlert.presentAlert();
+      
+      if (categoryChoice !== -1) {
+        let newCategory;
+        switch(categoryChoice) {
+          case 0: newCategory = "📙广告模块"; break;
+          case 1: newCategory = "📗功能模块"; break;
+          case 2: newCategory = "📘面板模块"; break;
+        }
+        for (let module of processedModules) {
+          module.content = updateCategory(module.content, newCategory);
+          module.category = newCategory;
+        }
+        // 再次写入文件以更新类别
+        for (const module of processedModules) {
+          fm.writeString(module.filePath, module.content)
+        }
+        categoryUpdateResult = `Category 更新成功：${newCategory}`;
+      } else {
+        categoryUpdateResult = `Category 保持不变：${currentCategory}`;
+      }
     } else {
-      categoryUpdateResult = `Category 保持不变：${currentCategory}`;
+      console.log("用户取消了替换操作")
+      isCancelled = true;
     }
   } else {
     categoryUpdateResult = "无法更新：未处理任何模块";
@@ -426,7 +456,6 @@ async function update() {
     }
   }
 }
-
 // 确保脚本正确结束
 Script.complete();
 
