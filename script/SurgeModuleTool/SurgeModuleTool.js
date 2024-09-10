@@ -2,8 +2,9 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
+
 // prettier-ignore
-let ToolVersion = "1.5";
+let ToolVersion = "1.6";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -323,7 +324,8 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
 
       let categoryAlert = new Alert();
       categoryAlert.title = "选择模块类别";
-      categoryAlert.message = `处理的模块数：${processedModules.length}\n当前名称：${currentName}\n当前类别：${currentCategory}`;
+      categoryAlert.message = 
+      `模块名称：${currentName}\n模块类别：${currentCategory}\n处理的模块数：${processedModules.length}`;
       categoryAlert.addAction("📙广告模块");
       categoryAlert.addAction("📗功能模块");
       categoryAlert.addAction("📘面板模块");
@@ -345,26 +347,26 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
         for (const module of processedModules) {
           fm.writeString(module.filePath, module.content)
         }
-        categoryUpdateResult = `🔄️ 分类更新成功：${newCategory}`;
+        categoryUpdateResult = `💯分类更新成功：${newCategory}`;
       } else {
-        categoryUpdateResult = `↩️ 分类初始值：${currentCategory}`;
+        categoryUpdateResult = `⁉️分类未更新：${currentCategory}`;
       }
     } else {
       console.log("用户取消了替换操作")
       isCancelled = true;
     }
   } else {
-    categoryUpdateResult = "无法更新：未处理任何模块";
+    categoryUpdateResult = "❌类别无法分类：未处理任何模块";
   }
 }
 
 // 结果报告逻辑
 if (!checkUpdate && !fromUrlScheme && !isCancelled) {
   let alert = new Alert();
-  let upErrk = report.fail.length > 0 ? `❌ 更新失败: ${report.fail.length}` : '',
+  let upErrk = report.fail.length > 0 ? `❌ 模块更新失败: ${report.fail.length}` : '',
     noUrlErrk = report.noUrl > 0 ? `⚠️ 无链接: ${report.noUrl}` : '';
   alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-  alert.message = `${noUrlErrk}\n✅ 更新成功: ${report.success}\n${upErrk}${
+  alert.message = `${noUrlErrk}\n✅ 模块更新成功: ${report.success}\n${upErrk}${
     report.fail.length > 0 ? `\n${report.fail.join(', ')}` : ''
   }\n\n${categoryUpdateResult}`;
   alert.addDestructiveAction('重载 Surge');
