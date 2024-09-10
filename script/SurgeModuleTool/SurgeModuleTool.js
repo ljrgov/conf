@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.3";
+let ToolVersion = "2.1";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -33,14 +33,20 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+const CATEGORIES = [
+  "📚 未分类",
+  "📙 广告屏蔽",
+  "📗 功能集成",
+  "📘 面板模块"
+];
+
 function processModuleContent(content) {
-  const defaultCategory = "📚未分类";
   let categoryMatch = content.match(/#!category\s*=\s*(.*)/);
   
   if (categoryMatch) {
-    content = content.replace(/#!category\s*=\s*.*/, `#!category = ${defaultCategory}`);
+    content = content.replace(/#!category\s*=\s*.*/, `#!category = ${CATEGORIES[0]}`);
   } else {
-    content = `#!category = ${defaultCategory}\n${content}`;
+    content = `#!category = ${CATEGORIES[0]}\n${content}`;
   }
   
   return content;
@@ -50,19 +56,13 @@ async function showCategoryDialog(moduleName, currentCategory) {
   let alert = new Alert();
   alert.title = "选择分类";
   alert.message = `模块：${moduleName}\n当前分类：${currentCategory}`;
-  alert.addAction("广告屏蔽");
-  alert.addAction("面板展示");
-  alert.addAction("功能集成");
+  
+  CATEGORIES.forEach(category => alert.addAction(category));
   alert.addCancelAction("保持当前分类");
   
   let choice = await alert.presentAlert();
   
-  switch(choice) {
-    case 0: return "广告屏蔽";
-    case 1: return "面板展示";
-    case 2: return "功能集成";
-    default: return null;
-  }
+  return choice < CATEGORIES.length ? CATEGORIES[choice] : currentCategory;
 }
 
 function updateModuleCategory(content, category) {
@@ -74,7 +74,7 @@ function updateModuleCategory(content, category) {
 
 function extractCurrentCategory(content) {
   let match = content.match(/#!category\s*=\s*(.*)/);
-  return match ? match[1].trim() : "📚未分类";
+  return match ? match[1].trim() : CATEGORIES[0];
 }
 
 function generateCategory(modules) {
@@ -82,8 +82,7 @@ function generateCategory(modules) {
   
   for (let module of modules) {
     let content = fm.readString(module.path);
-    let categoryMatch = content.match(/#!category\s*=\s*(.*)/);
-    let category = categoryMatch ? categoryMatch[1].trim() : "未分类";
+    let category = extractCurrentCategory(content);
     
     if (!categories[category]) {
       categories[category] = [];
@@ -160,6 +159,79 @@ async function update() {
   }
 }
 
+class BatchProcessor {
+  constructor(modules, settings) {
+    this.modules = modules;
+    this.settings = settings;
+    this.report = {
+      success: 0,
+      fail: [],
+      noUrl: 0,
+    };
+  }
+
+  async process() {
+    const progress = new Progress();
+    progress.totalUnitCount = this.modules.length;
+
+    for (let [index, module] of this.modules.entries()) {
+      try {
+        await this.updateModule(module);
+        this.report.success++;
+      } catch (error) {
+        if (error.message === "无订阅链接") {
+          this.report.noUrl++;
+        } else {
+          this.report.fail.push(module);
+        }
+      }
+      progress.completedUnitCount = index + 1;
+    }
+
+    return this.report;
+  }
+
+  async updateModule(modulePath) {
+    const fm = FileManager.iCloud();
+    let content = fm.readString(modulePath);
+    let matched = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
+    if (!matched) {
+      throw new Error("无订阅链接");
+    }
+    let url = matched[1];
+    let res = await this.downloadContent(url);
+    let newCategory = this.autoCategorizeMoudle(res);
+    res = updateModuleCategory(res, newCategory);
+    fm.writeString(modulePath, res);
+  }
+
+  async downloadContent(url) {
+    const req = new Request(url);
+    req.timeoutInterval = 10;
+    return await req.loadString();
+  }
+
+  autoCategorizeMoudle(content) {
+    if (content.includes("DOMAIN-SET") || content.includes("RULE-SET")) {
+      return CATEGORIES[1]; // 广告屏蔽
+    } else if (content.includes("panel") || content.includes("Panel")) {
+      return CATEGORIES[3]; // 面板模块
+    } else if (content.includes("script") || content.includes("Script")) {
+      return CATEGORIES[2]; // 功能集成
+    }
+    return CATEGORIES[0]; // 未分类
+  }
+}
+
+async function executeBatchProcessing(folderPath) {
+  const fm = FileManager.iCloud();
+  let files = fm.listContents(folderPath).filter(file => file.endsWith('.sgmodule'));
+  let modules = files.map(file => `${folderPath}/${file}`);
+
+  let processor = new BatchProcessor(modules, {});
+  return await processor.process();
+}
+
 async function main() {
   let idx
   let fromUrlScheme
@@ -175,6 +247,7 @@ async function main() {
     alert.addAction('从链接创建')
     alert.addAction('更新单个模块')
     alert.addAction('更新全部模块')
+    alert.addAction('批量处理')
     alert.addAction('生成分类列表')
     alert.addDestructiveAction('更新本脚本')
     alert.addCancelAction('取消')
@@ -281,7 +354,10 @@ async function main() {
         }
       }
     }
-  } else if (idx === 3) { // 生成分类列表
+  } else if (idx === 3) { // 批量处理
+    folderPath = await DocumentPicker.openFolder()
+    report = await executeBatchProcessing(folderPath)
+  } else if (idx === 4) { // 生成分类列表
     folderPath = await DocumentPicker.openFolder()
     files = fm.listContents(folderPath).filter(file => file.endsWith('.sgmodule'))
     let modules = files.map(file => ({
@@ -300,7 +376,7 @@ async function main() {
     resultAlert.message = `分类列表已保存至：${categoryFilePath}`
     resultAlert.addAction("确定")
     await resultAlert.presentAlert()
-  } else if (idx === 4) { // 更新本脚本
+  } else if (idx === 5) { // 更新本脚本
     console.log('检查更新')
     checkUpdate = true
     await update()
@@ -330,8 +406,6 @@ async function main() {
 }
 
 await main();
-
-
 
 
 
