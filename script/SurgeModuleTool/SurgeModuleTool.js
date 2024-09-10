@@ -36,6 +36,21 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+// 新增：生成唯一文件名的函数
+function generateUniqueFileName(folderPath, baseName, extension) {
+  let counter = 1;
+  let fileName = `${baseName}.${extension}`;
+  let filePath = `${folderPath}/${fileName}`;
+  
+  while (fm.fileExists(filePath)) {
+    fileName = `${baseName}_${counter}.${extension}`;
+    filePath = `${folderPath}/${fileName}`;
+    counter++;
+  }
+  
+  return fileName;
+}
+
 async function update() {
   const fm = FileManager.iCloud()
   const dict = fm.documentsDirectory()
@@ -365,8 +380,9 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
             let confirmResult = await confirmAlert.presentAlert()
 
             if (confirmResult === -1) {  // 用户选择取消
-              // 自动更改文件名
-              let newFileName = `${module.name}_${new Date().getTime()}.sgmodule`;
+              // 使用新的文件命名逻辑
+              let baseName = module.name.replace(/\.sgmodule$/, '');
+              let newFileName = generateUniqueFileName(folderPath, baseName, 'sgmodule');
               let newFilePath = `${folderPath}/${newFileName}`;
               module.filePath = newFilePath;
               console.log(`文件重命名为: ${newFileName}`);
@@ -375,7 +391,8 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
         }
       }
     }
-// 写入处理后的内容到文件
+
+    // 写入处理后的内容到文件
     for (const module of processedModules) {
       fm.writeString(module.filePath, module.content)
     }
