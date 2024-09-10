@@ -1,16 +1,12 @@
 #!name=Github private
-#!desc=验证
+#!desc=验证bhhjjjjjjjjhh
 #!author=Your Name
 #!arguments=token, username
 #!arguments-desc=github令牌
 
 
-[Rule]
-#!include=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/rule/rule1.list
-#!include=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/rule/rule2.list
-#!include=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/rule/rule3.list
-
 [Script]
 custom_script1 = type=http-response, pattern=https://example.com/api1, requires-body=true, script-path=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/script/script1.js
 custom_script2 = type=http-response, pattern=https://example.com/api2, requires-body=true, script-path=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/script/script2.js
 # Add more scripts as needed
+jdjjfjfjjfjfjjfjf=jfjcjjcjfjfjjfjgpng
