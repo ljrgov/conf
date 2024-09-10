@@ -48,7 +48,7 @@ if (fromUrlScheme) {
   alert.addDestructiveAction('更新本脚本')
   alert.addAction('从链接创建')
   alert.addAction('更新单个模块')
-  alert.addAction('更新指定模块')  // 新添加的选项
+  alert.addAction('更新指定模块')
   alert.addAction('更新全部模块')
   alert.addCancelAction('取消')
   idx = await alert.presentAlert()
@@ -64,9 +64,9 @@ if (idx == 4) {  // 更新全部模块
   folderPath = await DocumentPicker.openFolder()
   files = fm.listContents(folderPath)
 } else if (idx == 3) {  // 更新指定模块
-  const selectedFiles = await DocumentPicker.openFiles();
-  folderPath = fm.directory(selectedFiles[0]);
-  files = selectedFiles.map(file => fm.fileName(file));
+  folderPath = await DocumentPicker.openFolder()
+  const selectedFiles = await DocumentPicker.openPanel()
+  files = selectedFiles.map(file => fm.fileName(file))
 } else if (idx == 2) {  // 更新单个模块
   const filePath = await DocumentPicker.openFile()
   folderPath = filePath.substring(0, filePath.lastIndexOf('/'))
@@ -115,7 +115,7 @@ let report = {
   noUrl: 0,
 }
 
-// 新增: 进度显示相关变量和函数
+// 进度显示相关变量和函数
 let progressAlert;
 
 function updateProgress(completed, total) {
@@ -127,7 +127,7 @@ function updateProgress(completed, total) {
   }
 }
 
-// 新增: 批量处理函数
+// 批量处理函数
 async function processBatch(files, folderPath, concurrency = 5) {
   const total = files.length;
   let completed = 0;
@@ -155,7 +155,8 @@ async function processBatch(files, folderPath, concurrency = 5) {
 
   progressAlert.message = "100% (" + total + "/" + total + ")";
   await delay(1000);
-  progressAlert.dismiss();
+  // Remove the dismiss() call as it's not supported
+  // Instead, we'll let the alert close naturally when the user taps "OK"
 }
 
 // 主要的模块处理函数，保留原有逻辑
@@ -324,7 +325,7 @@ async function update() {
   let version
   let resp
   try {
-    const url = 'https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/SurgeModuleTool.js?v=' + Date.now()
+    const url = 'https://raw.ain/SurgeModuleTool.js?v=' + Date.now()
     let req = new Request(url)
     req.method = 'GET'
     req.headers = {
