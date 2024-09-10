@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
-let ToolVersion = "1.0";
+let ToolVersion = "1.1";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -172,11 +172,11 @@ async function main() {
   } else {
     let alert = new Alert()
     alert.title = 'Surge 模块工具'
+    alert.addDestructiveAction('更新本脚本')
     alert.addAction('从链接创建')
     alert.addAction('更新单个模块')
     alert.addAction('更新全部模块')
     alert.addAction('生成分类列表')
-    alert.addDestructiveAction('更新本脚本')
     alert.addCancelAction('取消')
     idx = await alert.presentAlert()
   }
