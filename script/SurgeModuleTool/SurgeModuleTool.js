@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "1.7";  // 版本号更新为 1.7
+let ToolVersion = "1.8";
 
 // 全局变量来标记是否取消操作
 let isCancelled = false;
@@ -46,13 +46,31 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
-// 进度显示函数
-async function showProgress(total, current, message) {
-  let progress = current / total;
-  let width = 20;
-  let filledWidth = Math.round(width * progress);
-  let bar = '█'.repeat(filledWidth) + '░'.repeat(width - filledWidth);
-  console.log(`${bar} ${(progress * 100).toFixed(1)}% | ${message}`);
+async function showProgressBar(total, current, message) {
+  const width = 300;
+  const height = 15;
+  const percent = current / total;
+  const draw = new DrawContext();
+  draw.size = new Size(width, height);
+  draw.opaque = false;
+  
+  // 绘制背景
+  draw.setFillColor(new Color("#E0E0E0"));
+  draw.fillRect(new Rect(0, 0, width, height));
+  
+  // 绘制进度
+  draw.setFillColor(new Color("#4CAF50"));
+  draw.fillRect(new Rect(0, 0, width * percent, height));
+  
+  // 添加文字
+  draw.setFont(Font.mediumSystemFont(12));
+  draw.setTextAlignedCenter();
+  draw.setTextColor(new Color("#000000"));
+  draw.drawTextInRect(`${message} (${Math.round(percent * 100)}%)`, new Rect(0, 0, width, height));
+  
+  const image = draw.getImage();
+  QuickLook.present(image, true);
+  await delay(100);  // 短暂延迟以确保UI更新
 }
 
 async function update() {
@@ -350,8 +368,11 @@ async function processFiles() {
     if (result) {
       processedModules.push(result);
     }
-    await showProgress(files.length, i + 1, `处理模块 ${i + 1}/${files.length}`);
+    await showProgressBar(files.length, i + 1, `处理模块 ${i + 1}/${files.length}`);
   }
+  // 文件处理完成后关闭进度条
+  QuickLook.present(null);
+  await delay(500);  // 稍作延迟，确保进度条被关闭
   return processedModules;
 }
 
@@ -362,7 +383,7 @@ if (idx >= 1 && idx <= 3 && !isCancelled) {
   if (!isCancelled && processedModules.length > 0) {
     let shouldWrite = true;
     
-    // 只有在从链接创建时才显示替换确认对话框
+// 只有在从链接创建时才显示替换确认对话框
     if (idx == 1) {
       for (const module of processedModules) {
         if (fm.fileExists(module.filePath)) {
@@ -472,4 +493,3 @@ try {
 
 // 确保脚本正确结束
 Script.complete();
-
