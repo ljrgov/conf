@@ -1,5 +1,5 @@
 // prettier-ignore
-let ToolVersion = "1";
+let ToolVersion = "2";
 
 // 全局变量
 let isCancelled = false;
@@ -408,24 +408,31 @@ async function showSettingsMenu() {
   alert.addAction('检查更新');
   alert.addAction('查看日志');
   alert.addAction('设置日志级别');
-  alert.addCancelAction('返回');
+  alert.addAction('清除日志');
+  alert.addAction('返回主菜单');
   
   let idx = await alert.presentAlert();
   
   switch(idx) {
     case 0:
       await checkForUpdates();
-      return;
+      break;
     case 1:
       await showLogs();
-      return;
+      break;
     case 2:
       await setLogLevelMenu();
-      return;
+      break;
+    case 3:
+      await clearLogs();
+      break;
+    case 4:
     default:
       await showMainMenu();
       return;
   }
+  // 执行完设置操作后，自动返回设置菜单
+  await showSettingsMenu();
 }
 
 async function setLogLevelMenu() {
@@ -456,7 +463,7 @@ async function setLogLevelMenu() {
   } else {
     log(`日志级别保持不变: ${currentLevel}`, 'INFO');
   }
-  await showSettingsMenu();
+  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function checkForUpdates() {
@@ -502,7 +509,7 @@ async function forceUpdate() {
       Safari.open(`scriptable:///open/${Script.name()}`);
     }
   }
-  await showMainMenu();
+  // 不再调用 showMainMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function showLogs() {
@@ -514,29 +521,35 @@ async function showLogs() {
   alert.title = '脚本运行日志';
   alert.message = logText;
   alert.addAction('关闭');
-  alert.addDestructiveAction('清除日志');
-  const result = await alert.presentAlert();
-  
-  if (result === 1) {
-    await clearLogs();
-  }
-  await showSettingsMenu(); // 修改这里，返回设置菜单而不是主菜单
+  await alert.presentAlert();
+  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function clearLogs() {
-  logs = [];
-  const logFile = fm.joinPath(fm.documentsDirectory(), 'SurgeModuleToolLogs.json');
-  if (fm.fileExists(logFile)) {
-    fm.remove(logFile);
-  }
-  log('日志已清除', 'INFO');
-  
   let alert = new Alert();
-  alert.title = '日志已清除';
-  alert.message = '所有日志记录已被删除。';
-  alert.addAction('确定');
-  await alert.presentAlert();
-  await showSettingsMenu();
+  alert.title = '清除日志';
+  alert.message = '确定要清除所有日志记录吗？';
+  alert.addDestructiveAction('清除');
+  alert.addCancelAction('取消');
+
+  let choice = await alert.presentAlert();
+  if (choice === 0) {
+    logs = [];
+    const logFile = fm.joinPath(fm.documentsDirectory(), 'SurgeModuleToolLogs.json');
+    if (fm.fileExists(logFile)) {
+      fm.remove(logFile);
+    }
+    log('日志已清除', 'INFO');
+    
+    let confirmAlert = new Alert();
+    confirmAlert.title = '日志已清除';
+    confirmAlert.message = '所有日志记录已被删除。';
+    confirmAlert.addAction('确定');
+    await confirmAlert.presentAlert();
+  } else {
+    log('取消清除日志操作', 'INFO');
+  }
+  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 // 主要功能函数
@@ -614,8 +627,8 @@ async function updateAllModules() {
 async function handleProcessedModules(processedModules) {
   let shouldWrite = true;
   
-  if (processedModules.length === 1 && fm.fileExists(processedModules[0].filePath) && fromUrlScheme) {
-    // 只在从链接创建时显示确认对话框
+  // 只在从链接创建时显示确认对话框，并且在分类选择之前
+  if (fromUrlScheme && processedModules.length === 1 && fm.fileExists(processedModules[0].filePath)) {
     let isContentSame = compareContentIgnoringCategoryAndDesc(processedModules[0].content, processedModules[0].originalContent);
     let contentComparisonText = isContentSame ? "文件内容一致" : "文件内容不一致";
     let contentComparisonSymbol = isContentSame ? "" : "❗️";
@@ -629,6 +642,9 @@ async function handleProcessedModules(processedModules) {
 
     if (confirmResult === -1) {
       shouldWrite = false;
+      log("用户取消了替换操作", 'INFO');
+      isCancelled = true;
+      return; // 如果用户取消，直接返回，不再继续后续操作
     }
   }
 
@@ -639,6 +655,7 @@ async function handleProcessedModules(processedModules) {
     log(`已更新 ${processedModules.length} 个文件`, 'INFO');
     report.success = processedModules.length;
 
+    // 分类选择逻辑
     let currentCategory = processedModules[0].category;
     let currentName = processedModules[0].name;
 
@@ -669,9 +686,6 @@ async function handleProcessedModules(processedModules) {
       categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
       log(`分类未更新：${currentCategory}`, 'INFO');
     }
-  } else {
-    log("用户取消了替换操作", 'INFO');
-    isCancelled = true;
   }
 }
 
