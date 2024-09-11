@@ -1,4 +1,4 @@
-// prettier-ignore
+// Surge Module Tool
 let ToolVersion = "2";
 
 // 全局变量
@@ -15,44 +15,74 @@ let logs = [];
 const MAX_LOG_ENTRIES = 1000;
 const LOG_CLEANUP_INTERVAL = 7 * 24 * 60 * 60 * 1000; // 7天
 
-const LOG_LEVELS = {
-  DEBUG: 0,   // 详细的调试信息，用于开发和故障排除
-  INFO: 1,    // 常规信息，记录正常操作
-  WARN: 2,    // 警告信息，可能的问题但不影响主要功能
-  ERROR: 3,   // 错误信息，影响功能但不中断脚本
-  CRITICAL: 4 // 严重错误，可能导致脚本中断
-};
+// 使用缓冲区来减少I/O操作
+let logBuffer = [];
+const BUFFER_SIZE = 10;
+const FLUSH_INTERVAL = 5000; // 5秒
 
-let currentLogLevel = LOG_LEVELS.INFO; // 默认日志级别
-
-function setLogLevel(level) {
-  if (LOG_LEVELS.hasOwnProperty(level) && LOG_LEVELS[level] !== currentLogLevel) {
-    currentLogLevel = LOG_LEVELS[level];
-    log(`日志级别已设置为 ${level}`, 'INFO');
-    return true;
-  }
-  return false;
-}
+let lastFlushTime = Date.now();
 
 function log(message, level = 'INFO', details = null) {
-  const logLevel = LOG_LEVELS[level] || LOG_LEVELS.INFO;
-  if (logLevel >= currentLogLevel) {
-    const timestamp = new Date().toISOString();
-    let logEntry = `[${timestamp}] [${level}] ${message}`;
-    
-    if (details) {
-      if (typeof details === 'object') {
-        logEntry += '\nDetails: ' + JSON.stringify(details, null, 2);
-      } else {
-        logEntry += '\nDetails: ' + details;
-      }
+  const timestamp = new Date().toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+  let logEntry = `[${timestamp}] [${level.padEnd(7)}] ${message}`;
+  
+  if (details) {
+    if (typeof details === 'object') {
+      logEntry += '\nDetails: ' + JSON.stringify(details, null, 2);
+    } else {
+      logEntry += '\nDetails: ' + details;
     }
+  }
+  
+  logBuffer.push(logEntry);
+  
+  if (logBuffer.length >= BUFFER_SIZE || Date.now() - lastFlushTime >= FLUSH_INTERVAL) {
+    flushLogs();
+  }
+}
+
+function flushLogs() {
+  if (logBuffer.length > 0) {
+    logs.push(...logBuffer);
+    console.log(logBuffer.join('\n'));
+    logBuffer = [];
     
-    logs.push(logEntry);
-    if (logs.length > MAX_LOG_ENTRIES) {
+    while (logs.length > MAX_LOG_ENTRIES) {
       logs.shift();
     }
-    console.log(logEntry);
+    
+    lastFlushTime = Date.now();
+  }
+}
+
+function checkFlush() {
+  if (Date.now() - lastFlushTime >= FLUSH_INTERVAL) {
+    flushLogs();
+  }
+}
+
+// 在脚本结束时确保所有日志都被刷新
+Script.complete = () => {
+  flushLogs();
+  saveLogs();
+};
+
+// 异步保存日志到文件
+async function saveLogs() {
+  const logFile = fm.joinPath(fm.documentsDirectory(), 'SurgeModuleToolLogs.json');
+  try {
+    await fm.writeString(logFile, JSON.stringify(logs));
+    log('Logs saved successfully', 'INFO', { file: logFile });
+  } catch (error) {
+    logError('Failed to save logs', error);
   }
 }
 
@@ -106,16 +136,6 @@ function cleanupOldLogs() {
     }
   } else {
     log('No existing log file found for cleanup', 'DEBUG');
-  }
-}
-
-function saveLogs() {
-  const logFile = fm.joinPath(fm.documentsDirectory(), 'SurgeModuleToolLogs.json');
-  try {
-    fm.writeString(logFile, JSON.stringify(logs));
-    log('Logs saved successfully', 'INFO', { file: logFile });
-  } catch (error) {
-    logError('Failed to save logs', error);
   }
 }
 
@@ -191,17 +211,30 @@ function compareContentIgnoringCategoryAndDesc(content1, content2) {
   const lines1 = content1.split('\n');
   const lines2 = content2.split('\n');
   
-  if (lines1.length !== lines2.length) return false;
+  const filterLines = (lines) => lines.filter(line => 
+    !line.trim().toLowerCase().startsWith('#!category') && 
+    !line.trim().toLowerCase().startsWith('#!desc')
+  );
   
-  for (let i = 0; i < lines1.length; i++) {
-    const line1 = lines1[i].trim().toLowerCase();
-    const line2 = lines2[i].trim().toLowerCase();
-    
-    if (line1.startsWith('#!category') || line1.startsWith('#!desc')) continue;
-    if (line1 !== line2) return false;
+  const filteredLines1 = filterLines(lines1);
+  const filteredLines2 = filterLines(lines2);
+  
+  if (filteredLines1.length !== filteredLines2.length) return false;
+  
+  for (let i = 0; i < filteredLines1.length; i++) {
+    if (filteredLines1[i].trim() !== filteredLines2[i].trim()) return false;
   }
   
   return true;
+}
+
+function updateCategory(content, newCategory) {
+  const categoryRegex = /^#!category\s*?=.*?$/im;
+  if (categoryRegex.test(content)) {
+    return content.replace(categoryRegex, `#!category=${newCategory}`);
+  } else {
+    return content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
+  }
 }
 
 // 更新脚本
@@ -362,15 +395,6 @@ async function processModule(folderPath, file) {
   return null;
 }
 
-function updateCategory(content, newCategory) {
-  const categoryRegex = /^#!category\s*?=.*?$/im;
-  if (categoryRegex.test(content)) {
-    return content.replace(categoryRegex, `#!category=${newCategory}`);
-  } else {
-    return content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
-  }
-}
-
 // 菜单和用户界面
 async function showMainMenu() {
   let alert = new Alert();
@@ -407,7 +431,6 @@ async function showSettingsMenu() {
   alert.title = 'Surge 模块工具设置';
   alert.addAction('检查更新');
   alert.addAction('查看日志');
-  alert.addAction('设置日志级别');
   alert.addAction('清除日志');
   alert.addAction('返回主菜单');
   
@@ -421,58 +444,15 @@ async function showSettingsMenu() {
       await showLogs();
       break;
     case 2:
-      await setLogLevelMenu();
-      break;
-    case 3:
       await clearLogs();
       break;
-    case 4:
+    case 3:
     default:
       await showMainMenu();
       return;
   }
   // 执行完设置操作后，自动返回设置菜单
   await showSettingsMenu();
-}
-
-async function setLogLevelMenu() {
-  const currentLevel = Object.keys(LOG_LEVELS).find(key => LOG_LEVELS[key] === currentLogLevel);
-  
-  let alert = new Alert();
-  alert.title = '设置日志级别';
-  alert.message = `当前日志级别: ${currentLevel}\n\n` +
-                  '选择一个新的日志级别：\n\n' +
-                  'DEBUG: 详细的调试信息\n' +
-                  'INFO: 常规操作信息\n' +
-                  'WARN: 警告信息\n' +
-                  'ERROR: 错误信息\n' +
-                  'CRITICAL: 严重错误';
-  
-  alert.addAction('DEBUG');
-  alert.addAction('INFO');
-  alert.addAction('WARN');
-  alert.addAction('ERROR');
-  alert.addAction('CRITICAL');
-  alert.addCancelAction('取消');
-
-  let idx = await alert.presentAlert();
-  if (idx !== -1) {
-    const levels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL'];
-    let confirmAlert = new Alert();
-    confirmAlert.title = '确认更改日志级别';
-    confirmAlert.message = `是否将日志级别从 ${currentLevel} 更改为 ${levels[idx]}？`;
-    confirmAlert.addAction('确认');
-    confirmAlert.addCancelAction('取消');
-    let confirmChoice = await confirmAlert.presentAlert();
-    if (confirmChoice === 0) {
-      setLogLevel(levels[idx]);
-      log(`日志级别已从 ${currentLevel} 更改为 ${levels[idx]}`, 'INFO');
-    } else {
-      log(`日志级别保持不变: ${currentLevel}`, 'INFO');
-    }
-  } else {
-    log(`日志级别保持不变: ${currentLevel}`, 'INFO');
-  }
 }
 
 async function checkForUpdates() {
@@ -554,7 +534,7 @@ async function createFromLink(url, name) {
   if (!url) {
     let alert = new Alert();
     alert.title = '将自动添加后缀 .sgmodule';
-    alert.addTextField('链接(必填)', '');
+    alert.addTextField('模块链接(必填)', '');
     alert.addTextField('名称(选填)', '');
     alert.addAction('下载');
     alert.addCancelAction('取消');
@@ -622,32 +602,41 @@ async function updateAllModules() {
 }
 
 async function handleProcessedModules(processedModules) {
+  if (processedModules.length === 0) {
+    log("没有处理任何模块", 'WARN');
+    return;
+  }
+
   let shouldWrite = true;
   
   // 只在从链接创建时显示确认对话框，并且在分类选择之前
-  if (fromUrlScheme && processedModules.length === 1 && fm.fileExists(processedModules[0].filePath)) {
-    let isContentSame = compareContentIgnoringCategoryAndDesc(processedModules[0].content, processedModules[0].originalContent);
-    let contentComparisonText = isContentSame ? "文件内容一致" : "文件内容不一致";
-    let contentComparisonSymbol = isContentSame ? "" : "❗️";
-    
-    let confirmAlert = new Alert();
-    confirmAlert.title = "文件替换";
-    confirmAlert.message = `文件 "${processedModules[0].name}"\n\n${contentComparisonSymbol}${contentComparisonText}${contentComparisonSymbol}`;
-    confirmAlert.addAction("替换");
-    confirmAlert.addCancelAction("取消");
-    let confirmResult = await confirmAlert.presentAlert();
+  if (fromUrlScheme) {
+    for (const module of processedModules) {
+      if (fm.fileExists(module.filePath)) {
+        let isContentSame = compareContentIgnoringCategoryAndDesc(module.content, module.originalContent);
+        let contentComparisonText = isContentSame ? "文件内容一致" : "文件内容不一致";
+        let contentComparisonSymbol = isContentSame ? "" : "❗️";
+        
+        let confirmAlert = new Alert();
+        confirmAlert.title = "文件替换";
+        confirmAlert.message = `文件 "${module.name}"\n\n${contentComparisonSymbol}${contentComparisonText}${contentComparisonSymbol}`;
+        confirmAlert.addAction("替换");
+        confirmAlert.addCancelAction("取消");
+        let confirmResult = await confirmAlert.presentAlert();
 
-    if (confirmResult === -1) {
-      shouldWrite = false;
-      log("用户取消了替换操作", 'INFO');
-      isCancelled = true;
-      return; // 如果用户取消，直接返回，不再继续后续操作
+        if (confirmResult === -1) {
+          shouldWrite = false;
+          log(`用户取消了替换操作: ${module.name}`, 'INFO');
+          return; // 如果用户取消，直接返回，不继续处理
+        }
+      }
     }
   }
 
   if (shouldWrite) {
     for (const module of processedModules) {
       FileOperations.writeFile(module.filePath, module.content);
+      log(`更新文件: ${module.name}`, 'INFO');
     }
     log(`已更新 ${processedModules.length} 个文件`, 'INFO');
     report.success = processedModules.length;
@@ -662,7 +651,7 @@ async function handleProcessedModules(processedModules) {
     categoryAlert.addAction("📙广告模块");
     categoryAlert.addAction("📗功能模块");
     categoryAlert.addAction("📘面板模块");
-    categoryAlert.addCancelAction("取消");
+    categoryAlert.addCancelAction("📚取消分类");
     let categoryChoice = await categoryAlert.presentAlert();
     
     if (categoryChoice !== -1) {
@@ -676,6 +665,7 @@ async function handleProcessedModules(processedModules) {
         module.content = updateCategory(module.content, newCategory);
         module.category = newCategory;
         FileOperations.writeFile(module.filePath, module.content);
+        log(`更新分类: ${module.name} -> ${newCategory}`, 'INFO');
       }
       categoryUpdateResult = `✅分类更新成功：${newCategory}`;
       log(`分类更新成功：${newCategory}`, 'INFO');
