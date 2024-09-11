@@ -3,10 +3,17 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.05";
+let ToolVersion = "2.07";
 
 async function delay(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
+  let endTime = Date.now() + milliseconds;
+  while (Date.now() < endTime) {
+    await new Promise(resolve => {
+      if (Date.now() >= endTime) {
+        resolve();
+      }
+    });
+  }
 }
 
 function convertToValidFileName(str) {
@@ -177,8 +184,6 @@ if (idx == 3) {
       name = fullname ? fullname.replace(/\.sgmodule$/, '') : `untitled-${new Date().toLocaleString()}`;
     }
     name = convertToValidFileName(name);
-    files = [`${name}.sgmodule`];
-    contents = [`#SUBSCRIBED ${url}`];
     
     const req = new Request(url);
     req.timeoutInterval = 10;
@@ -190,9 +195,16 @@ if (idx == 3) {
     const filePath = fm.joinPath(fm.documentsDirectory(), fileName);
     fm.writeString(filePath, content);
     
+    console.log(`已保存模块: ${fileName}`);
+    
+    // 文件保存后进行分类
     await handleCategory(filePath, name);
     
-    console.log(`已保存并分类模块: ${fileName}`);
+    console.log(`已完成模块分类: ${fileName}`);
+    
+    // 更新文件列表和内容列表，以便后续处理
+    files = [fileName];
+    contents = [content];
   }
 } else if (idx == 0) {
   console.log('检查更新');
@@ -318,6 +330,16 @@ if (!fromUrlScheme && idx !== 0) {
   }`;
   alert.addDestructiveAction('重载 Surge');
   alert.addAction('打开 Surge');
+  alert.addCancelAction('关闭');
+  let choice = await alert.presentAlert();
+  if (choice == 0) {
+    await new Request('http://script.hub/reload').loadString();
+  } else if (choice == 1) {
+    Safari.open('surge://');
+  }
+}
+
+Script.complete();
   alert.addCancelAction('关闭');
   let choice = await alert.presentAlert();
   if (choice == 0) {
