@@ -3,26 +3,21 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.03";
+let ToolVersion = "2.04";
 
 async function delay(milliseconds) {
   var before = Date.now()
   while (Date.now() < before + milliseconds) {}
   return true
 }
+
 function convertToValidFileName(str) {
-  // 替换非法字符为下划线
   const invalidCharsRegex = /[\/:*?"<>|]/g
   const validFileName = str.replace(invalidCharsRegex, '_')
-
-  // 删除多余的点号
   const multipleDotsRegex = /\.{2,}/g
   const fileNameWithoutMultipleDots = validFileName.replace(multipleDotsRegex, '.')
-
-  // 删除文件名开头和结尾的点号和空格
   const leadingTrailingDotsSpacesRegex = /^[\s.]+|[\s.]+$/g
   const finalFileName = fileNameWithoutMultipleDots.replace(leadingTrailingDotsSpacesRegex, '')
-
   return finalFileName
 }
 
@@ -41,10 +36,60 @@ function addLineAfterLastOccurrence(text, addition) {
   return text
 }
 
+// 新增：处理模块分类的函数
+async function handleCategory(filePath, name) {
+  const fm = FileManager.iCloud();
+  let content = fm.readString(filePath);
+  
+  let categoryMatch = content.match(/^#!category\s*=\s*(.*?)$/m);
+  let category = categoryMatch ? categoryMatch[1] : "📚未分类";
+
+  // 如果没有找到 category，添加初始值
+  if (!categoryMatch) {
+    content = content.replace(/^(#!name=.*?)(\n|$)/, `$1\n#!category=📚未分类$2`);
+    fm.writeString(filePath, content);
+    categoryMatch = content.match(/^#!category\s*=\s*(.*?)$/m);
+    category = "📚未分类";
+  }
+
+  let alert = new Alert();
+  alert.title = "模块分类";
+  alert.message = `当前模块名称: ${name}\n当前分类: ${category}`;
+  alert.addAction("📙广告模块");
+  alert.addAction("📗功能模块");
+  alert.addAction("📘面板模块");
+  alert.addAction("📚保持当前分类");
+  
+  let choice = await alert.presentAlert();
+  
+  let newCategory;
+  switch (choice) {
+    case 0:
+      newCategory = "📙广告模块";
+      break;
+    case 1:
+      newCategory = "📗功能模块";
+      break;
+    case 2:
+      newCategory = "📘面板模块";
+      break;
+    case 3:
+      newCategory = category; // 保持当前分类
+      break;
+  }
+
+  if (newCategory !== category) {
+    content = content.replace(/^#!category=.*?$/m, `#!category=${newCategory}`);
+    fm.writeString(filePath, content);
+    console.log(`已更新模块分类: ${name} -> ${newCategory}`);
+  } else {
+    console.log(`保持模块分类不变: ${name} -> ${category}`);
+  }
+}
+
 let idx
 let fromUrlScheme
 let checkUpdate
-// if (args.queryParameters.url && args.queryParameters.name) {
 if (args.queryParameters.url) {
   fromUrlScheme = true
 }
@@ -53,7 +98,6 @@ if (fromUrlScheme) {
 } else {
   let alert = new Alert()
   alert.title = 'Surge 模块工具'
-  //alert.addDestructiveAction("更新文件夹内全部文件")
   alert.addDestructiveAction('更新本脚本')
   alert.addAction('从链接创建')
   alert.addAction('更新单个模块')
@@ -104,6 +148,22 @@ if (idx == 3) {
     name = convertToValidFileName(name)
     files = [`${name}.sgmodule`]
     contents = [`#SUBSCRIBED ${url}`]
+    
+    // 下载并保存文件
+    const req = new Request(url)
+    req.timeoutInterval = 10
+    req.method = 'GET'
+    let content = await req.loadString()
+    content = `#SUBSCRIBED ${url}\n${content}`
+    
+    const fileName = `${name}.sgmodule`
+    const filePath = fm.joinPath(fm.documentsDirectory(), fileName)
+    fm.writeString(filePath, content)
+    
+    // 处理分类
+    await handleCategory(filePath, name)
+    
+    console.log(`已保存并分类模块: ${fileName}`)
   }
 } else if (idx == 0) {
   console.log('检查更新')
@@ -119,7 +179,6 @@ let report = {
 
 for await (const [index, file] of files.entries()) {
   if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
-    // console.log(file);
     let originalName
     let originalDesc
     let noUrl
@@ -184,17 +243,19 @@ for await (const [index, file] of files.entries()) {
         res = `#!desc=\n${res}`
       }
       res = res.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')
-      // console.log(res);
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`)
       content = `${res}`.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `)
-      // console.log(content);
+      
       if (filePath) {
         fm.writeString(filePath, content)
+        
+        // 处理分类
+        await handleCategory(filePath, name)
       } else {
         await DocumentPicker.exportString(content, file)
+        // 注意：对于导出的文件，我们无法直接处理分类，因为文件路径未知
       }
 
-      // }
       let nameInfo = `${name}`
       let descInfo = `${desc}`
       if (originalName && name !== originalName) {
@@ -295,6 +356,17 @@ async function update() {
   }
 
   if (!version) {
+    let alert = new Alert()
+    alert.title = 'Surge 模块工具'
+    alert.message = '无法获取在线版本'
+    alert.addCancelAction('关闭')
+    await alert.presentAlert()
+    return
+  } else {
+    let needUpdate = version > ToolVersion
+    if (!needUpdate) {
+      let alert = new Alert()
+if (!version) {
     let alert = new Alert()
     alert.title = 'Surge 模块工具'
     alert.message = '无法获取在线版本'
