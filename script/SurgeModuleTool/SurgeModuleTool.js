@@ -1,5 +1,5 @@
 // prettier-ignore
-let ToolVersion = "2";
+let ToolVersion = "1";
 
 // 全局变量
 let isCancelled = false;
@@ -26,10 +26,12 @@ const LOG_LEVELS = {
 let currentLogLevel = LOG_LEVELS.INFO; // 默认日志级别
 
 function setLogLevel(level) {
-  if (LOG_LEVELS.hasOwnProperty(level)) {
+  if (LOG_LEVELS.hasOwnProperty(level) && LOG_LEVELS[level] !== currentLogLevel) {
     currentLogLevel = LOG_LEVELS[level];
     log(`日志级别已设置为 ${level}`, 'INFO');
+    return true;
   }
+  return false;
 }
 
 function log(message, level = 'INFO', details = null) {
@@ -131,6 +133,32 @@ function readLogs() {
   return [];
 }
 
+// 模块化重构 (适配 Scriptable)
+const FileOperations = {
+  readFile: function(path) {
+    return fm.readString(path);
+  },
+  writeFile: function(path, content) {
+    fm.writeString(path, content);
+  },
+  listContents: function(path) {
+    return fm.listContents(path);
+  }
+};
+
+const NetworkOperations = {
+  fetchModule: async function(url) {
+    const req = new Request(url);
+    req.timeoutInterval = 10;
+    req.method = 'GET';
+    const startTime = Date.now();
+    let res = await req.loadString();
+    const responseTime = Date.now() - startTime;
+    logNetworkRequest(url, 'GET', req.response.statusCode, responseTime);
+    return res;
+  }
+};
+
 // 辅助函数
 async function delay(milliseconds) {
   return new Promise(resolve => Timer.schedule(milliseconds / 1000, false, () => resolve()));
@@ -222,6 +250,13 @@ async function update(forceUpdate = false) {
   return null;
 }
 
+// 异步处理和并发优化
+async function processFiles() {
+  const processPromises = files.map(file => processModule(folderPath, file));
+  const processedModules = await Promise.all(processPromises);
+  return processedModules.filter(module => module !== null);
+}
+
 // 模块处理
 async function processModule(folderPath, file) {
   if (isCancelled) {
@@ -236,7 +271,7 @@ async function processModule(folderPath, file) {
       if (contents.length > 0) {
         content = contents[files.indexOf(file)];
       } else {
-        content = fm.readString(filePath);
+        content = FileOperations.readFile(filePath);
       }
 
       const nameMatched = content.match(/^#\!name\s*?=\s*(.*?)\s*(\n|$)/im);
@@ -270,20 +305,7 @@ async function processModule(folderPath, file) {
         throw new Error('无订阅链接');
       }
 
-      const req = new Request(url);
-      req.timeoutInterval = 10;
-      req.method = 'GET';
-      const startTime = Date.now();
-      let res = await req.loadString();
-      const responseTime = Date.now() - startTime;
-      const statusCode = req.response.statusCode;
-      logNetworkRequest(url, 'GET', statusCode, responseTime);
-      if (statusCode < 200 || statusCode >= 400) {
-        throw new Error(`statusCode: ${statusCode}`);
-      }
-      if (!res) {
-        throw new Error(`未获取到模块内容`);
-      }
+      let res = await NetworkOperations.fetchModule(url);
 
       const newNameMatched = res.match(/^#\!name\s*?=\s*?\s*(.*?)\s*(\n|$)/im);
       if (!newNameMatched) {
@@ -317,7 +339,7 @@ async function processModule(folderPath, file) {
         desc: newDesc,
         category: "📚未分类",
         filePath,
-        originalContent: fm.fileExists(filePath) ? fm.readString(filePath) : null
+        originalContent: fm.fileExists(filePath) ? FileOperations.readFile(filePath) : null
       };
     } catch (e) {
       if (noUrl) {
@@ -347,18 +369,6 @@ function updateCategory(content, newCategory) {
   } else {
     return content.replace(/^(#!name.*?)$/im, `$1\n#!category=${newCategory}`);
   }
-}
-
-async function processFiles() {
-  let processedModules = [];
-  for (const file of files) {
-    if (isCancelled) break;
-    const result = await processModule(folderPath, file);
-    if (result) {
-      processedModules.push(result);
-    }
-  }
-  return processedModules;
 }
 
 // 菜单和用户界面
@@ -419,9 +429,12 @@ async function showSettingsMenu() {
 }
 
 async function setLogLevelMenu() {
+  const currentLevel = Object.keys(LOG_LEVELS).find(key => LOG_LEVELS[key] === currentLogLevel);
+  
   let alert = new Alert();
   alert.title = '设置日志级别';
-  alert.message = '选择一个日志级别：\n\n' +
+  alert.message = `当前日志级别: ${currentLevel}\n\n` +
+                  '选择一个新的日志级别：\n\n' +
                   'DEBUG: 详细的调试信息\n' +
                   'INFO: 常规操作信息\n' +
                   'WARN: 警告信息\n' +
@@ -439,6 +452,9 @@ async function setLogLevelMenu() {
   if (idx !== -1) {
     const levels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL'];
     setLogLevel(levels[idx]);
+    log(`日志级别已从 ${currentLevel} 更改为 ${levels[idx]}`, 'INFO');
+  } else {
+    log(`日志级别保持不变: ${currentLevel}`, 'INFO');
   }
   await showSettingsMenu();
 }
@@ -504,7 +520,7 @@ async function showLogs() {
   if (result === 1) {
     await clearLogs();
   }
-  await showMainMenu();
+  await showSettingsMenu(); // 修改这里，返回设置菜单而不是主菜单
 }
 
 async function clearLogs() {
@@ -520,7 +536,7 @@ async function clearLogs() {
   alert.message = '所有日志记录已被删除。';
   alert.addAction('确定');
   await alert.presentAlert();
-  await showMainMenu();
+  await showSettingsMenu();
 }
 
 // 主要功能函数
@@ -587,7 +603,7 @@ async function updateAllModules() {
     isCancelled = true;
     return;
   }
-  files = fm.listContents(folderPath);
+  files = FileOperations.listContents(folderPath);
   
   let processedModules = await processFiles();
   if (processedModules.length > 0) {
@@ -596,53 +612,66 @@ async function updateAllModules() {
 }
 
 async function handleProcessedModules(processedModules) {
-  for (const module of processedModules) {
-    try {
-      fm.writeString(module.filePath, module.content);
-      logFileOperation('Write', module.filePath, 'SUCCESS');
-    } catch (error) {
-      logFileOperation('Write', module.filePath, 'FAIL');
-      logError(`Failed to write file: ${module.filePath}`, error);
+  let shouldWrite = true;
+  
+  if (processedModules.length === 1 && fm.fileExists(processedModules[0].filePath) && fromUrlScheme) {
+    // 只在从链接创建时显示确认对话框
+    let isContentSame = compareContentIgnoringCategoryAndDesc(processedModules[0].content, processedModules[0].originalContent);
+    let contentComparisonText = isContentSame ? "文件内容一致" : "文件内容不一致";
+    let contentComparisonSymbol = isContentSame ? "" : "❗️";
+    
+    let confirmAlert = new Alert();
+    confirmAlert.title = "文件替换";
+    confirmAlert.message = `文件 "${processedModules[0].name}"\n\n${contentComparisonSymbol}${contentComparisonText}${contentComparisonSymbol}`;
+    confirmAlert.addAction("替换");
+    confirmAlert.addCancelAction("取消");
+    let confirmResult = await confirmAlert.presentAlert();
+
+    if (confirmResult === -1) {
+      shouldWrite = false;
     }
   }
-  log(`已更新 ${processedModules.length} 个文件`, 'INFO');
-  report.success = processedModules.length;
 
-  let currentCategory = processedModules[0].category;
-  let currentName = processedModules[0].name;
-
-  let categoryAlert = new Alert();
-  categoryAlert.title = "模块分类";
-  categoryAlert.message = `模块名称：${currentName}\n当前类别：${currentCategory}`;
-  categoryAlert.addAction("📙广告模块");
-  categoryAlert.addAction("📗功能模块");
-  categoryAlert.addAction("📘面板模块");
-  categoryAlert.addCancelAction("取消");
-  let categoryChoice = await categoryAlert.presentAlert();
-  
-  if (categoryChoice !== -1) {
-    let newCategory;
-    switch(categoryChoice) {
-      case 0: newCategory = "📙广告模块"; break;
-      case 1: newCategory = "📗功能模块"; break;
-      case 2: newCategory = "📘面板模块"; break;
+  if (shouldWrite) {
+    for (const module of processedModules) {
+      FileOperations.writeFile(module.filePath, module.content);
     }
-    for (let module of processedModules) {
-      try {
+    log(`已更新 ${processedModules.length} 个文件`, 'INFO');
+    report.success = processedModules.length;
+
+    let currentCategory = processedModules[0].category;
+    let currentName = processedModules[0].name;
+
+    let categoryAlert = new Alert();
+    categoryAlert.title = "模块分类";
+    categoryAlert.message = `模块名称：${currentName}\n当前类别：${currentCategory}`;
+    categoryAlert.addAction("📙广告模块");
+    categoryAlert.addAction("📗功能模块");
+    categoryAlert.addAction("📘面板模块");
+    categoryAlert.addCancelAction("取消");
+    let categoryChoice = await categoryAlert.presentAlert();
+    
+    if (categoryChoice !== -1) {
+      let newCategory;
+      switch(categoryChoice) {
+        case 0: newCategory = "📙广告模块"; break;
+        case 1: newCategory = "📗功能模块"; break;
+        case 2: newCategory = "📘面板模块"; break;
+      }
+      for (let module of processedModules) {
         module.content = updateCategory(module.content, newCategory);
         module.category = newCategory;
-        fm.writeString(module.filePath, module.content);
-        logFileOperation('Update Category', module.filePath, 'SUCCESS');
-      } catch (error) {
-        logFileOperation('Update Category', module.filePath, 'FAIL');
-        logError(`Failed to update category for file: ${module.filePath}`, error);
+        FileOperations.writeFile(module.filePath, module.content);
       }
+      categoryUpdateResult = `✅分类更新成功：${newCategory}`;
+      log(`分类更新成功：${newCategory}`, 'INFO');
+    } else {
+      categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
+      log(`分类未更新：${currentCategory}`, 'INFO');
     }
-    categoryUpdateResult = `✅分类更新成功：${newCategory}`;
-    log(`分类更新成功：${newCategory}`, 'INFO');
   } else {
-    categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
-    log(`分类未更新：${currentCategory}`, 'INFO');
+    log("用户取消了替换操作", 'INFO');
+    isCancelled = true;
   }
 }
 
