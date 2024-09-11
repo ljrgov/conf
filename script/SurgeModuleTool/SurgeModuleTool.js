@@ -386,7 +386,7 @@ async function showMainMenu() {
   switch(idx) {
     case 0:
       await showSettingsMenu();
-      break;​​​
+      break;
     case 1:
       await createFromLink();
       break;
