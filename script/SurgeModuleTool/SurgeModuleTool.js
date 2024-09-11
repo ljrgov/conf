@@ -366,14 +366,6 @@ async function update() {
     let needUpdate = version > ToolVersion
     if (!needUpdate) {
       let alert = new Alert()
-if (!version) {
-    let alert = new Alert()
-    alert.title = 'Surge 模块工具'
-    alert.message = '无法获取在线版本'
-    alert.addCancelAction('关闭')
-    await alert.presentAlert()
-    return
-  } else {
     let needUpdate = version > ToolVersion
     if (!needUpdate) {
       let alert = new Alert()
