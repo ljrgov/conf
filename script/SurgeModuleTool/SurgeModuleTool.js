@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.07";
+let ToolVersion = "2.09";
 
 async function delay(milliseconds) {
   let endTime = Date.now() + milliseconds;
@@ -95,39 +95,39 @@ async function update() {
     version = match ? match[1] : '';
   } catch (e) {
     console.error(e);
+    return;
   }
 
   if (!version) {
+    console.log('无法获取在线版本');
+    return;
+  }
+
+  let needUpdate = version > ToolVersion;
+  if (!needUpdate) {
     let alert = new Alert();
     alert.title = 'Surge 模块工具';
-    alert.message = '无法获取在线版本';
+    alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
+    alert.addDestructiveAction('强制更新');
     alert.addCancelAction('关闭');
-    await alert.presentAlert();
-    return;
-  } else {
-    let needUpdate = version > ToolVersion;
-    if (!needUpdate) {
-      let alert = new Alert();
-      alert.title = 'Surge 模块工具';
-      alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
-      alert.addDestructiveAction('强制更新');
-      alert.addCancelAction('关闭');
-      let idx = await alert.presentAlert();
-      if (idx === 0) {
-        needUpdate = true;
-      }
+    let idx = await alert.presentAlert();
+    if (idx === 0) {
+      needUpdate = true;
+    } else {
+      return;
     }
-    if (needUpdate) {
-      fm.writeString(`${dict}/${scriptName}.js`, resp);
-      console.log('更新成功: ' + version);
-      let notification = new Notification();
-      notification.title = 'Surge 模块工具 更新成功: ' + version;
-      notification.subtitle = '点击通知跳转';
-      notification.sound = 'default';
-      notification.openURL = `scriptable:///open/${scriptName}`;
-      notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
-      await notification.schedule();
-    }
+  }
+  
+  if (needUpdate) {
+    fm.writeString(`${dict}/${scriptName}.js`, resp);
+    console.log('更新成功: ' + version);
+    let notification = new Notification();
+    notification.title = 'Surge 模块工具 更新成功: ' + version;
+    notification.subtitle = '点击通知跳转';
+    notification.sound = 'default';
+    notification.openURL = `scriptable:///open/${scriptName}`;
+    notification.addAction('打开脚本', `scriptable:///open/${scriptName}`, false);
+    await notification.schedule();
   }
 }
 
@@ -146,6 +146,11 @@ if (fromUrlScheme) {
   alert.addAction('更新全部模块');
   alert.addCancelAction('取消');
   idx = await alert.presentAlert();
+  if (idx === -1) {
+    // 用户点击了取消，退出脚本
+    Script.complete();
+    return;
+  }
 }
 
 let folderPath;
@@ -154,12 +159,24 @@ let contents = [];
 const fm = FileManager.iCloud();
 
 if (idx == 3) {
-  folderPath = await DocumentPicker.openFolder();
-  files = fm.listContents(folderPath);
+  try {
+    folderPath = await DocumentPicker.openFolder();
+    files = fm.listContents(folderPath);
+  } catch (e) {
+    console.log('用户取消了文件夹选择');
+    Script.complete();
+    return;
+  }
 } else if (idx == 2) {
-  const filePath = await DocumentPicker.openFile();
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+  try {
+    const filePath = await DocumentPicker.openFile();
+    folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+    files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+  } catch (e) {
+    console.log('用户取消了文件选择');
+    Script.complete();
+    return;
+  }
 } else if (idx == 1) {
   let url;
   let name;
@@ -173,7 +190,12 @@ if (idx == 3) {
     alert.addTextField('名称(选填)', '');
     alert.addAction('下载');
     alert.addCancelAction('取消');
-    await alert.presentAlert();
+    let alertIdx = await alert.presentAlert();
+    if (alertIdx === -1) {
+      // 用户点击了取消，退出脚本
+      Script.complete();
+      return;
+    }
     url = alert.textFieldValue(0);
     name = alert.textFieldValue(1);
   }
@@ -185,26 +207,32 @@ if (idx == 3) {
     }
     name = convertToValidFileName(name);
     
-    const req = new Request(url);
-    req.timeoutInterval = 10;
-    req.method = 'GET';
-    let content = await req.loadString();
-    content = `#SUBSCRIBED ${url}\n${content}`;
-    
-    const fileName = `${name}.sgmodule`;
-    const filePath = fm.joinPath(fm.documentsDirectory(), fileName);
-    fm.writeString(filePath, content);
-    
-    console.log(`已保存模块: ${fileName}`);
-    
-    // 文件保存后进行分类
-    await handleCategory(filePath, name);
-    
-    console.log(`已完成模块分类: ${fileName}`);
-    
-    // 更新文件列表和内容列表，以便后续处理
-    files = [fileName];
-    contents = [content];
+    try {
+      const req = new Request(url);
+      req.timeoutInterval = 10;
+      req.method = 'GET';
+      let content = await req.loadString();
+      content = `#SUBSCRIBED ${url}\n${content}`;
+      
+      const fileName = `${name}.sgmodule`;
+      const filePath = fm.joinPath(fm.documentsDirectory(), fileName);
+      fm.writeString(filePath, content);
+      
+      console.log(`已保存模块: ${fileName}`);
+      
+      // 文件保存后进行分类
+      await handleCategory(filePath, name);
+      
+      console.log(`已完成模块分类: ${fileName}`);
+      
+      // 更新文件列表和内容列表，以便后续处理
+      files = [fileName];
+      contents = [content];
+    } catch (e) {
+      console.error(`下载或保存模块时出错: ${e}`);
+      Script.complete();
+      return;
+    }
   }
 } else if (idx == 0) {
   console.log('检查更新');
@@ -333,17 +361,7 @@ if (!fromUrlScheme && idx !== 0) {
   alert.addCancelAction('关闭');
   let choice = await alert.presentAlert();
   if (choice == 0) {
-    await new Request('http://script.hub/reload').loadString();
-  } else if (choice == 1) {
-    Safari.open('surge://');
-  }
-}
-
-Script.complete();
-  alert.addCancelAction('关闭');
-  let choice = await alert.presentAlert();
-  if (choice == 0) {
-    await new Request('http://script.hub/reload').loadString();
+        await new Request('http://script.hub/reload').loadString();
   } else if (choice == 1) {
     Safari.open('surge://');
   }
