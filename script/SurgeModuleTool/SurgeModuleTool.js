@@ -15,7 +15,6 @@ let logs = [];
 const MAX_LOG_ENTRIES = 1000;
 const LOG_CLEANUP_INTERVAL = 7 * 24 * 60 * 60 * 1000; // 7天
 
-// 使用缓冲区来减少I/O操作
 let logBuffer = [];
 const BUFFER_SIZE = 10;
 const FLUSH_INTERVAL = 5000; // 5秒
@@ -24,12 +23,8 @@ let lastFlushTime = Date.now();
 
 function log(message, level = 'INFO', details = null) {
   const timestamp = new Date().toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
     hour12: false
   });
   let logEntry = `[${timestamp}] [${level.padEnd(7)}] ${message}`;
@@ -69,13 +64,11 @@ function checkFlush() {
   }
 }
 
-// 在脚本结束时确保所有日志都被刷新
 Script.complete = () => {
   flushLogs();
   saveLogs();
 };
 
-// 异步保存日志到文件
 async function saveLogs() {
   const logFile = fm.joinPath(fm.documentsDirectory(), 'SurgeModuleToolLogs.json');
   try {
@@ -283,14 +276,20 @@ async function update(forceUpdate = false) {
   return null;
 }
 
-// 异步处理和并发优化
+// 重构的核心功能
+async function processModules(updateType) {
+  let processedModules = await processFiles();
+  if (processedModules.length > 0) {
+    await handleProcessedModules(processedModules, updateType);
+  }
+}
+
 async function processFiles() {
   const processPromises = files.map(file => processModule(folderPath, file));
   const processedModules = await Promise.all(processPromises);
   return processedModules.filter(module => module !== null);
 }
 
-// 模块处理
 async function processModule(folderPath, file) {
   if (isCancelled) {
     log('Module processing cancelled', 'WARN', { file });
@@ -359,7 +358,6 @@ async function processModule(folderPath, file) {
       res = addLineAfterLastOccurrence(res, `\n\n# 🔗 模块链接\n${subscribed.replace(/\n/g, '')}\n`);
       content = res.replace(/^#\!desc\s*?=\s*/im, `#!desc=🔗 [${new Date().toLocaleString()}] `);
 
-      // 设置初始分类值
       if (!categoryRegex.test(content)) {
         content = content.replace(/^(#!name.*?)$/im, `$1\n#!category=📚未分类`);
       } else {
@@ -382,7 +380,6 @@ async function processModule(folderPath, file) {
         report.fail.push(currentName || file);
         logError(`模块处理失败`, e);
       }
-
       if (fromUrlScheme) {
         let alert = new Alert();
         alert.title = `${noUrl ? '⚠️' : '❌'} ${currentName || ''}\n${file}`;
@@ -393,6 +390,142 @@ async function processModule(folderPath, file) {
     }
   }
   return null;
+}
+
+async function createFromLink(url, name) {
+  if (!url) {
+    let alert = new Alert();
+    alert.title = '将自动添加后缀 .sgmodule';
+    alert.addTextField('模块链接(必填)', '');
+    alert.addTextField('名称(选填)', '');
+    alert.addAction('下载');
+    alert.addCancelAction('取消');
+    let result = await alert.presentAlert();
+    if (result === -1) {
+      isCancelled = true;
+      return;
+    }
+    url = alert.textFieldValue(0);
+    name = alert.textFieldValue(1);
+  }
+
+  if (!name) {
+    const plainUrl = url.split('?')[0];
+    const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
+    if (fullname) {
+      name = fullname.replace(/\.sgmodule$/, '');
+    }
+    if (!name) {
+      name = `untitled-${new Date().toLocaleString()}`;
+    }
+  }
+  name = convertToValidFileName(name);
+  files = [`${name}.sgmodule`];
+  contents = [`#SUBSCRIBED ${url}`];
+  folderPath = await DocumentPicker.openFolder();
+  if (!folderPath) {
+    isCancelled = true;
+    return;
+  }
+
+  await processModules('create_from_link');
+}
+
+async function updateSingleModule() {
+  const filePath = await DocumentPicker.openFile();
+  if (!filePath) {
+    isCancelled = true;
+    return;
+  }
+  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+  
+  await processModules('update_single');
+}
+
+async function updateAllModules() {
+  folderPath = await DocumentPicker.openFolder();
+  if (!folderPath) {
+    isCancelled = true;
+    return;
+  }
+  files = FileOperations.listContents(folderPath);
+  
+  await processModules('update_all');
+}
+
+async function handleProcessedModules(processedModules, updateType) {
+  if (processedModules.length === 0) {
+    log("没有处理任何模块", 'WARN');
+    return;
+  }
+
+  for (const module of processedModules) {
+    let shouldWrite = true;
+
+    if (updateType === 'create_from_link' && fm.fileExists(module.filePath)) {
+      let isContentSame = compareContentIgnoringCategoryAndDesc(module.content, module.originalContent);
+      if (!isContentSame) {
+        let confirmAlert = new Alert();
+        confirmAlert.title = "文件替换确认";
+        confirmAlert.message = `文件 "${module.name}" 的内容已更改。是否替换？`;
+        confirmAlert.addAction("替换");
+        confirmAlert.addCancelAction("取消");
+        let confirmResult = await confirmAlert.presentAlert();
+
+        if (confirmResult === -1) {
+          shouldWrite = false;
+          log(`用户取消了替换操作: ${module.name}`, 'INFO');
+        }
+      } else {
+        log(`文件 "${module.name}" 内容未变，无需更新`, 'INFO');
+        shouldWrite = false;
+      }
+    }
+
+    if (shouldWrite) {
+      FileOperations.writeFile(module.filePath, module.content);
+      log(`更新文件: ${module.name}`, 'INFO');
+      report.success++;
+    }
+  }
+
+  log(`已处理 ${report.success} 个文件`, 'INFO');
+
+  // 分类选择逻辑
+  if (processedModules.length > 0) {
+    let currentCategory = processedModules[0].category;
+    let currentName = processedModules[0].name;
+
+    let categoryAlert = new Alert();
+    categoryAlert.title = "模块分类";
+    categoryAlert.message = `模块名称：${currentName}\n当前类别：${currentCategory}`;
+    categoryAlert.addAction("📙广告模块");
+    categoryAlert.addAction("📗功能模块");
+    categoryAlert.addAction("📘面板模块");
+    categoryAlert.addCancelAction("📚取消分类");
+    let categoryChoice = await categoryAlert.presentAlert();
+    
+    if (categoryChoice !== -1) {
+      let newCategory;
+      switch(categoryChoice) {
+        case 0: newCategory = "📙广告模块"; break;
+        case 1: newCategory = "📗功能模块"; break;
+        case 2: newCategory = "📘面板模块"; break;
+      }
+      for (let module of processedModules) {
+        module.content = updateCategory(module.content, newCategory);
+        module.category = newCategory;
+        FileOperations.writeFile(module.filePath, module.content);
+        log(`更新分类: ${module.name} -> ${newCategory}`, 'INFO');
+      }
+      categoryUpdateResult = `✅分类更新成功：${newCategory}`;
+      log(`分类更新成功：${newCategory}`, 'INFO');
+    } else {
+      categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
+      log(`分类未更新：${currentCategory}`, 'INFO');
+    }
+  }
 }
 
 // 菜单和用户界面
@@ -529,153 +662,6 @@ async function clearLogs() {
   }
 }
 
-// 主要功能函数
-async function createFromLink(url, name) {
-  if (!url) {
-    let alert = new Alert();
-    alert.title = '将自动添加后缀 .sgmodule';
-    alert.addTextField('模块链接(必填)', '');
-    alert.addTextField('名称(选填)', '');
-    alert.addAction('下载');
-    alert.addCancelAction('取消');
-    let result = await alert.presentAlert();
-    if (result === -1) {
-      isCancelled = true;
-      return;
-    }
-    url = alert.textFieldValue(0);
-    name = alert.textFieldValue(1);
-  }
-
-  if (!name) {
-    const plainUrl = url.split('?')[0];
-    const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-    if (fullname) {
-      name = fullname.replace(/\.sgmodule$/, '');
-    }
-    if (!name) {
-      name = `untitled-${new Date().toLocaleString()}`;
-    }
-  }
-  name = convertToValidFileName(name);
-  files = [`${name}.sgmodule`];
-  contents = [`#SUBSCRIBED ${url}`];
-  folderPath = await DocumentPicker.openFolder();
-  if (!folderPath) {
-    isCancelled = true;
-    return;
-  }
-
-  let processedModules = await processFiles();
-  if (processedModules.length > 0) {
-    await handleProcessedModules(processedModules);
-  }
-}
-
-async function updateSingleModule() {
-  const filePath = await DocumentPicker.openFile();
-  if (!filePath) {
-    isCancelled = true;
-    return;
-  }
-  folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-  files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-  
-  let processedModules = await processFiles();
-  if (processedModules.length > 0) {
-    await handleProcessedModules(processedModules);
-  }
-}
-
-async function updateAllModules() {
-  folderPath = await DocumentPicker.openFolder();
-  if (!folderPath) {
-    isCancelled = true;
-    return;
-  }
-  files = FileOperations.listContents(folderPath);
-  
-  let processedModules = await processFiles();
-  if (processedModules.length > 0) {
-    await handleProcessedModules(processedModules);
-  }
-}
-
-async function handleProcessedModules(processedModules) {
-  if (processedModules.length === 0) {
-    log("没有处理任何模块", 'WARN');
-    return;
-  }
-
-  let shouldWrite = true;
-  
-  // 只在从链接创建时显示确认对话框，并且在分类选择之前
-  if (fromUrlScheme) {
-    for (const module of processedModules) {
-      if (fm.fileExists(module.filePath)) {
-        let isContentSame = compareContentIgnoringCategoryAndDesc(module.content, module.originalContent);
-        let contentComparisonText = isContentSame ? "文件内容一致" : "文件内容不一致";
-        let contentComparisonSymbol = isContentSame ? "" : "❗️";
-        
-        let confirmAlert = new Alert();
-        confirmAlert.title = "文件替换";
-        confirmAlert.message = `文件 "${module.name}"\n\n${contentComparisonSymbol}${contentComparisonText}${contentComparisonSymbol}`;
-        confirmAlert.addAction("替换");
-        confirmAlert.addCancelAction("取消");
-        let confirmResult = await confirmAlert.presentAlert();
-
-        if (confirmResult === -1) {
-          shouldWrite = false;
-          log(`用户取消了替换操作: ${module.name}`, 'INFO');
-          return; // 如果用户取消，直接返回，不继续处理
-        }
-      }
-    }
-  }
-
-  if (shouldWrite) {
-    for (const module of processedModules) {
-      FileOperations.writeFile(module.filePath, module.content);
-      log(`更新文件: ${module.name}`, 'INFO');
-    }
-    log(`已更新 ${processedModules.length} 个文件`, 'INFO');
-    report.success = processedModules.length;
-
-    // 分类选择逻辑
-    let currentCategory = processedModules[0].category;
-    let currentName = processedModules[0].name;
-
-    let categoryAlert = new Alert();
-    categoryAlert.title = "模块分类";
-    categoryAlert.message = `模块名称：${currentName}\n当前类别：${currentCategory}`;
-    categoryAlert.addAction("📙广告模块");
-    categoryAlert.addAction("📗功能模块");
-    categoryAlert.addAction("📘面板模块");
-    categoryAlert.addCancelAction("📚取消分类");
-    let categoryChoice = await categoryAlert.presentAlert();
-    
-    if (categoryChoice !== -1) {
-      let newCategory;
-      switch(categoryChoice) {
-        case 0: newCategory = "📙广告模块"; break;
-        case 1: newCategory = "📗功能模块"; break;
-        case 2: newCategory = "📘面板模块"; break;
-      }
-      for (let module of processedModules) {
-        module.content = updateCategory(module.content, newCategory);
-        module.category = newCategory;
-        FileOperations.writeFile(module.filePath, module.content);
-        log(`更新分类: ${module.name} -> ${newCategory}`, 'INFO');
-      }
-      categoryUpdateResult = `✅分类更新成功：${newCategory}`;
-      log(`分类更新成功：${newCategory}`, 'INFO');
-    } else {
-      categoryUpdateResult = `⚠️分类未更新：${currentCategory}`;
-      log(`分类未更新：${currentCategory}`, 'INFO');
-    }
-  }
-}
-
 async function showReport() {
   if (!fromUrlScheme && !isCancelled) {
     let alert = new Alert();
@@ -683,7 +669,7 @@ async function showReport() {
     
     alert.title = `📦 模块总数: ${totalModules}`;
     
-    let messageComponents = [''];  // 在开头添加一个空行
+    let messageComponents = [''];
     
     if (report.success > 0) {
       messageComponents.push(`✅ 模块更新成功: ${report.success}`, '');
@@ -704,7 +690,6 @@ async function showReport() {
       messageComponents.push(`⚠️ 无效链接:`, report.fail.join('\n'), '');
     }
     
-    // 移除最后一个空字符串，避免在消息末尾出现多余的空行
     if (messageComponents[messageComponents.length - 1] === '') {
       messageComponents.pop();
     }
