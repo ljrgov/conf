@@ -386,7 +386,7 @@ async function showMainMenu() {
   switch(idx) {
     case 0:
       await showSettingsMenu();
-      break;
+      break;​​​
     case 1:
       await createFromLink();
       break;
@@ -458,40 +458,40 @@ async function setLogLevelMenu() {
   let idx = await alert.presentAlert();
   if (idx !== -1) {
     const levels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL'];
-    setLogLevel(levels[idx]);
-    log(`日志级别已从 ${currentLevel} 更改为 ${levels[idx]}`, 'INFO');
+    let confirmAlert = new Alert();
+    confirmAlert.title = '确认更改日志级别';
+    confirmAlert.message = `是否将日志级别从 ${currentLevel} 更改为 ${levels[idx]}？`;
+    confirmAlert.addAction('确认');
+    confirmAlert.addCancelAction('取消');
+    let confirmChoice = await confirmAlert.presentAlert();
+    if (confirmChoice === 0) {
+      setLogLevel(levels[idx]);
+      log(`日志级别已从 ${currentLevel} 更改为 ${levels[idx]}`, 'INFO');
+    } else {
+      log(`日志级别保持不变: ${currentLevel}`, 'INFO');
+    }
   } else {
     log(`日志级别保持不变: ${currentLevel}`, 'INFO');
   }
-  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function checkForUpdates() {
   log('检查更新');
   let updateResult = await update();
+  let alert = new Alert();
   if (updateResult) {
-    if (!isOpenedFromButton) {
-      let alert = new Alert();
-      alert.title = '更新成功';
-      alert.message = `脚本已更新到版本: ${updateResult}`;
-      alert.addAction('确定');
-      await alert.presentAlert();
-    }
+    alert.title = '更新成功';
+    alert.message = `脚本已更新到版本: ${updateResult}`;
+    alert.addAction('确定');
   } else {
-    if (!isOpenedFromButton) {
-      let alert = new Alert();
-      alert.title = '无需更新';
-      alert.message = '当前已是最新版本';
-      alert.addAction('确定');
-      alert.addDestructiveAction('强制更新');
-      let choice = await alert.presentAlert();
-      if (choice === 1) {
-        await forceUpdate();
-      }
-    }
+    alert.title = '无需更新';
+    alert.message = '当前已是最新版本';
+    alert.addAction('确定');
+    alert.addDestructiveAction('强制更新');
   }
-  if (!isOpenedFromButton) {
-    await showMainMenu();
+  let choice = await alert.presentAlert();
+  if (!updateResult && choice === 1) {
+    await forceUpdate();
   }
 }
 
@@ -509,7 +509,6 @@ async function forceUpdate() {
       Safari.open(`scriptable:///open/${Script.name()}`);
     }
   }
-  // 不再调用 showMainMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function showLogs() {
@@ -522,7 +521,6 @@ async function showLogs() {
   alert.message = logText;
   alert.addAction('关闭');
   await alert.presentAlert();
-  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 async function clearLogs() {
@@ -549,7 +547,6 @@ async function clearLogs() {
   } else {
     log('取消清除日志操作', 'INFO');
   }
-  // 不再调用 showSettingsMenu，而是由 showSettingsMenu 自己处理返回逻辑
 }
 
 // 主要功能函数
