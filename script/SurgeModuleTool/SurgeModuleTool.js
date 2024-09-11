@@ -63,6 +63,7 @@ async function showLogs() {
   if (result === 1) {
     await clearLogs();
   }
+  await showMainMenu();
 }
 
 async function clearLogs() {
@@ -78,6 +79,7 @@ async function clearLogs() {
   alert.message = '所有日志记录已被删除。';
   alert.addAction('确定');
   await alert.presentAlert();
+  await showMainMenu();
 }
 
 // 辅助函数
@@ -126,7 +128,7 @@ function compareContentIgnoringCategoryAndDesc(content1, content2) {
 }
 
 // 更新脚本
-async function update() {
+async function update(forceUpdate = false) {
   const dict = fm.documentsDirectory();
   const scriptName = 'SurgeModuleTool';
   let version;
@@ -153,19 +155,7 @@ async function update() {
     return null;
   }
   
-  let needUpdate = version > ToolVersion;
-  if (!needUpdate) {
-    let alert = new Alert();
-    alert.title = 'Surge 模块工具';
-    alert.message = `当前版本: ${ToolVersion}\n在线版本: ${version}\n无需更新`;
-    alert.addDestructiveAction('强制更新');
-    alert.addCancelAction('关闭');
-    let idx = await alert.presentAlert();
-    if (idx === 0) {
-      needUpdate = true;
-    }
-  }
-  
+  let needUpdate = version > ToolVersion || forceUpdate;
   if (needUpdate) {
     fm.writeString(`${dict}/${scriptName}.js`, resp);
     log('更新成功: ' + version, 'info');
@@ -308,32 +298,59 @@ async function processFiles() {
 }
 
 // 菜单和用户界面
+async function showMainMenu() {
+  let alert = new Alert();
+  alert.title = 'Surge 模块工具';
+  alert.addAction('设置');
+  alert.addAction('从链接创建');
+  alert.addAction('更新单个模块');
+  alert.addAction('更新全部模块');
+  alert.addCancelAction('取消');
+  
+  let idx = await alert.presentAlert();
+  
+  switch(idx) {
+    case 0:
+      await showSettingsMenu();
+      break;
+    case 1:
+      await createFromLink();
+      break;
+    case 2:
+      await updateSingleModule();
+      break;
+    case 3:
+      await updateAllModules();
+      break;
+    default:
+      isCancelled = true;
+      break;
+  }
+}
+
 async function showSettingsMenu() {
   let alert = new Alert();
   alert.title = 'Surge 模块工具设置';
+  alert.addAction('检查更新');
   alert.addAction('查看日志');
-  alert.addAction('清除日志');
-  alert.addAction('更新本脚本');
   alert.addCancelAction('返回');
   
   let idx = await alert.presentAlert();
   
   switch(idx) {
     case 0:
-      await showLogs();
+      await checkForUpdates();
       return;
     case 1:
-      await clearLogs();
-      return;
-    case 2:
-      await updateScript();
+      await showLogs();
       return;
     default:
+      await showMainMenu();
       return;
   }
 }
 
-async function updateScript() {
+async function checkForUpdates() {
   log('检查更新');
   let updateResult = await update();
   if (updateResult) {
@@ -348,41 +365,33 @@ async function updateScript() {
     }
   } else {
     let alert = new Alert();
-    alert.title = '更新失败';
-    alert.message = '无法获取更新或已是最新版本';
+    alert.title = '无需更新';
+    alert.message = '当前已是最新版本';
     alert.addAction('确定');
-    await alert.presentAlert();
+    alert.addDestructiveAction('强制更新');
+    let choice = await alert.presentAlert();
+    if (choice === 1) {
+      await forceUpdate();
+    }
   }
+  await showMainMenu();
 }
 
-async function showMainMenu() {
-  let alert = new Alert();
-  alert.title = 'Surge 模块工具';
-  alert.addAction('从链接创建');
-  alert.addAction('更新单个模块');
-  alert.addAction('更新全部模块');
-  alert.addAction('设置');
-  alert.addCancelAction('取消');
-  
-  let idx = await alert.presentAlert();
-  
-  switch(idx) {
-    case 0:
-      await createFromLink();
-      break;
-    case 1:
-      await updateSingleModule();
-      break;
-    case 2:
-      await updateAllModules();
-      break;
-    case 3:
-      await showSettingsMenu();
-      break;
-    default:
-      isCancelled = true;
-      break;
+async function forceUpdate() {
+  log('强制更新');
+  let updateResult = await update(true);
+  if (updateResult) {
+    let alert = new Alert();
+    alert.title = '更新成功';
+    alert.message = `脚本已强制更新到版本: ${updateResult}`;
+    alert.addAction('确定');
+    alert.addAction('打开脚本');
+    let choice = await alert.presentAlert();
+    if (choice === 1) {
+      Safari.open(`scriptable:///open/${Script.name()}`);
+    }
   }
+  await showMainMenu();
 }
 
 // 主要功能函数
