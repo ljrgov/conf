@@ -50,11 +50,8 @@ async function updateModules(files, folderPath, contents = []) {
   for await (const [index, file] of files.entries()) {
     if (file && !/\.(conf|txt|js|list)$/i.test(file)) {
       try {
-        // 读取文件内容
         let content = contents[index] || await readFileContent(file, folderPath);
-
-        // 解析原始信息和订阅链接
-        let originalCategory = extractInfo(content, 'category');
+        let originalCategory = extractInfo(content, 'category') || "📚未分类";
         const subscribeMatch = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
         if (!subscribeMatch) {
           report.noUrl.push(file);
@@ -62,46 +59,22 @@ async function updateModules(files, folderPath, contents = []) {
         }
         const url = subscribeMatch[1];
 
-        // 下载新内容
         let newContent = await downloadContent(url);
-
-        // 解析新内容
         let newName = extractInfo(newContent, 'name') || extractInfo(content, 'name');
         let newDesc = extractInfo(newContent, 'desc') || extractInfo(content, 'desc');
 
-        // 确定最终使用的分类
-        let finalCategory = originalCategory || "📚未分类";
+        newContent = `#!name=${newName}\n#!category=${originalCategory}\n#!desc=🔗 [${new Date().toLocaleString()}] ${newDesc}\n\n${newContent.replace(/^(#!name|#!category|#!desc|#SUBSCRIBED).*\n?/gm, '')}\n\n# 🔗 模块链接\n#SUBSCRIBED ${url}\n`;
 
-        // 更新特定行
-        let updatedContent = newContent;
-        updatedContent = updatedContent.replace(/^#!name=.*$/m, `#!name=${newName}`);
-        updatedContent = updatedContent.replace(/^#!desc=.*$/m, `#!desc=🔗 [${new Date().toLocaleString()}] ${newDesc}`);
-        
-        // 更新或添加 category
-        if (!/^#!category=.*$/m.test(updatedContent)) {
-          updatedContent = `#!category=${finalCategory}\n` + updatedContent;
-        } else {
-          updatedContent = updatedContent.replace(/^#!category=.*$/m, `#!category=${finalCategory}`);
-        }
+        await saveFileContent(file, folderPath, newContent);
 
-        // 更新或添加订阅链接
-        if (!/^#SUBSCRIBED/m.test(updatedContent)) {
-          updatedContent += `\n\n# 🔗 模块链接\n#SUBSCRIBED ${url}`;
-        } else {
-          updatedContent = updatedContent.replace(/^#SUBSCRIBED.*$/m, `#SUBSCRIBED ${url}`);
-        }
-
-        // 保存更新后的内容
-        await saveFileContent(file, folderPath, updatedContent);
-
-        // 重新分类
-        let updatedCategory = await chooseCategory(finalCategory);
+        let moduleName = file.replace(/\.sgmodule$/, '');
+        let updatedCategory = await chooseCategory(moduleName, originalCategory);
         if (updatedCategory !== "📚保持当前分类") {
-          updatedContent = updatedContent.replace(/^#!category=.*$/m, `#!category=${updatedCategory}`);
-          await saveFileContent(file, folderPath, updatedContent);
+          newContent = newContent.replace(/^#!category=.*$/m, `#!category=${updatedCategory}`);
+          await saveFileContent(file, folderPath, newContent);
           report.categories[updatedCategory]++;
         } else {
-          report.categories[finalCategory]++;
+          report.categories[originalCategory]++;
         }
 
         console.log(`✅ 更新成功: ${file}`);
@@ -148,15 +121,14 @@ async function saveFileContent(file, folderPath, content) {
     const filePath = `${folderPath}/${file}`;
     fm.writeString(filePath, content);
   } else {
-    // 如果没有 folderPath，说明是新创建的文件，使用导出功能
     await DocumentPicker.exportString(content, file);
   }
 }
 
-async function chooseCategory(currentCategory) {
+async function chooseCategory(moduleName, currentCategory) {
   let alert = new Alert();
   alert.title = "选择模块分类";
-  alert.message = `当前分类: ${currentCategory}`;
+  alert.message = `当前模块: ${moduleName}\n当前分类: ${currentCategory}`;
   alert.addAction("📙广告模块");
   alert.addAction("📘功能模块");
   alert.addAction("📗面板模块");
@@ -173,7 +145,7 @@ async function update() {
   let version;
   let resp;
   try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now();
+    const url = 'https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/SurgeModuleTool.js?v=' + Date.now();
     let req = new Request(url);
     req.method = 'GET';
     req.headers = {
@@ -257,8 +229,21 @@ if (!cancelled) {
   const fm = FileManager.iCloud();
 
   if (idx == 3) {
-    folderPath = await DocumentPicker.openFolder();
-    files = fm.listContents(folderPath);
+    try {
+      folderPath = await DocumentPicker.openFolder();
+      files = fm.listContents(folderPath);
+    } catch (error) {
+      if (error.message.includes("未能打开文件")) {
+        let alert = new Alert();
+        alert.title = "批量处理!";
+        alert.message = "请勿选择单个文件";
+        alert.addAction("OK");
+        await alert.present();
+        cancelled = true;
+      } else {
+        throw error;
+      }
+    }
   } else if (idx == 2) {
     const filePath = await DocumentPicker.openFile();
     folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -287,19 +272,30 @@ if (!cancelled) {
     }
     
     if (!cancelled && url) {
-      if (!name) {
-        const plainUrl = url.split('?')[0];
-        const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-        if (fullname) {
-          name = fullname.replace(/\.sgmodule$/, '');
+      try {
+        let newContent = await downloadContent(url);
+        let currentCategory = extractInfo(newContent, 'category') || "📚未分类";
+        name = name || `untitled-${new Date().toLocaleString()}`;
+        name = convertToValidFileName(name);
+        let fileName = `${name}.sgmodule`;
+        await saveFileContent(fileName, null, newContent);
+        
+        let moduleName = name.replace(/\.sgmodule$/, '');
+        let category = await chooseCategory(moduleName, currentCategory);
+        if (category !== "📚保持当前分类") {
+          newContent = newContent.replace(/^#!category=.*$/m, `#!category=${category}`);
+          await saveFileContent(fileName, null, newContent);
         }
-        if (!name) {
-          name = `untitled-${new Date().toLocaleString()}`;
-        }
+        
+        console.log(`✅ 更新成功: ${fileName}`);
+      } catch (error) {
+        let errorAlert = new Alert();
+        errorAlert.title = "错误";
+        errorAlert.message = error.message;
+        errorAlert.addAction("确定");
+        await errorAlert.present();
+        cancelled = true;
       }
-      name = convertToValidFileName(name);
-      files = [`${name}.sgmodule`];
-      contents = [`#SUBSCRIBED ${url}`];
     }
   } else if (idx == 0) {
     console.log('检查更新');
@@ -314,31 +310,26 @@ if (!cancelled) {
       let alert = new Alert();
       let messageLines = [];
 
-      // 显示更新成功的数量（如果不为0）
       if (report.success > 0) {
-        messageLines.push(`✅ 更新成功: ${report.success}`);
+        messageLines.push(`✅ 模块更新成功: ${report.success}`);
       }
 
-      // 显示分类更新情况
       let categoryLines = [];
       for (let category in report.categories) {
         if (report.categories[category] > 0) {
-          categoryLines.push(`分类更新成功：${category}：${report.categories[category]}`);
+          categoryLines.push(`${category}：${report.categories[category]}`);
         }
       }
       if (categoryLines.length > 0) {
         messageLines.push(categoryLines.join('\n'));
       }
 
-      // 显示无链接的模块
-      if (report.noUrl.length > 0) {
-        messageLines.push(report.noUrl.map(file => `${file}：⚠️无链接`).join('\n'));
+      if (report.fail.length > 0) {
+        messageLines.push(`❌ 模块更新失败: ${report.fail.length}`);
       }
 
-      // 显示更新失败的模块（如果有）
-      if (report.fail.length > 0) {
-        messageLines.push(`❌ 更新失败: ${report.fail.length}`);
-        messageLines.push(report.fail.join('\n'));
+      if (report.noUrl.length > 0) {
+        messageLines.push(report.noUrl.map(file => `${file.replace(/\.sgmodule$/, '')}：⚠️无链接`).join('\n'));
       }
 
       alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl.length}`;
