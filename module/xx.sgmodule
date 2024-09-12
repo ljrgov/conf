@@ -1,5 +1,5 @@
 #!name=Git
-#!desc=验证
+#!desc=验
 #!author=Your Name
 #!arguments=token, username
 #!arguments-desc=github令牌
