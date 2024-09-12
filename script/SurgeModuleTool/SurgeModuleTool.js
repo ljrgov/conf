@@ -3,7 +3,7 @@
 // icon-color: blue; icon-glyph: cloud-download-alt;
 
 // prettier-ignore
-let ToolVersion = "2.04";
+let ToolVersion = "2.05";
 
 async function delay(milliseconds) {
   var before = Date.now()
@@ -38,7 +38,13 @@ async function updateModules(files, folderPath, contents = []) {
   let report = {
     success: 0,
     fail: [],
-    noUrl: 0,
+    noUrl: [],
+    categories: {
+      "📙广告模块": 0,
+      "📘功能模块": 0,
+      "📗面板模块": 0,
+      "📚未分类": 0
+    }
   };
 
   for await (const [index, file] of files.entries()) {
@@ -51,42 +57,58 @@ async function updateModules(files, folderPath, contents = []) {
         let originalCategory = extractInfo(content, 'category');
         const subscribeMatch = content.match(/^#SUBSCRIBED\s+(.*?)\s*(\n|$)/im);
         if (!subscribeMatch) {
-          throw new Error('无订阅链接');
+          report.noUrl.push(file);
+          continue;
         }
         const url = subscribeMatch[1];
 
-        // 下载和验证新内容
+        // 下载新内容
         let newContent = await downloadContent(url);
 
         // 解析新内容
-        let newName = extractInfo(newContent, 'name');
-        let newDesc = extractInfo(newContent, 'desc');
+        let newName = extractInfo(newContent, 'name') || extractInfo(content, 'name');
+        let newDesc = extractInfo(newContent, 'desc') || extractInfo(content, 'desc');
 
         // 确定最终使用的分类
         let finalCategory = originalCategory || "📚未分类";
 
-        // 构建更新后的内容
-        newContent = `#!name=${newName}\n#!category=${finalCategory}\n#!desc=🔗 [${new Date().toLocaleString()}] ${newDesc}\n\n# 🔗 模块链接\n#SUBSCRIBED ${url}\n\n${newContent.replace(/^(#SUBSCRIBED|# 🔗 模块链接)(.*?)(\n|$)/gim, '')}`;
+        // 更新特定行
+        let updatedContent = newContent;
+        updatedContent = updatedContent.replace(/^#!name=.*$/m, `#!name=${newName}`);
+        updatedContent = updatedContent.replace(/^#!desc=.*$/m, `#!desc=🔗 [${new Date().toLocaleString()}] ${newDesc}`);
+        
+        // 更新或添加 category
+        if (!/^#!category=.*$/m.test(updatedContent)) {
+          updatedContent = `#!category=${finalCategory}\n` + updatedContent;
+        } else {
+          updatedContent = updatedContent.replace(/^#!category=.*$/m, `#!category=${finalCategory}`);
+        }
+
+        // 更新或添加订阅链接
+        if (!/^#SUBSCRIBED/m.test(updatedContent)) {
+          updatedContent += `\n\n# 🔗 模块链接\n#SUBSCRIBED ${url}`;
+        } else {
+          updatedContent = updatedContent.replace(/^#SUBSCRIBED.*$/m, `#SUBSCRIBED ${url}`);
+        }
 
         // 保存更新后的内容
-        await saveFileContent(file, folderPath, newContent);
+        await saveFileContent(file, folderPath, updatedContent);
 
         // 重新分类
         let updatedCategory = await chooseCategory(finalCategory);
         if (updatedCategory !== "📚保持当前分类") {
-          newContent = newContent.replace(/#!category=.*\n/, `#!category=${updatedCategory}\n`);
-          await saveFileContent(file, folderPath, newContent);
+          updatedContent = updatedContent.replace(/^#!category=.*$/m, `#!category=${updatedCategory}`);
+          await saveFileContent(file, folderPath, updatedContent);
+          report.categories[updatedCategory]++;
+        } else {
+          report.categories[finalCategory]++;
         }
 
         console.log(`✅ 更新成功: ${file}`);
         report.success += 1;
 
       } catch (error) {
-        if (error.message === '无订阅链接') {
-          report.noUrl += 1;
-        } else {
-          report.fail.push(file);
-        }
+        report.fail.push(`${file}: ${error.message}`);
         console.error(`❌ 更新失败: ${file} - ${error.message}`);
       }
     }
@@ -151,7 +173,7 @@ async function update() {
   let version;
   let resp;
   try {
-    const url = 'https://raw.githubusercontent.com/ljrgov/conf/main/script/SurgeModuleTool/SurgeModuleTool.js?v=' + Date.now();
+    const url = 'https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/SurgeModuleTool.js?v=' + Date.now();
     let req = new Request(url);
     req.method = 'GET';
     req.headers = {
@@ -265,33 +287,19 @@ if (!cancelled) {
     }
     
     if (!cancelled && url) {
-      let validUrl = false;
-      try {
-        new URL(url);
-        validUrl = true;
-      } catch (error) {
-        let errorAlert = new Alert();
-        errorAlert.title = "⚠️ 错误";
-        errorAlert.message = "输入的URL无效";
-        errorAlert.addAction("确定");
-        await errorAlert.present();
-      }
-
-      if (validUrl) {
-        if (!name) {
-          const plainUrl = url.split('?')[0];
-          const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-          if (fullname) {
-            name = fullname.replace(/\.sgmodule$/, '');
-          }
-          if (!name) {
-            name = `untitled-${new Date().toLocaleString()}`;
-          }
+      if (!name) {
+        const plainUrl = url.split('?')[0];
+        const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
+        if (fullname) {
+          name = fullname.replace(/\.sgmodule$/, '');
         }
-        name = convertToValidFileName(name);
-        files = [`${name}.sgmodule`];
-        contents = [`#SUBSCRIBED ${url}`];
+        if (!name) {
+          name = `untitled-${new Date().toLocaleString()}`;
+        }
       }
+      name = convertToValidFileName(name);
+      files = [`${name}.sgmodule`];
+      contents = [`#SUBSCRIBED ${url}`];
     }
   } else if (idx == 0) {
     console.log('检查更新');
@@ -304,11 +312,38 @@ if (!cancelled) {
 
     if (!fromUrlScheme) {
       let alert = new Alert();
-      alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl}`;
-      alert.message = `✅ 更新成功: ${report.success}\n❌ 更新失败: ${report.fail.length}\n🈚️ 无链接: ${report.noUrl}`;
-      if (report.fail.length > 0) {
-        alert.message += `\n\n失败的模块:\n${report.fail.join('\n')}`;
+      let messageLines = [];
+
+      // 显示更新成功的数量（如果不为0）
+      if (report.success > 0) {
+        messageLines.push(`✅ 更新成功: ${report.success}`);
       }
+
+      // 显示分类更新情况
+      let categoryLines = [];
+      for (let category in report.categories) {
+        if (report.categories[category] > 0) {
+          categoryLines.push(`分类更新成功：${category}：${report.categories[category]}`);
+        }
+      }
+      if (categoryLines.length > 0) {
+        messageLines.push(categoryLines.join('\n'));
+      }
+
+      // 显示无链接的模块
+      if (report.noUrl.length > 0) {
+        messageLines.push(report.noUrl.map(file => `${file}：⚠️无链接`).join('\n'));
+      }
+
+      // 显示更新失败的模块（如果有）
+      if (report.fail.length > 0) {
+        messageLines.push(`❌ 更新失败: ${report.fail.length}`);
+        messageLines.push(report.fail.join('\n'));
+      }
+
+      alert.title = `📦 模块总数: ${report.success + report.fail.length + report.noUrl.length}`;
+      alert.message = messageLines.join('\n\n');
+
       alert.addDestructiveAction('重载 Surge');
       alert.addAction('打开 Surge');
       alert.addCancelAction('关闭');
