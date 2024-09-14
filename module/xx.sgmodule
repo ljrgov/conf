@@ -1,6 +1,8 @@
 #!name=Git
 #!desc=验
 #!author=Your Name
+#ghh
+#gggg
 #!arguments=token, username
 #!arguments-desc=github令牌
 
