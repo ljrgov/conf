@@ -21,7 +21,7 @@ function convertToValidFileName(str) {
   return finalFileName
 }
 
-async function updateModules(files, folderPath, contents = [], singleCategory = null) {
+async function updateModules(files, folderPath, contents = [], isBulkUpdate = false) {
   let report = {
     success: 0,
     fail: [],
@@ -34,12 +34,10 @@ async function updateModules(files, folderPath, contents = [], singleCategory = 
     }
   };
 
-  // 计算需要处理的模块总数
-  const totalModules = files.filter(file => !/\.(conf|txt|js|list)$/i.test(file)).length;
-
-  // 如果是更新全部模块，先进行一次分类选择
-  let globalCategory = singleCategory;
-  if (singleCategory === true) {
+  // 只在批量更新时进行全局分类选择
+  let globalCategory = null;
+  if (isBulkUpdate) {
+    const totalModules = files.filter(file => !/\.(conf|txt|js|list)$/i.test(file)).length;
     let alert = new Alert();
     alert.title = "选择全局模块分类";
     alert.message = `需要处理的模块总数: ${totalModules}`;
@@ -85,7 +83,22 @@ async function updateModules(files, folderPath, contents = [], singleCategory = 
         let newDesc = extractInfo(newContent, 'desc') || extractInfo(content, 'desc');
 
         // 确定最终使用的分类
-        let finalCategory = globalCategory || originalCategory || "📚未分类";
+        let finalCategory;
+        if (isBulkUpdate) {
+          finalCategory = globalCategory || originalCategory || "📚未分类";
+        } else {
+          // 对单个模块更新或从链接创建时，保持原有的分类选择逻辑
+          let alert = new Alert();
+          alert.title = "选择模块分类";
+          alert.message = `当前模块名称: ${newName}\n当前分类: ${originalCategory || "📚未分类"}`;
+          alert.addAction("📙广告模块");
+          alert.addAction("📘功能模块");
+          alert.addAction("📗面板模块");
+          alert.addAction("📚保持当前分类");
+          let choice = await alert.presentAlert();
+          const categories = ["📙广告模块", "📘功能模块", "📗面板模块", originalCategory || "📚未分类"];
+          finalCategory = categories[choice];
+        }
 
         // 更新内容
         let updatedContent = newContent;
@@ -245,123 +258,6 @@ async function update() {
   }
 }
 
-// 主脚本逻辑
-async function main() {
-  let idx;
-  let fromUrlScheme;
-  let checkUpdate;
-  let cancelled = false;
-
-  if (args.queryParameters.url) {
-    fromUrlScheme = true;
-  }
-
-  if (fromUrlScheme) {
-    idx = 1;
-  } else {
-    let alert = new Alert();
-    alert.title = 'Surge 模块工具';
-    alert.addDestructiveAction('更新本脚本');
-    alert.addAction('从链接创建');
-    alert.addAction('更新单个模块');
-    alert.addAction('更新全部模块');
-    alert.addCancelAction('取消');
-    idx = await alert.presentAlert();
-
-    if (idx === -1) {
-      cancelled = true;
-    }
-  }
-
-  if (!cancelled) {
-    let folderPath;
-    let files = [];
-    let contents = [];
-    const fm = FileManager.iCloud();
-
-    if (idx == 3) { // 更新全部模块
-      try {
-        folderPath = await DocumentPicker.openFolder();
-        files = fm.listContents(folderPath);
-        let report = await updateModules(files, folderPath, [], true); // 传入true表示使用单一分类选择
-        if (report) {
-          displayReport(report);
-        }
-      } catch (error) {
-        let alert = new Alert();
-        alert.title = '⚠️ 警告';
-        alert.message = '批量处理：请勿选择单个文件';
-        alert.addAction('确定');
-        await alert.presentAlert();
-        return;
-      }
-    } else if (idx == 2) { // 更新单个模块
-      try {
-        const filePath = await DocumentPicker.openFile();
-        folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-        files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
-        let report = await updateModules(files, folderPath);
-        if (report) {
-          displayReport(report);
-        }
-      } catch (error) {
-        let alert = new Alert();
-        alert.title = '⚠️ 警告';
-        alert.message = '错误: 取消选择文档。';
-        alert.addAction('确定');
-        await alert.presentAlert();
-        return;
-      }
-    } else if (idx == 1) { // 从链接创建
-      let url;
-      let name;
-      if (fromUrlScheme) {
-        url = args.queryParameters.url;
-        name = args.queryParameters.name;
-      } else {
-        let alert = new Alert();
-        alert.title = '将自动添加后缀 .sgmodule';
-        alert.addTextField('链接(必填)', '');
-        alert.addTextField('名称(选填)', '');
-        alert.addAction('下载');
-        alert.addCancelAction('取消');
-        let response = await alert.presentAlert();
-        
-        if (response === -1) {
-          cancelled = true;
-        } else {
-          url = alert.textFieldValue(0);
-          name = alert.textFieldValue(1);
-        }
-      }
-      
-      if (!cancelled && url) {
-        if (!name) {
-          const plainUrl = url.split('?')[0];
-          const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
-          if (fullname) {
-            name = fullname.replace(/\.sgmodule$/, '');
-          }
-          if (!name) {
-            name = `untitled-${new Date().toLocaleString()}`;
-          }
-        }
-        name = convertToValidFileName(name);
-        files = [`${name}.sgmodule`];
-        contents = [`#SUBSCRIBED ${url}`];
-        let report = await updateModules(files, null, contents);
-        if (report) {
-          displayReport(report);
-        }
-      }
-    } else if (idx == 0) { // 更新本脚本
-      console.log('检查更新');
-      checkUpdate = true;
-      await update();
-    }
-  }
-}
-
 function displayReport(report) {
   let alert = new Alert();
   let messageLines = [];
@@ -422,6 +318,123 @@ function displayReport(report) {
       Safari.open('surge://');
     }
   });
+}
+
+// 主脚本逻辑
+async function main() {
+  let idx;
+  let fromUrlScheme;
+  let checkUpdate;
+  let cancelled = false;
+
+  if (args.queryParameters.url) {
+    fromUrlScheme = true;
+  }
+
+  if (fromUrlScheme) {
+    idx = 1;
+  } else {
+    let alert = new Alert();
+    alert.title = 'Surge 模块工具';
+    alert.addDestructiveAction('更新本脚本');
+    alert.addAction('从链接创建');
+    alert.addAction('更新单个模块');
+    alert.addAction('更新全部模块');
+    alert.addCancelAction('取消');
+    idx = await alert.presentAlert();
+
+    if (idx === -1) {
+      cancelled = true;
+    }
+  }
+
+  if (!cancelled) {
+    let folderPath;
+    let files = [];
+    let contents = [];
+    const fm = FileManager.iCloud();
+
+if (idx == 3) { // 更新全部模块
+      try {
+        folderPath = await DocumentPicker.openFolder();
+        files = fm.listContents(folderPath);
+        let report = await updateModules(files, folderPath, [], true); // 传入true表示批量更新
+        if (report) {
+          displayReport(report);
+        }
+      } catch (error) {
+        let alert = new Alert();
+        alert.title = '⚠️ 警告';
+        alert.message = '批量处理：请勿选择单个文件';
+        alert.addAction('确定');
+        await alert.presentAlert();
+        return;
+      }
+    } else if (idx == 2) { // 更新单个模块
+      try {
+        const filePath = await DocumentPicker.openFile();
+        folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+        files = [filePath.substring(filePath.lastIndexOf('/') + 1)];
+        let report = await updateModules(files, folderPath, [], false); // 传入false表示单个更新
+        if (report) {
+          displayReport(report);
+        }
+      } catch (error) {
+        let alert = new Alert();
+        alert.title = '⚠️ 警告';
+        alert.message = '错误: 取消选择文档。';
+        alert.addAction('确定');
+        await alert.presentAlert();
+        return;
+      }
+    } else if (idx == 1) { // 从链接创建
+      let url;
+      let name;
+      if (fromUrlScheme) {
+        url = args.queryParameters.url;
+        name = args.queryParameters.name;
+      } else {
+        let alert = new Alert();
+        alert.title = '将自动添加后缀 .sgmodule';
+        alert.addTextField('链接(必填)', '');
+        alert.addTextField('名称(选填)', '');
+        alert.addAction('下载');
+        alert.addCancelAction('取消');
+        let response = await alert.presentAlert();
+        
+        if (response === -1) {
+          cancelled = true;
+        } else {
+          url = alert.textFieldValue(0);
+          name = alert.textFieldValue(1);
+        }
+      }
+      
+      if (!cancelled && url) {
+        if (!name) {
+          const plainUrl = url.split('?')[0];
+          const fullname = plainUrl.substring(plainUrl.lastIndexOf('/') + 1);
+          if (fullname) {
+            name = fullname.replace(/\.sgmodule$/, '');
+          }
+          if (!name) {
+            name = `untitled-${new Date().toLocaleString()}`;
+          }
+        }
+        name = convertToValidFileName(name);
+        files = [`${name}.sgmodule`];
+        contents = [`#SUBSCRIBED ${url}`];
+        let report = await updateModules(files, null, contents, false); // 传入false表示单个创建
+        if (report) {
+          displayReport(report);
+        }
+      }
+    } else if (idx == 0) { // 更新本脚本
+      console.log('检查更新');
+      checkUpdate = true;
+      await update();
+    }
+  }
 }
 
 // 运行主函数
