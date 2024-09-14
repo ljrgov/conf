@@ -8,11 +8,11 @@
 
 
 [Panel]
-{{{是否注释机场1？}}}Sub-info = script-name=1号机场,update-interval=7200
+{{{是否注释机场1？}}}Sub-info = script-name=1号机场,update-interval=86400
 
-{{{是否注释机场2？}}}Sub-info = script-name=2号机场,update-interval=7200
+{{{是否注释机场2？}}}Sub-info = script-name=2号机场,update-interval=86400
 
-{{{是否注释机场3？}}}Sub-info = script-name=3号机场,update-interval=7200
+{{{是否注释机场3？}}}Sub-info = script-name=3号机场,update-interval=86400
 
 [Script]
 1号机场 = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/ljrgov/conf/main/script/panel/airport.js,script-update-interval=86400,argument="url={{{机场1订阅}}}&title={{{名称1}}}&icon={{{图标1}}}&color={{{颜色1}}}&reset_day={{{重置日期1}}}"
