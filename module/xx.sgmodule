@@ -1,11 +1,15 @@
 #!name=Git
-#!desc=验6666
+#!desc=验
 #!author=Your Name
 #!arguments=token, username
 #!arguments-desc=github令牌
 
 [Script]
 custom_script1 = type=http-response, pattern=https://example.com/api1, requires-
-custom_script2 = type=http-response, pattern=https://example.com/api2, requires-body=true, script-path=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/script/script2.js
+custom_script2 = type=http-response, 
+
+✌️✌️😀😃😃✅✅😃😃
+
+pattern=https://example.com/api2, requires-body=true, script-path=https://$(token)@raw.githubusercontent.com/$(username)/conf/main/script/script2.js
 # Add more scripts as needed
 
