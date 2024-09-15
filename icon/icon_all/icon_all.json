@@ -1,240 +1,250 @@
 {
-  "name": "Custom Icon Set",
+  "name": "图标集",
   "icons": [
     {
-      "name": "Google_Search.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png",
-      "comment": "谷歌搜索图标"
+      "name": "AD_reject.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/AD_reject.png",
+      "comment": "禁广告图标"
     },
     {
-      "name": "Game.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png",
-      "comment": "游戏图标"
+      "name": "apple_gray.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/apple_gray.png",
+      "comment": "苹果灰色图标"
     },
     {
-      "name": "Apple.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png",
-      "comment": "苹果图标"
+      "name": "apple_rainbow.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/apple_rainbow.png",
+      "comment": "苹果彩虹图标"
     },
     {
-      "name": "Apple_1.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png",
-      "comment": "苹果备用图标"
+      "name": "bestbvn.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/bestbvn.png",
+      "comment": "bestvpn机场图标"
     },
     {
-      "name": "Global.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png",
-      "comment": "全球图标"
-    },
-    {
-      "name": "World_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/World_Map.png",
-      "comment": "世界地图图标"
-    },
-    {
-      "name": "United_States.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png",
-      "comment": "美国图标"
-    },
-    {
-      "name": "Turkey.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Turkey.png",
-      "comment": "土耳其图标"
-    },
-    {
-      "name": "United_Kingdom.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Kingdom.png",
-      "comment": "英国图标"
-    },
-    {
-      "name": "YouTube.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png",
-      "comment": "YouTube图标"
-    },
-    {
-      "name": "X.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/X.png",
-      "comment": "X（Twitter）图标"
-    },
-    {
-      "name": "Twitter.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png",
-      "comment": "Twitter图标"
-    },
-    {
-      "name": "TikTok_1.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png",
-      "comment": "TikTok图标"
-    },
-    {
-      "name": "Telegram.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png",
-      "comment": "Telegram图标"
-    },
-    {
-      "name": "Singapore.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png",
-      "comment": "新加坡图标"
-    },
-    {
-      "name": "Oceania_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Oceania_Map.png",
-      "comment": "大洋洲地图图标"
-    },
-    {
-      "name": "Netflix.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png",
-      "comment": "Netflix图标"
-    },
-    {
-      "name": "Macao.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Macao.png",
-      "comment": "澳门图标"
-    },
-    {
-      "name": "Korea.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Korea.png",
-      "comment": "韩国图标"
-    },
-    {
-      "name": "Japan.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png",
-      "comment": "日本图标"
-    },
-    {
-      "name": "Germany.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png",
-      "comment": "德国图标"
-    },
-    {
-      "name": "Hong_Kong.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png",
-      "comment": "香港图标"
-    },
-    {
-      "name": "France.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/France.png",
-      "comment": "法国图标"
-    },
-    {
-      "name": "Final.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png",
+      "name": "doudifenliu.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/doudifenliu.png",
       "comment": "兜底分流图标"
     },
     {
-      "name": "Europe_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Europe_Map.png",
-      "comment": "欧洲地图图标"
+      "name": "download.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/download.png",
+      "comment": "下载图标"
     },
     {
-      "name": "Emby.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png",
-      "comment": "Emby图标"
-    },
-    {
-      "name": "China.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png",
-      "comment": "中国图标"
-    },
-    {
-      "name": "China_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China_Map.png",
-      "comment": "中国地图图标"
-    },
-    {
-      "name": "United_States_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States_Map.png",
-      "comment": "美国大陆地图图标"
-    },
-    {
-      "name": "Canada.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Canada.png",
-      "comment": "加拿大图标"
-    },
-    {
-      "name": "Asia_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Asia_Map.png",
-      "comment": "亚洲地图图标"
-    },
-    {
-      "name": "America_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/America_Map.png",
-      "comment": "美洲地图图标"
-    },
-    {
-      "name": "LA_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/LA_Map.png",
-      "comment": "南美地图图标"
-    },
-    {
-      "name": "Africa_Map.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Africa_Map.png",
-      "comment": "非洲地图图标"
-    },
-    {
-      "name": "Russia.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Russia.png",
-      "comment": "俄罗斯图标"
-    },
-    {
-      "name": "Advertising.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png",
-      "comment": "广告拦截图标"
-    },
-    {
-      "name": "Surge_01.png",
-      "url": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Surge_01.png",
-      "comment": "Surge图标"
+      "name": "emby.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/emby.png",
+      "comment": "emby图标"
     },
     {
       "name": "facebook.png",
-      "url": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/lige47/facebook.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/facebook.png",
       "comment": "Facebook图标"
     },
     {
-      "name": "social-paypal.png",
-      "url": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/lige47/social-paypal.png",
-      "comment": "PayPal图标"
+      "name": "flag_ca.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_ca.png",
+      "comment": "加拿大图标"
     },
     {
-      "name": "PayPal.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/PayPal.png",
-      "comment": "PayPal备用图标"
+      "name": "flag_china.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_china.png",
+      "comment": "中国图标"
     },
     {
-      "name": "ChatGPT4.png",
-      "url": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/chxm1023/ChatGPT4.png",
-      "comment": "ChatGPT图标"
+      "name": "flag_de.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_de.png",
+      "comment": "德国图标"
     },
     {
-      "name": "Clubhouse.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Clubhouse.png",
-      "comment": "手势图标"
+      "name": "flag_fr.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_fr.png",
+      "comment": "法国图标"
     },
     {
-      "name": "Rainbow_1.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rainbow_1.png",
+      "name": "flag_hand.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_hand.png",
+      "comment": "打招呼图标"
+    },
+    {
+      "name": "flag_hk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_hk.png",
+      "comment": "香港图标"
+    },
+    {
+      "name": "flag_jp.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_jp.png",
+      "comment": "日本图标"
+    },
+    {
+      "name": "flag_kr.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_kr.png",
+      "comment": "韩国图标"
+    },
+    {
+      "name": "flag_mo.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_mo.png",
+      "comment": "澳门图标"
+    },
+    {
+      "name": "flag_rainbow.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_rainbow.png",
       "comment": "彩虹旗图标"
     },
     {
-      "name": "Copilot.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Copilot.png",
-      "comment": "微软Copilot图标"
+      "name": "flag_ru.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_ru.png",
+      "comment": "俄罗斯图标"
     },
     {
-      "name": "ChatGPT.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png",
-      "comment": "ChatGPT备用图标"
+      "name": "flag_sg.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_sg.png",
+      "comment": "新加坡图标"
     },
     {
-      "name": "OpenAI.png",
-      "url": "https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png",
-      "comment": "OpenAI图标"
+      "name": "flag_tk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_tk.png",
+      "comment": "土耳其图标"
     },
     {
-      "name": "Download.png",
-      "url": "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Download.png",
-      "comment": "下载图标"
+      "name": "flag_uk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_uk.png",
+      "comment": "英国图标"
+    },
+    {
+      "name": "flag_us.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_us.png",
+      "comment": "美国图标"
+    },
+    {
+      "name": "game.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/game.png",
+      "comment": "游戏图标"
+    },
+    {
+      "name": "github.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/github.png",
+      "comment": "github图标"
+    },
+    {
+      "name": "global.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/global.png",
+      "comment": "全球图标"
+    },
+    {
+      "name": "globalmedia.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/globalmedia.png",
+      "comment": "全球媒体图标"
+    },
+    {
+      "name": "google.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/google.png",
+      "comment": "谷歌图标"
+    },
+    {
+      "name": "map_africa.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_africa.png",
+      "comment": "非洲地图图标"
+    },
+    {
+      "name": "map_america.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_america.png",
+      "comment": "美洲地图图标"
+    },
+    {
+      "name": "map_asia.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_asia.png",
+      "comment": "亚洲地图图标"
+    },
+    {
+      "name": "map_au.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_au.png",
+      "comment": "澳洲地图图标"
+    },
+    {
+      "name": "map_china.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_china.png",
+      "comment": "中国地图图标"
+    },
+    {
+      "name": "map_eu.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_eu.png",
+      "comment": "欧洲地图图标"
+    },
+    {
+      "name": "map_global.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_global.png",
+      "comment": "全球地图图标"
+    },
+    {
+      "name": "map_s_america.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_s_america.png",
+      "comment": "南美地图图标"
+    },
+    {
+      "name": "map_us.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_us.png",
+      "comment": "北美地图图标"
+    },
+    {
+      "name": "microsoft.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/microsoft.png",
+      "comment": "微软图标"
+    },
+    {
+      "name": "naxi.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/naxi.png",
+      "comment": "奶昔机场图标"
+    },
+    {
+      "name": "openAI.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/openAI.png",
+      "comment": "AI图标"
+    },
+    {
+      "name": "paypal.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/paypal.png",
+      "comment": "PayPal图标"
+    },
+    {
+      "name": "surge_blue.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_blue.png",
+      "comment": "surge图标蓝色"
+    },
+    {
+      "name": "surge_orange.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_orange.png",
+      "comment": "surge图标橘色"
+    },
+    {
+      "name": "surge_purple.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_purple.png",
+      "comment": "surge图标紫色"
+    },
+    {
+      "name": "telegram.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/telegram.png",
+      "comment": "电报图标"
+    },
+    {
+      "name": "tiktok.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/tiktok.png",
+      "comment": "TikTok图标"
+    },
+    {
+      "name": "twitter.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/twitter.png",
+      "comment": "推特图标"
+    },
+    {
+      "name": "youtube.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/youtube.png",
+      "comment": "YouTube图标"
+    },
+    {
+      "name": "twitter_x.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/twitter_x.png",
+      "comment": "推特X图标"
     }
   ]
 }
