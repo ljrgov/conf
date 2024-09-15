@@ -43,6 +43,7 @@ DOMAIN,alkalimakersuite-pa.clients6.google.com
 DOMAIN,makersuite.google.com
 
 # Claude
+DOMAIN-SUFFIX,prodregistryv2.org
 DOMAIN-SUFFIX,api3.siftscience.com
 DOMAIN-SUFFIX,ingest.us.sentry.io
 DOMAIN-SUFFIX,anthropic.com
