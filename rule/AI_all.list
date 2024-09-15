@@ -43,6 +43,8 @@ DOMAIN,alkalimakersuite-pa.clients6.google.com
 DOMAIN,makersuite.google.com
 
 # Claude
+DOMAIN-SUFFIX,api3.siftscience.com
+DOMAIN-SUFFIX,ingest.us.sentry.io
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
 IP-CIDR,160.79.104.0/23,no-resolve
