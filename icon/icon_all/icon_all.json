@@ -17,8 +17,8 @@
       "comment": "苹果彩虹图标"
     },
     {
-      "name": "bestbvn.png",
-      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/bestbvn.png",
+      "name": "bestvpn.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/bestvpn.png",
       "comment": "bestvpn机场图标"
     },
     {
@@ -193,8 +193,13 @@
     },
     {
       "name": "naxi.png",
-      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/naxi.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/naixi.png",
       "comment": "奶昔机场图标"
+    },
+    {
+      "name": "nieflix.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/nieflix.png",
+      "comment": "奈飞图标"
     },
     {
       "name": "openAI.png",
