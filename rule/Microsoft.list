@@ -11,6 +11,8 @@ DOMAIN-SUFFIX,sfx.ms
 DOMAIN-SUFFIX,spoprod-a.akamaihd.net
 
 # Microsoft 需要代理访问的域名
+DOMAIN-SUFFIX,in.appcenter.ms 
+DOMAIN-SUFFIX,adjust.net.in
 DOMAIN-KEYWORD,microsoft
 DOMAIN-SUFFIX,aadrm.com
 DOMAIN-SUFFIX,acompli.com
