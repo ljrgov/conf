@@ -22,7 +22,6 @@ DOMAIN-SUFFIX,api.onesignal.com
 DOMAIN-SUFFIX,api.ipify.org
 DOMAIN-SUFFIX,report.appmetrica.yandex.net
 DOMAIN-SUFFIX,api.adapty.io
-DOMAIN-SUFFIX,app-analytics-services.com
 DOMAIN-SUFFIX,zxou1z-launches.appsflyersdk.com
 DOMAIN-SUFFIX,amplitude.com
 DOMAIN-SUFFIX,appsflyersdk.com
@@ -30,7 +29,7 @@ DOMAIN-SUFFIX,onesignal.com
 DOMAIN-SUFFIX,ipify.org
 DOMAIN-SUFFIX,yandex.net
 DOMAIN-SUFFIX,adapty.io
-DOMAIN-SUFFIX,app-analytics-services.com
+
 
 # Gemini
 DOMAIN,bard.google.com
