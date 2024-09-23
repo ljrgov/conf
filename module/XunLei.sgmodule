@@ -41,7 +41,7 @@ DOMAIN,tx-cfg-u1.ubixioe.com,REJECT
 DOMAIN,tx-data-u1.ubixioe.com,REJECT
 # 友盟
 DOMAIN,cnlogs.umeng.com,REJECT
-DOMAIN,errlog.umeng.com,REJECT
+DOMAIN,errlog.umeng.com,REJECT-DROP
 DOMAIN,errnewlog.umeng.com,REJECT
 DOMAIN,ucc.umeng.com,REJECT
 DOMAIN,ulogs.umeng.com,REJECT
