@@ -1,5 +1,7 @@
 #包含全部国外网站
 #漏网之鱼，自行添加
+DOMAIN-SUFFIX,nsloon.com
+DOMAIN-SUFFIX,unpkg.com
 DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN-SUFFIX,1password.com
 DOMAIN-SUFFIX,adguard.org
