@@ -1,4 +1,29 @@
+# Swiftgram
+DOMAIN-SUFFIX,swiftgram.app
 # Telegram
+# IP Ranges for Telegram Data Centers
+IP-ASN,59930,no-resolve
+IP-CIDR,91.108.12.0/22,no-resolve
+IP-CIDR6,2a0a:f280::/32,no-resolve
+IP-ASN,44907,no-resolve
+IP-CIDR,91.108.20.0/22,no-resolve
+IP-CIDR6,2001:b28:f23c::/48,no-resolve
+IP-ASN,211157,no-resolve
+IP-CIDR,91.105.192.0/23,no-resolve
+IP-CIDR,185.76.151.0/24,no-resolve
+IP-ASN,62041,no-resolve
+IP-CIDR,149.154.160.0/20,no-resolve
+IP-CIDR,91.108.4.0/22,no-resolve
+IP-CIDR,91.108.8.0/22,no-resolve
+IP-CIDR6,2001:b28:f23d::/48,no-resolve
+IP-CIDR6,2001:67c:4e8::/48,no-resolve
+IP-ASN,62014,no-resolve
+IP-CIDR,91.108.16.0/22,no-resolve
+IP-CIDR,91.108.56.0/22,no-resolve
+IP-CIDR6,2001:b28:f23f::/48,no-resolve
+IP-CIDR,95.161.76.101/32,no-resolve
+IP-CIDR,5.28.195.80/32,no-resolve
+IP-CIDR,91.108.0.0/16,no-resolve
 DOMAIN-SUFFIX,comments.app
 DOMAIN-SUFFIX,contest.com
 DOMAIN-SUFFIX,graph.org
@@ -33,35 +58,8 @@ DOMAIN-KEYWORD,nicegram
 DOMAIN,api.mixpanel.com
 DOMAIN-SUFFIX,imem.app
 
-# Swiftgram
-DOMAIN-SUFFIX,swiftgram.app
-
 # Turrit
 DOMAIN-SUFFIX,iturrit.com
-
-# IP Ranges for Telegram Data Centers
-IP-ASN,59930,no-resolve
-IP-CIDR,91.108.12.0/22,no-resolve
-IP-CIDR6,2a0a:f280::/32,no-resolve
-IP-ASN,44907,no-resolve
-IP-CIDR,91.108.20.0/22,no-resolve
-IP-CIDR6,2001:b28:f23c::/48,no-resolve
-IP-ASN,211157,no-resolve
-IP-CIDR,91.105.192.0/23,no-resolve
-IP-CIDR,185.76.151.0/24,no-resolve
-IP-ASN,62041,no-resolve
-IP-CIDR,149.154.160.0/20,no-resolve
-IP-CIDR,91.108.4.0/22,no-resolve
-IP-CIDR,91.108.8.0/22,no-resolve
-IP-CIDR6,2001:b28:f23d::/48,no-resolve
-IP-CIDR6,2001:67c:4e8::/48,no-resolve
-IP-ASN,62014,no-resolve
-IP-CIDR,91.108.16.0/22,no-resolve
-IP-CIDR,91.108.56.0/22,no-resolve
-IP-CIDR6,2001:b28:f23f::/48,no-resolve
-IP-CIDR,95.161.76.101/32,no-resolve
-IP-CIDR,5.28.195.80/32,no-resolve
-IP-CIDR,91.108.0.0/16,no-resolve
 
 # Processes for Telegram
 PROCESS-NAME,nekox.messenger
