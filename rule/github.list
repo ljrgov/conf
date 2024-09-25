@@ -1,4 +1,6 @@
 #扩展项
+DOMAIN-SUFFIX,gravatar.com
+DOMAIN-SUFFIX,gitlab.net
 DOMAIN-SUFFIX,challenges.cloudflare.com
 DOMAIN-SUFFIX,nexitally.com
 DOMAIN-SUFFIX,naiixi.com
