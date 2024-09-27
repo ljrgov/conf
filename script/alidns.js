@@ -12,7 +12,7 @@ async function dnsQuery() {
   try {
     const arguments = JSON.parse($argument);
     const DOMAIN = $domain;
-    const TYPE = arguments.TYPE || "1"; // 默认为 A 记录 (IPv4)
+    const TYPE = arguments.TYPE; // Surge 会自动决定查询 A 还是 AAAA 记录
 
     // 检查 Surge DNS 缓存
     const cachedResult = $surge.getDnsCache(DOMAIN)[TYPE === "28" ? "AAAA" : "A"];
