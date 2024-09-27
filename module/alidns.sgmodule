@@ -1,11 +1,15 @@
 #!name=阿里 DNS
-#!desc=适配阿里 DoH JSON API
-#!arguments=阿里DNS:223.5.5.5,请求域名:*,请求类型:1,Device ID:IOS,Account ID,AccessKey ID,AccessKey Secret
-#!arguments-desc=相关参数说明查阅 阿里云DoH JSON API 文档
-
+#!desc=适配阿里 DoH JSON API，支持 IPv4 和 IPv6，带缓存和IP优化
+#!arguments=阿里DNS:223.5.5.5,请求域名:*,Account ID,AccessKey ID,AccessKey Secret,Device ID:IOS
 
 [Host]
-{{{请求域名}}}= script:Alidns
+{{{请求域名}}} = script:Alidns-A
+{{{请求域名}}} = script:Alidns-AAAA
 
 [Script]
-Alidns = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"{{{请求类型}}}"}"
+Alidns-A = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"1"}"
+
+Alidns-AAAA = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"28"}"
+
+[Event]
+network-changed script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js
