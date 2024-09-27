@@ -11,7 +11,7 @@ async function dnsQuery() {
     const DID = arguments.DID;
     const key = sha256(UID + SECRET + TS + DOMAIN + ID);
 
-    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=A`;
+    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=1`;
 
     const resp = await get(DNS_QUERY);
     const addresses = JSON.parse(resp.body);
