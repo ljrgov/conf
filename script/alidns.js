@@ -1,97 +1,108 @@
+let cache = {};
+let lastQueryTime = 0;
+const CACHE_TTL = 180000; // 缓存时间 180s
+const FALLBACK_DNS = "http://127.0.0.1:53"; // 本地 DNS 地址
+const DNS_QUERY_TIMEOUT = 3000; // 请求超时 3s
+
 async function dnsQuery() {
   try {
-    const args = JSON.parse($argument);
-    const { HOST, TYPE, UID, ID, SECRET, DID } = args;
+    const arguments = JSON.parse($argument);
+    const { HOST, TYPE, UID, ID, SECRET, DID } = arguments;
     const DOMAIN = $domain;
-    const TS = Math.floor(Date.now() / 1000);
+
+    // 检查缓存
+    const currentTime = Date.now();
+    if (cache[DOMAIN] && (currentTime - lastQueryTime < CACHE_TTL)) {
+      // 返回缓存的地址
+      return $done({ addresses: cache[DOMAIN], ttl: 600 });
+    }
+
+    const TS = parseInt(Date.now() / 1000);
     const key = sha256(UID + SECRET + TS + DOMAIN + ID);
+    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=${TYPE}`;
 
-    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&type=${TYPE}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}`;
-
-    const resp = await get(DNS_QUERY);
+    // 使用 Promise.race 设置超时
+    const resp = await Promise.race([get(DNS_QUERY), timeout(DNS_QUERY_TIMEOUT)]);
     const addresses = JSON.parse(resp.body);
 
     if (addresses.code) {
-      throw new Error(`Error Code: ${addresses.code}`);
+      throw new Error(addresses.code);
     }
 
-    if (Array.isArray(addresses)) {
-      $done({ addresses, ttl: 600 });
-    } else {
-      throw new Error('Unexpected response format');
-    }
+    // 更新缓存
+    cache[DOMAIN] = addresses.addresses;
+    lastQueryTime = currentTime;
+
+    // 异步测速和排序
+    // TODO: 在此添加测速逻辑
+
+    $done({ addresses: addresses.addresses, ttl: 600 });
   } catch (e) {
-    console.log(`DNS Query Error: ${e.message}`);
-    $done({});
+    console.log("Error:", e.message);
+    // 如果出错，尝试使用本地 DNS 解析
+    const localResp = await getLocalDNS(DOMAIN);
+    $done({ addresses: localResp, ttl: 600 });
   }
 }
 
+// 超时函数
+function timeout(ms) {
+  return new Promise((_, reject) => setTimeout(() => reject(new Error('请求超时')), ms));
+}
+
+// 本地 DNS 查询函数
+async function getLocalDNS(domain) {
+  const localDNS_QUERY = `${FALLBACK_DNS}/resolve?name=${domain}&type=A`; // 假设本地 DNS 有类似的 API
+  try {
+    const resp = await get(localDNS_QUERY);
+    const addresses = JSON.parse(resp.body);
+    return addresses.answers.map(answer => answer.data); // 提取 IP 地址
+  } catch (error) {
+    console.log("本地 DNS 查询失败:", error.message);
+    return ["127.0.0.1"]; // 返回默认 IP
+  }
+}
+
+// 网络请求函数
 function get(url) {
   return new Promise((resolve, reject) => {
     $httpClient.get(url, (error, response, data) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve({ header: response, body: data });
-      }
+      if (error) reject(error);
+      else resolve({ header: response, body: data });
     });
   });
 }
 
-// SHA-256 function
-function sha256(input) {
-  function rotateRight(n, bits) {
-    return (n >>> bits) | (n << (32 - bits));
+// SHA-256 计算
+function sha256(r) {
+  function o(r, o) {
+    return r >>> o | r << 32 - o;
   }
 
-  const primes = [
-    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113,
-  ];
-
-  const H = primes.slice(0, 8).map((p) => Math.sqrt(p) * Math.pow(2, 32) | 0);
-  const K = primes.slice(8, 72).map((p) => Math.cbrt(p) * Math.pow(2, 32) | 0);
-
-  input += String.fromCharCode(0x80);
-
-  while (input.length % 64 - 56) input += '\0';
-
-  const words = [];
-  for (let i = 0; i < input.length; i += 4) {
-    words.push((input.charCodeAt(i) << 24) | (input.charCodeAt(i + 1) << 16) | (input.charCodeAt(i + 2) << 8) | input.charCodeAt(i + 3));
-  }
-
-  words.push((input.length - 1) * 8 / Math.pow(2, 32) | 0);
-  words.push((input.length - 1) * 8 | 0);
-
-  for (let i = 0; i < words.length; i += 16) {
-    const w = words.slice(i, i + 16);
-    const state = H.slice(0);
-
-    for (let j = 0; j < 64; j++) {
-      const s0 = rotateRight(state[0], 2) ^ rotateRight(state[0], 13) ^ rotateRight(state[0], 22);
-      const s1 = rotateRight(state[4], 6) ^ rotateRight(state[4], 11) ^ rotateRight(state[4], 25);
-
-      const t1 = state[7] + s1 + ((state[4] & state[5]) ^ (~state[4] & state[6])) + K[j] + (w[j] = j < 16 ? w[j] : (
-        w[j - 16] + (rotateRight(w[j - 15], 7) ^ rotateRight(w[j - 15], 18) ^ (w[j - 15] >>> 3)) + w[j - 7] + (rotateRight(w[j - 2], 17) ^ rotateRight(w[j - 2], 19) ^ (w[j - 2] >>> 10))
-      ));
-
-      const t2 = s0 + ((state[0] & state[1]) ^ (state[0] & state[2]) ^ (state[1] & state[2]));
-      state[7] = state[6];
-      state[6] = state[5];
-      state[5] = state[4];
-      state[4] = state[3] + t1 | 0;
-      state[3] = state[2];
-      state[2] = state[1];
-      state[1] = state[0];
-      state[0] = t1 + t2 | 0;
+  for (var f, a = Math.pow, t = a(2, 32), h = "length", n = "", c = [], e = 8 * r[h], i = sha256.h = sha256.h || [], s = sha256.k = sha256.k || [], u = s[h], v = {}, l = 2; u < 64; l++)
+    if (!v[l]) {
+      for (d = 0; d < 313; d += l) v[d] = l;
+      i[u] = a(l, .5) * t | 0, s[u++] = a(l, 1 / 3) * t | 0;
     }
-
-    for (let j = 0; j < 8; j++) {
-      H[j] = H[j] + state[j] | 0;
-    }
+  for (r += ""; r[h] % 64 - 56;) r += "\0";
+  for (d = 0; d < r[h]; d++) {
+    if ((f = r.charCodeAt(d)) >> 8) return;
+    c[d >> 2] |= f << (3 - d) % 4 * 8;
   }
-
-  return H.map((h) => ('00000000' + h.toString(16)).slice(-8)).join('');
+  for (c[c[h]] = e / t | 0, c[c[h]] = e, f = 0; f < c[h];) {
+    for (var g = c.slice(f, f += 16), k = i, i = i.slice(0, 8), d = 0; d < 64; d++) {
+      var p = g[d - 15], w = g[d - 2], A = i[0], C = i[4];
+      (i = [(w = i[7] + (o(C, 6) ^ o(C, 11) ^ o(C, 25)) + (C & i[5] ^ ~C & i[6]) + s[d] + (g[d] = d < 16 ? g[d] : g[d - 16] + (o(p, 7) ^ o(p, 18) ^ p >>> 3) + g[d - 7] + (o(w, 17) ^ o(w, 19) ^ w >>> 10) | 0)) + ((o(A, 2) ^ o(A, 13) ^ o(A, 22)) + (A & i[1] ^ A & i[2] ^ i[1] & i[2])) | 0].concat(i))[4] = i[4] + w | 0;
+    }
+    for (d = 0; d < 8; d++) i[d] = i[d] + k[d] | 0;
+  }
+  for (d = 0; d < 8; d++) for (f = 3; f + 1; f--) {
+    var M = i[d] >> 8 * f & 255;
+    n += (M < 16 ? 0 : "") + M.toString(16);
+  }
+  return n;
 }
 
+// 启动 DNS 查询
 dnsQuery();
+
