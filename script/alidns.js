@@ -2,29 +2,18 @@ const CACHE_TTL = 300; // 5分钟
 const DNS_TIMEOUT = 3000; // 3秒
 const IP_TEST_TIMEOUT = 1000; // IP测试超时时间
 const MAX_TEST_IPS = 3; // 最多测试的IP数量
+const MAX_RETRIES = 3; // 最大重试次数
 
 async function dnsQuery() {
-  if ($eventType === "network-changed") {
-    $surge.setDnsCache({}, {});
-    return $done({});
-  }
-
   try {
     const arguments = JSON.parse($argument);
-    const DOMAIN = $domain;
-    const TYPE = arguments.TYPE; // Surge 会自动决定查询 A 还是 AAAA 记录
-
-    // 检查 Surge DNS 缓存
-    const cachedResult = $surge.getDnsCache(DOMAIN)[TYPE === "28" ? "AAAA" : "A"];
-    if (cachedResult && cachedResult.length > 0) {
-      return $done({ addresses: cachedResult, ttl: CACHE_TTL });
-    }
-
     const HOST = arguments.HOST;
+    const TYPE = arguments.TYPE;
     const UID = arguments.UID;
     const ID = arguments.ID;
     const SECRET = arguments.SECRET;
     const TS = parseInt(Date.now() / 1000);
+    const DOMAIN = $domain;
     const DID = arguments.DID;
     const key = sha256(UID + SECRET + TS + DOMAIN + ID);
 
@@ -35,41 +24,37 @@ async function dnsQuery() {
     // IP 优化
     const optimizedAddresses = await optimizeIPs(addresses, TYPE);
 
-    // 更新 Surge DNS 缓存
-    $surge.setDnsCache({
-      [DOMAIN]: { [TYPE === "28" ? "AAAA" : "A"]: optimizedAddresses }
-    }, { ttl: CACHE_TTL });
-
     $done({ addresses: optimizedAddresses, ttl: CACHE_TTL });
   } catch (e) {
-    console.log(`阿里云 DNS 查询错误: ${e.message}`);
-    // 使用 Surge 的常规 DNS
+    console.log(`DNS 查询错误: ${e.message}`);
     $done({});
   }
 }
 
-async function retryDnsQuery(query, maxRetries = 3) {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const resp = await Promise.race([
-        get(query),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('DNS 查询超时')), DNS_TIMEOUT))
-      ]);
+async function retryDnsQuery(query, retries = 0) {
+  try {
+    const resp = await Promise.race([
+      get(query),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('DNS 查询超时')), DNS_TIMEOUT))
+    ]);
 
-      if (resp.statusCode !== 200) {
-        throw new Error(`HTTP 错误: ${resp.statusCode}`);
-      }
+    if (resp.statusCode !== 200) {
+      throw new Error(`HTTP 错误: ${resp.statusCode}`);
+    }
 
-      const addresses = JSON.parse(resp.body);
+    const addresses = JSON.parse(resp.body);
 
-      if (addresses.code) {
-        throw new Error(addresses.code);
-      }
+    if (addresses.code) {
+      throw new Error(addresses.code);
+    }
 
-      return addresses;
-    } catch (e) {
-      console.log(`DNS 查询重试 ${i + 1}/${maxRetries}: ${e.message}`);
-      if (i === maxRetries - 1) throw e;
+    return addresses;
+  } catch (e) {
+    console.log(`DNS 查询失败 (尝试 ${retries + 1}/${MAX_RETRIES}): ${e.message}`);
+    if (retries < MAX_RETRIES - 1) {
+      return retryDnsQuery(query, retries + 1);
+    } else {
+      throw e;
     }
   }
 }
