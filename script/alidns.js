@@ -9,8 +9,7 @@ async function dnsQuery() {
     const SECRET = arguments.SECRET;
     const DID = arguments.DID;
     const DOMAIN = $domain;
-    const TYPE = arguments.TYPE; // 保留类型参数
-
+  
     // 获取当前时间戳（秒）
     const TS = parseInt(Date.now() / 1000);
 
@@ -18,7 +17,7 @@ async function dnsQuery() {
     const key = sha256(UID + SECRET + TS + DOMAIN + ID);
 
     // 构造 DNS 请求 URL
-    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&type=${TYPE}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}`;
+    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=A,AAAA`;
 
     // 发起请求并解析返回结果
     const resp = await get(DNS_QUERY);
