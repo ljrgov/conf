@@ -7,9 +7,9 @@
 {{{请求域名}}} = script:Alidns-AAAA
 
 [Script]
-Alidns-A = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"1"}"
+Alidns-A = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"1"}"
 
-Alidns-AAAA = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"28"}"
+Alidns-AAAA = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"28"}"
 
 [Event]
-network-changed script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Tools/alidns.js
+network-changed script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js
