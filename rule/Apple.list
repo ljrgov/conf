@@ -4,6 +4,7 @@ DOMAIN,cdn.apple-cloudkit.com
 DOMAIN,cvws.icloud-content.com
 DOMAIN,news-client.apple.com
 DOMAIN,news-events.apple.com
+DOMAIN-SUFFIX,smoot.apple.cn
 DOMAIN-SUFFIX,apple-dns.net
 DOMAIN-SUFFIX,apple.com
 DOMAIN-SUFFIX,apple.com.cn
