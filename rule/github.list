@@ -22,6 +22,7 @@ DOMAIN,jconnor.org
 DOMAIN-SUFFIX,sub-store.vercel.app
 DOMAIN-SUFFIX,docs.boxjs.app
 DOMAIN-SUFFIX,fastly.jsdelivr.net
+DOMAIN-SUFFIX,o.lencr.org
 #github
 DOMAIN-SUFFIX,github.com
 DOMAIN-SUFFIX,github.io
