@@ -1,10 +1,11 @@
-#!name=阿里云 DNS
-#!desc=阿里云 DoH (DNS over HTTPS) 查询，支持 IPv4 和 IPv6
+#!name=阿里 DNS
+#!desc=适配阿里 DoH JSON API
+#!arguments=阿里DNS:223.5.5.5,请求域名:*,请求类型:1,Device ID:IOS,Account ID,AccessKey ID,AccessKey Secret
+#!arguments-desc=相关参数说明查阅 阿里云DoH JSON API 文档
 #!category=📘功能模块
-#!arguments=HOST: 223.5.5.5, DOMAIN: *, DID: IOS, UID: 阿里云账户ID, ID: AccessKey ID, SECRET: AccessKey Secret
 
 [Host]
-{{{DOMAIN}}} = script:AliyunDNS
+{{{请求域名}}}= script:Alidns
 
 [Script]
-AliyunDNS = type=dns,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js,argument={"HOST":"{{{HOST}}}","DID":"{{{DID}}}","UID":"{{{UID}}}","ID":"{{{ID}}}","SECRET":"{{{SECRET}}}"}
+Alidns = type=dns,engine=jsc,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/alidns.js,argument="{"HOST":"{{{阿里DNS}}}","UID":"{{{Account ID}}}","ID":"{{{AccessKey ID}}}","SECRET":"{{{AccessKey Secret}}}","DID":"{{{Device ID}}}","TYPE":"{{{请求类型}}}"}"
