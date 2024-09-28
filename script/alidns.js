@@ -1,13 +1,30 @@
 async function dnsQuery() {
   try {
     const arguments = JSON.parse($argument);
-    const { HOST, TYPE, UID, ID, SECRET, DID } = arguments;
-    const TS = Math.floor(Date.now() / 1000); // 只计算一次时间戳
-    const DOMAIN = $domain;
 
-    // 使用缓存来减少重复计算哈希
-    const key = generateKey(UID, SECRET, TS, DOMAIN, ID);
-    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=${TYPE}`;
+    const HOST = arguments.HOST;
+    const TYPE = arguments.TYPE;
+    const UID = arguments.UID;
+    const ID = arguments.ID;
+    const SECRET = arguments.SECRET;
+    const TS = parseInt(Date.now() / 1000);
+    const DOMAIN = encodeURIComponent($domain); // 使用 encodeURIComponent 进行编码
+    const DID = arguments.DID;
+    const key = sha256(UID + SECRET + TS + DOMAIN + ID);
+
+    // 构建URL，使用URLSearchParams构造查询参数
+    const urlParams = new URLSearchParams({
+      name: DOMAIN,
+      uid: UID,
+      ak: ID,
+      key: key,
+      ts: TS,
+      short: 1,
+      did: DID,
+      type: TYPE,
+    });
+
+    const DNS_QUERY = `https://${HOST}/resolve?${urlParams.toString()}`;
 
     const resp = await get(DNS_QUERY);
     const addresses = JSON.parse(resp.body);
@@ -16,15 +33,16 @@ async function dnsQuery() {
       throw new Error(addresses.code);
     }
 
+    // 只在成功时返回结果
     $done({ addresses, ttl: 600 });
   } catch (e) {
     console.log(e.message);
-  } finally {
+    // 捕获错误时返回空对象
     $done({});
   }
 }
 
-// 使用 Promise 封装 HTTP 请求
+// 获取 HTTP 响应的函数
 function get(url) {
   return new Promise((resolve, reject) => {
     $httpClient.get(url, (error, response, data) => {
@@ -34,48 +52,28 @@ function get(url) {
   });
 }
 
-// SHA256 哈希函数
-let keyCache = {};
-
-function generateKey(UID, SECRET, TS, DOMAIN, ID) {
-  const cacheKey = `${UID}-${DOMAIN}-${TS}-${ID}`;
-  if (keyCache[cacheKey]) {
-    return keyCache[cacheKey]; // 如果已经计算过，直接返回缓存结果
-  }
-  const key = sha256(`${UID}${SECRET}${TS}${DOMAIN}${ID}`);
-  keyCache[cacheKey] = key;
-  return key;
-}
-
-// SHA256 计算函数
+// SHA-256 哈希函数
 function sha256(r) {
-  function o(r, o) {
-    return r >>> o | r << (32 - o);
-  }
+  function o(r, o) { return r >>> o | r << 32 - o; }
   for (var f, a = Math.pow, t = a(2, 32), h = "length", n = "", c = [], e = 8 * r[h], i = sha256.h = sha256.h || [], s = sha256.k = sha256.k || [], u = s[h], v = {}, l = 2; u < 64; l++)
-    if (!v[l]) {
-      for (d = 0; d < 313; d += l) v[d] = l; 
-      i[u] = a(l, .5) * t | 0; 
-      s[u++] = a(l, 1 / 3) * t | 0;
-    }
-  for (r += ""; r[h] % 64 - 56;) r += "\0"; 
+    if (!v[l]) { for (d = 0; d < 313; d += l) v[d] = l; i[u] = a(l, .5) * t | 0, s[u++] = a(l, 1 / 3) * t | 0; }
+  for (r += ""; r[h] % 64 - 56;) r += "\0";
   for (d = 0; d < r[h]; d++) {
-    if ((f = r.charCodeAt(d)) >> 8) return; 
-    c[d >> 2] |= f << (3 - d) % 4 * 8; 
+    if ((f = r.charCodeAt(d)) >>> 8) return;
+    c[d >> 2] |= f << (3 - d) % 4 * 8;
   }
   for (c[c[h]] = e / t | 0, c[c[h]] = e, f = 0; f < c[h];) {
     for (var g = c.slice(f, f += 16), k = i, i = i.slice(0, 8), d = 0; d < 64; d++) {
       var p = g[d - 15], w = g[d - 2], A = i[0], C = i[4];
-      (i = [(w = i[7] + (o(C, 6) ^ o(C, 11) ^ o(C, 25)) + (C & i[5] ^ ~C & i[6]) + s[d] + (g[d] = d < 16 ? g[d] : g[d - 16] + (o(p, 7) ^ o(p, 18) ^ p >>> 3) + g[d - 7] + (o(w, 17) ^ o(w, 19) ^ w >>> 10) | 0)) + ((o(A, 2) ^ o(A, 13) ^ o(A, 22)) + (A & i[1] ^ A & i[2] ^ i[1] & i[2])) | 0) + i)[4] = i[4] + w | 0; 
+      (i = [(w = i[7] + (o(C, 6) ^ o(C, 11) ^ o(C, 25)) + (C & i[5] ^ ~C & i[6]) + s[d] + (g[d] = d < 16 ? g[d] : g[d - 16] + (o(p, 7) ^ o(p, 18) ^ p >>> 3) + g[d - 7] + (o(w, 17) ^ o(w, 19) ^ w >>> 10) | 0)) + ((o(A, 2) ^ o(A, 13) ^ o(A, 22)) + (A & i[1] ^ A & i[2] ^ i[1] & i[2])) | 0).concat(i))[4] = i[4] + w | 0;
     }
     for (d = 0; d < 8; d++) i[d] = i[d] + k[d] | 0;
   }
   for (d = 0; d < 8; d++) for (f = 3; f + 1; f--) {
-    var M = i[d] >> 8 * f & 255;
+    var M = i[d] >>> 8 * f & 255;
     n += (M < 16 ? 0 : "") + M.toString(16);
   }
   return n;
 }
 
-// 执行 DNS 查询
 dnsQuery();
