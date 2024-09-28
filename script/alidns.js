@@ -1,7 +1,4 @@
 async function dnsQuery() {
-  const MAX_RETRIES = 3; // 最大重试次数
-  const TIMEOUT = 5000; // 请求超时设置（毫秒）
-
   try {
     const arguments = JSON.parse($argument);
 
@@ -17,8 +14,9 @@ async function dnsQuery() {
 
     const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=${TYPE}`;
 
-    const addresses = await fetchWithRetry(DNS_QUERY, MAX_RETRIES, TIMEOUT);
-    
+    const resp = await get(DNS_QUERY);
+    const addresses = JSON.parse(resp.body);
+
     if (addresses.code) {
       throw new Error(addresses.code);
     }
@@ -26,61 +24,21 @@ async function dnsQuery() {
     $done({ addresses, ttl: 600 });
   } catch (e) {
     console.log(e.message);
+  } finally {
     $done({});
   }
 }
 
-async function fetchWithRetry(url, retries, timeout) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const resp = await get(url, timeout);
-      return JSON.parse(resp.body);
-    } catch (error) {
-      if (i === retries - 1) throw error; // 如果是最后一次重试，抛出错误
-      console.log(`Retrying... (${i + 1}/${retries})`);
-    }
-  }
-}
-
-function get(url, timeout) {
+function get(url) {
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error('Request timed out'));
-    }, timeout);
-
     $httpClient.get(url, (error, response, data) => {
-      clearTimeout(timer); // 清除超时定时器
       if (error) reject(error);
       else resolve({ header: response, body: data });
     });
   });
 }
 
-// SHA-256 函数
-function sha256(r) {
-  function o(r, o) {
-    return r >>> o | r << 32 - o;
-  }
-  for (var f, a = Math.pow, t = a(2, 32), h = "length", n = "", c = [], e = 8 * r[h], i = sha256.h = sha256.h || [], s = sha256.k = sha256.k || [], u = s[h], v = {}, l = 2; u < 64; l++) if (!v[l]) {
-    for (d = 0; d < 313; d += l) v[d] = l; i[u] = a(l, .5) * t | 0, s[u++] = a(l, 1 / 3) * t | 0;
-  }
-  for (r += ""; r[h] % 64 - 56;) r += "\0";
-  for (d = 0; d < r[h]; d++) {
-    if ((f = r.charCodeAt(d)) >>> 8) return;
-    c[d >> 2] |= f << (3 - d) % 4 * 8;
-  }
-  for (c[c[h]] = e / t | 0, c[c[h]] = e, f = 0; f < c[h];) {
-    for (var g = c.slice(f, f += 16), k = i, i = i.slice(0, 8), d = 0; d < 64; d++) {
-      var p = g[d - 15], w = g[d - 2], A = i[0], C = i[4];
-      (i = [(w = i[7] + (o(C, 6) ^ o(C, 11) ^ o(C, 25)) + (C & i[5] ^ ~C & i[6]) + s[d] + (g[d] = d < 16 ? g[d] : g[d - 16] + (o(p, 7) ^ o(p, 18) ^ p >>> 3) + g[d - 7] + (o(w, 17) ^ o(w, 19) ^ w >>> 10) | 0)) + ((o(A, 2) ^ o(A, 13) ^ o(A, 22)) + (A & i[1] ^ A & i[2] ^ i[1] & i[2])) | 0)].concat(i))[4] = i[4] + w | 0;
-    }
-    for (d = 0; d < 8; d++) i[d] = i[d] + k[d] | 0;
-  }
-  for (d = 0; d < 8; d++) for (f = 3; f + 1; f--) {
-    var M = i[d] >>> 8 * f & 255;
-    n += (M < 16 ? 0 : "") + M.toString(16);
-  }
-  return n;
-}
+// https://altv.stuyk.com/docs/articles/snippets/sha-256.html
+function sha256(r){function o(r,o){return r>>>o|r<<32-o}for(var f,a=Math.pow,t=a(2,32),h="length",n="",c=[],e=8*r[h],i=sha256.h=sha256.h||[],s=sha256.k=sha256.k||[],u=s[h],v={},l=2;u<64;l++)if(!v[l]){for(d=0;d<313;d+=l)v[d]=l;i[u]=a(l,.5)*t|0,s[u++]=a(l,1/3)*t|0}for(r+="";r[h]%64-56;)r+="\0";for(d=0;d<r[h];d++){if((f=r.charCodeAt(d))>>8)return;c[d>>2]|=f<<(3-d)%4*8}for(c[c[h]]=e/t|0,c[c[h]]=e,f=0;f<c[h];){for(var g=c.slice(f,f+=16),k=i,i=i.slice(0,8),d=0;d<64;d++){var p=g[d-15],w=g[d-2],A=i[0],C=i[4];(i=[(w=i[7]+(o(C,6)^o(C,11)^o(C,25))+(C&i[5]^~C&i[6])+s[d]+(g[d]=d<16?g[d]:g[d-16]+(o(p,7)^o(p,18)^p>>>3)+g[d-7]+(o(w,17)^o(w,19)^w>>>10)|0))+((o(A,2)^o(A,13)^o(A,22))+(A&i[1]^A&i[2]^i[1]&i[2]))|0].concat(i))[4]=i[4]+w|0}for(d=0;d<8;d++)i[d]=i[d]+k[d]|0}for(d=0;d<8;d++)for(f=3;f+1;f--){var M=i[d]>>8*f&255;n+=(M<16?0:"")+M.toString(16)}return n}
 
 dnsQuery();
