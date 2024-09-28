@@ -8,23 +8,11 @@ async function dnsQuery() {
     const ID = arguments.ID;
     const SECRET = arguments.SECRET;
     const TS = parseInt(Date.now() / 1000);
-    const DOMAIN = encodeURIComponent($domain); // 使用 encodeURIComponent 进行编码
+    const DOMAIN = $domain;
     const DID = arguments.DID;
     const key = sha256(UID + SECRET + TS + DOMAIN + ID);
 
-    // 构建URL，使用URLSearchParams构造查询参数
-    const urlParams = new URLSearchParams({
-      name: DOMAIN,
-      uid: UID,
-      ak: ID,
-      key: key,
-      ts: TS,
-      short: 1,
-      did: DID,
-      type: TYPE,
-    });
-
-    const DNS_QUERY = `https://${HOST}/resolve?${urlParams.toString()}`;
+    const DNS_QUERY = `https://${HOST}/resolve?name=${DOMAIN}&uid=${UID}&ak=${ID}&key=${key}&ts=${TS}&short=1&did=${DID}&type=${TYPE}`;
 
     const resp = await get(DNS_QUERY);
     const addresses = JSON.parse(resp.body);
