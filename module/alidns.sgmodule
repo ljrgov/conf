@@ -1,7 +1,7 @@
 #!name=阿里云 DNS
 #!desc=阿里云 DoH (DNS over HTTPS) 查询，支持 IPv4 和 IPv6
-#arguments=HOST:223.5.5.5,DOMAIN:*,DID:IOS,UID:,ID:,SECRET:
-#!arguments-desc=HOST: 阿里DNS服务器, DOMAIN: 请求域名, DID: 设备ID, UID: 阿里云账户ID, ID: AccessKey ID, SECRET: AccessKey Secret
+#!category=📘功能模块
+#!arguments=HOST: 223.5.5.5, DOMAIN: *, DID: IOS, UID: 阿里云账户ID, ID: AccessKey ID, SECRET: AccessKey Secret
 
 [Host]
 {{{DOMAIN}}} = script:AliyunDNS
