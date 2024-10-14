@@ -9,6 +9,8 @@
 #!date=2024-07-14 20:23:48
 
 [Rule]
+DOMAIN-SUFFIX, dig.bdurl.net, REJECT-DROP
+DOMAIN-SUFFIX, tnco-aliec2.zijieapi.com, REJECT-DROP
 URL-REGEX,^http:\/\/idaa\.shuzilm\.cn\/report\?v=1\.0&t=iaa$,REJECT 
 URL-REGEX,^http:\/\/ipv6\.shuzilm\.cn\/ip\?pkg=com\.wealoha\.aloha$,REJECT 
 URL-REGEX,^http:\/\/ipv4\.shuzilm\.cn\/ip\?pkg=com\.wealoha\.aloha$,REJECT 
