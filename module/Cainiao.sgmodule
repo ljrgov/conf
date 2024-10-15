@@ -2,47 +2,47 @@
 #!desc=菜鸟 & 支付宝小程序 去广告
 #!author=RuCu6
 #!icon=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/Cainiao.png
-#!category=✌️去广告、会员
+#!category=📙去广告
 #!homepage=https://gitlab.com/lodepuly/vpn_tool/-/tree/master/Tool/Loon/Plugin
 #!date=2024-02-18 15:50:34
 
 [Map Local]
-# 首页 好物推荐,商品推广,底部标签页,快递详情页,问卷调查,主页图标
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.adkeyword\.get\.cn data-type=text data="{}" status-code=200
+# > 菜鸟裹裹_通用广告请求@ddgksf2013
+^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.(show|mshow)\.cn\/ data-type=text data=" " status-code=200
 
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.cncommunity\.my\.station\.query\.cn data-type=text data="{}" status-code=200
+# > 菜鸟裹裹_支付宝小程序_通用广告请求@ddgksf2013
+^https?:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.show data-type=text data=" " status-code=200
 
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.(batch\.show\.v2|expose\.mreply|index)\.cn data-type=text data="{}" status-code=200
+# > 菜鸟裹裹_支付宝小程序_底部商品推广新@ddgksf2013
+^https?:\/\/acs4miniapp-inner\.m\.taobao\.com\/gw\/mtop\.alimama\.abyss\.unionpage\.get data-type=text data=" " status-code=200
 
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbopen\.miniapp\.recommend\.cpc\.cn data-type=text data="{}" status-code=200
+# > 菜鸟裹裹_支付宝小程序_底部商品推广旧@ddgksf2013
+^https?:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.adx\.flyad\.getad data-type=text data=" " status-code=200
 
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbmensa\.research\.researchservice\.(acquire|event|close)\.cn data-type=text data="{}" status-code=200
-
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbpresentation\.(homepage\.merge|tabbar\.marketing)\.get\.cn data-type=text data="{}" status-code=200
-
-# 发现页 数字角标 裹裹券
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.com\.cainiao\.cnactivitycenter data-type=text data="{}" status-code=200
-
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.com\.cainiao\.cncreditmarket\.hit\.getactivityhit\.cn data-type=text data="{}" status-code=200
-
-^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.com\.cainiao\.longquan\.place\.getpageresourcecontent\.cn data-type=text data="{}" status-code=200
-
-# 支付宝 - 菜鸟小程序
-^https:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.adx\.flyad\.getad data="https://raw.githubusercontent.com/mieqq/mieqq/master/reject-dict.json"
+# > 菜鸟裹裹_支付宝小程序_匿名选择@ddgksf2013
+^https?:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.nbmensa\.research\.researchservice\.consultmerge data-type=text data=" " status-code=200
 
 [Script]
-# 其他
-header = type=http-response, pattern=^http:\/\/amdc\.m\.taobao\.com\/amdc\/mobileDispatch, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/header.js, timeout=60
+# > 菜鸟裹裹_我的页面去除推广[卸载重装]@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.app\.mine\.main\.cn, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
 
-cainiao = type=http-response, pattern=^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.m?show\.cn, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/cainiao.js, requires-body=true, max-size=-1, timeout=60
+# > 菜鸟裹裹_amdc处理[Anti已将Amdc分流删除,故更换屏蔽策略]@ddgksf2013
+amdc = type=http-response, pattern=^http:\/\/amdc\.m\.taobao\.com, script-path=https://github.com/ddgksf2013/Scripts/raw/master/amdc.js, requires-body=true, max-size=-1, timeout=60
 
-cainiao = type=http-response, pattern=^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbpresentation\.(pickup\.empty\.page|protocol\.homepage)\.get\.cn, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/cainiao.js, requires-body=true, max-size=-1, timeout=60
+# > 菜鸟裹裹_首页中部的问邻居推广@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbpresentation\.homepage\.merge\.get\.cn, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
 
-# 消息中心
-cainiao = type=http-response, pattern=^https:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.nbfriend\.message\.conversation\.list\.cn, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/cainiao.js, requires-body=true, max-size=-1, timeout=60
+# > 菜鸟裹裹_首页中部的惊喜福利推广@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.nbpresentation\.protocol\.homepage\.get\.cn, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
 
-# 支付宝 - 菜鸟小程序
-移除菜鸟小程序推广 = type=http-response, pattern=^https:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.mshow, script-path=https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Resource/Script/Cainiao/Cainiao_remove_ads.js, requires-body=true
+# > 菜鸟裹裹_搜索框下方今日好物推荐@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.adkeyword, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
+
+# > 菜鸟裹裹_首页底部商品推广@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/cn-acs\.m\.cainiao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.index\.cn, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
+
+# > 菜鸟裹裹_支付宝小程序_中部的寄件推广[导致的空白占位后续处理]@ddgksf2013
+cainiao_json = type=http-response, pattern=^https?:\/\/guide-acs\.m\.taobao\.com\/gw\/mtop\.cainiao\.guoguo\.nbnetflow\.ads\.mshow, script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/cainiao_json.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
-hostname = %APPEND% cn-acs.m.cainiao.com
+hostname = %APPEND% cn-acs.m.cainiao.com, guide-acs.m.taobao.com, acs4miniapp-inner.m.taobao.com
