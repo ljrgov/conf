@@ -1,6 +1,6 @@
 #!name=微博
 #!desc=全面净化
-#!category=✌️去广告、会员
+#!category=📙去广告
 #更新链接http://script.hub/file/_start_/https://raw.githubusercontent.com/RuCu6/QuanX/main/Rewrites/Cube/weibo.snippet/_end_/weibo.sgmodule?type=qx-rewrite&target=surge-module
 
 [URL Rewrite]
@@ -44,46 +44,46 @@
 
 [Script]
 # 首页 签到,发布按钮,侧边栏,右上角红包,顶部tab,侧边栏提醒,超话tab悬浮,顶部直播
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(checkin\/show|client\/publisher_list|push\/active)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(checkin\/show|client\/publisher_list|push\/active)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/groups\/allgroups\/v2\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/groups\/allgroups\/v2\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
 # 详情页 超话,评论区,看图界面,个人主页,我的页面,信息流,商品橱窗,视频流,视频号,视频调查,话题卡片
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(cardlist|page)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(cardlist|page)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/comments\/build_comments\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/comments\/build_comments\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(container\/asyn|flowlist|flowpage)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/(container\/asyn|flowlist|flowpage)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/friendships\/(create|destroy)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/friendships\/(create|destroy)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/profile\/(container_timeline|dealatt|me|statuses\/tab|userinfo)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/profile\/(container_timeline|dealatt|me|statuses\/tab|userinfo)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/statuses\/(container_timeline(_hot|_topic|_topicpage|_unread)?|unread_hot_timeline)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/statuses\/(container_timeline(_hot|_topic|_topicpage|_unread)?|unread_hot_timeline)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/statuses\/(extend|show)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/statuses\/(extend|show)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/video\/tiny_stream_video_list\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/video\/tiny_stream_video_list\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/!\/huati\/discovery_home_bottom_channels\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/!\/huati\/discovery_home_bottom_channels\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
 # 消息页
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/direct_messages\/user_list\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/direct_messages\/user_list\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/messageflow\/notice\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/messageflow\/notice\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/search\/(container_timeline|finder)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/search\/(container_timeline|finder)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/searchall\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/api\.weibo\.cn\/2\/searchall\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/bootpreload\.uve\.weibo\.com\/v[12]\/ad\/preload, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/bootpreload\.uve\.weibo\.com\/v[12]\/ad\/preload, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/sdkapp\.uve\.weibo\.com\/interface\/sdk\/sdkad\.php, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/sdkapp\.uve\.weibo\.com\/interface\/sdk\/sdkad\.php, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
-weibo = type=http-response, pattern=^https:\/\/wbapp\.uve\.weibo\.com\/(preload\/get_ad|wbapplua\/wbpullad\.lua)\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/wbapp\.uve\.weibo\.com\/(preload\/get_ad|wbapplua\/wbpullad\.lua)\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
 # 会员图标
-weibo = type=http-response, pattern=^https:\/\/new\.vip\.weibo\.cn\/aj\/appicon\/list\?, script-path=https://raw.githubusercontent.com/RuCu6/QuanX/main/Scripts/weibo.js, requires-body=true, max-size=-1, timeout=60
+weibo = type=http-response, pattern=^https:\/\/new\.vip\.weibo\.cn\/aj\/appicon\/list\?, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/weibo.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
 hostname = %APPEND% *.weibo.cn, *.weibo.com, weibo.com
