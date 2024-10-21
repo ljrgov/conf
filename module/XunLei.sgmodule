@@ -73,7 +73,7 @@ DOMAIN,et.tanx.com,REJECT-DROP
 
 [Script]
 # 精简我的页面
-精简我的页面 = type=http-response, pattern=^https:\/\/conf-m-ssl\.xunlei\.com\/external\/, script-path=https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Resource/Script/XunLei/XunLei_remove_ads.js, requires-body=true
+精简我的页面 = type=http-response, pattern=^https:\/\/conf-m-ssl\.xunlei\.com\/external\/, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/xunlei.js, requires-body=true
 
 [MITM]
 hostname = %APPEND% api-shoulei-ssl.xunlei.com, conf-m-ssl.xunlei.com
