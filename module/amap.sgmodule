@@ -34,10 +34,10 @@ DOMAIN-SUFFIX, v.smtcdns.com, REJECT
 
 [MAP LOCAL]
 # 导航详情页 - 路线规划、地点详情页、搜索详情页、导航结束页
-"^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?" response-body-json-del data.tipsOperationLocation obj.data.resourcePlacement
-"^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?" response-body-json-del history_tags
+"^https:\/\/m5\.amap\.com\/ws\/shield\/search_business\/process\/marketingOperationStructured\?" data="https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/empty.json"
+"^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/homepage\?" data="https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/empty.json"
 # 打车页 - 红点角标、弹窗、天气图标、推广卡片
-"^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\? "response-body-json-del data.carTips.data.popupInfo
+"^https:\/\/m5-zb\.amap\.com\/ws\/sharedtrip\/taxi\/order_detail_car_tips\?" data="https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/empty.json"
 
 [Script]
 # 导航详情页 - 路线规划、地点详情页、搜索详情页、导航结束页
