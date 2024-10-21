@@ -2,7 +2,7 @@
 #!desc=京东去广告\n作者：@RuCu6
 #!author=RuCu6
 #!icon=https://gitlab.com/lodepuly/iconlibrary/-/raw/main/App_icon/120px/JD.png
-#!category=✌️去广告、会员
+#!category=📙去广告
 #!homepage=https://gitlab.com/lodepuly/vpn_tool/-/tree/master/Tool/Loon/Plugin
 #!date=2024-01-23 09:50:15
 
@@ -16,7 +16,7 @@ IP-CIDR6,2402:db40:5100:1011::5/128,REJECT,no-resolve
 ^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(searchBoxWord|stationPullService|uniformRecommend[06]) data-type=text data="{}" status-code=200
 
 [Script]
-移除京东广告 = type=http-response, pattern=^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome), script-path=https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Resource/Script/JD/JD_remove_ads.js, requires-body=true
+移除京东广告 = type=http-response, pattern=^https:\/\/api\.m\.jd\.com\/client\.action\?functionId=(deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/JD.js, requires-body=true
 
 [MITM]
 hostname = %APPEND% api.m.jd.com
