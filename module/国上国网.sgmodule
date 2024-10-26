@@ -1,8 +1,13 @@
-#!name=🔴 网上国网
-#!desc=95598
-#!category=通用重写
+#!name=网上国网
+#!desc=95598，含tasks
+#!category=📕面板模块
+
+[Panel]
+策略面板 = script-name=网上国网,update-interval=7200
 
 [Script]
+网上国网 = type=cron,cronexp=0 5 21 * * *,wake-system=1,script-path=https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/95598/95598.js,timeout=60
+
 接口重写 = type=http-request, pattern=^https?:\/\/api\.wsgw-rewrite\.com\/electricity\/bill\/all, script-path=https://raw.githubusercontent.com/dompling/Script/master/wsgw/index.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
