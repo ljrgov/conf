@@ -2,6 +2,10 @@
 #!desc=95598，含tasks
 #!category=📕面板模块
 
+[Rule]
+DOMAIN-KEYWORD, yuheng, DIRECT
+DOMAIN-KEYWORD, yqc-premium, DIRECT
+
 [Panel]
 策略面板 = script-name=网上国网,update-interval=7200
 
