@@ -12,18 +12,19 @@ hostname = api2.mubu.com
 *******************************/
 
 var aFengYe = $response.body;
-var obj =  JSON.parse(aFengYe);
+var obj = JSON.parse(aFengYe);
 
 var vipInfo = {
   "level": 2,
   "vipEndDate": "2999-01-01"
-}
+};
 
 for (let key in obj.data) {
   if (vipInfo.hasOwnProperty(key)) {
-     obj.data[key] = vipInfo[key]
+    obj.data[key] = vipInfo[key];
   }
 }
 
+// 将修改后的对象转换回字符串，并通过 { body: ... } 形式传递给 $done
 aFengYe = JSON.stringify(obj);
-$done(aFengYe);
+$done({ body: aFengYe });
