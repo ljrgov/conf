@@ -5,6 +5,11 @@
 #!category=📙去广告
 
 [Rule]
+DOMAIN,sdk-conf.getui.com,DIRECT
+DOMAIN-SUFFIX,sdk.open.talk.getui.com,DIRECT
+DOMAIN-SUFFIX,sdk.open.talk.gepush.com,DIRECT
+DOMAIN-SUFFIX,cm-gtc.getui.com,REJECT,pre-matching
+DOMAIN-SUFFIX,cmyd.getui.com,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/promote.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/adms/.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/splash.*,REJECT,pre-matching
