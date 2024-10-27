@@ -5,6 +5,7 @@
 #!category=📙去广告
 
 [Rule]
+DOMAIN,caid.shuzilm.cn,REJECT,pre-matching
 DOMAIN,sdk-conf.getui.com,DIRECT
 DOMAIN-SUFFIX,sdk.open.talk.getui.com,DIRECT
 DOMAIN-SUFFIX,sdk.open.talk.gepush.com,DIRECT
@@ -16,8 +17,6 @@ URL-REGEX,https://argo.blued.cn/blued/splash.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/launch/adms,REJECT,pre-matching
 URL-REGEX,https://social.blued.cn/users/.*/joy,REJECT,pre-matching
 URL-REGEX,^https:\/\/social\.blued\.cn\/users\/recommend$,REJECT,pre-matching
-DOMAIN,caid.shuzilm.cn,REJECT,pre-matching
-
 
 [Script]
 blued_闪照 = type=http-request,pattern=^https:\/\/(burn-chatfiles|chatfiles|argo)\.(blued|bldimg)\.(cn|com)\/((chatfiles|ingfiles|burn_chatfiles\/(videos|users))\/.*(mp4|jpg|(jpg|png))|blued\/qiniu\/chat).*,script-path=https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedpic.js,requires-body=0,max-size=0,debug=0
@@ -27,4 +26,4 @@ blued_定位 = type=http-request,pattern=https://((social|argo).blued.cn|\b((25[
 Finka_location = type=http-request,pattern=https://(gethornet.com|api.finka.cn|api.sqaces.com|api.theorangemeetingplace.com).*,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js,script-update-interval=0,max-size=0,binary-body-mode=0
 
 [MITM]
-hostname =  %APPEND% gethornet.com,api.theorangemeetingplace.com,api.sqaces.com,argo.blued.cn,social.blued.cn,*.bldimg.com,-blued.irisdt.cn,-120.53.132.216, -49.233.247.68, -111.230.120.150,-live-im.blued.cn,-h4.blued.cn,-h8.blued.cn,-web.bldimg.com
+hostname =  %APPEND% api.finka.cn,gethornet.com,api.theorangemeetingplace.com,api.sqaces.com,argo.blued.cn,social.blued.cn,*.bldimg.com,-blued.irisdt.cn,-120.53.132.216, -49.233.247.68, -111.230.120.150,-live-im.blued.cn,-h4.blued.cn,-h8.blued.cn,-web.bldimg.com
