@@ -4,7 +4,7 @@
 #!icon=https://raw.githubusercontent.com/Alex0510/Eric/master/Icons/Blued.png
 #!homepage=https://t.me/+A1cOYwvOdeI4MWNl
 #!category=📙广告模块
-#-----------------------------------------#
+#------------------------------------#
 #👇<作者原始脚本和模块>👇#
 #🔗surge模块：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Module/blued.sgmodule
 #🔗boxjs订阅：https://raw.githubusercontent.com/Alex0510/Eric/master/surge/Script/blued.box.json
@@ -13,7 +13,7 @@
 #🧑‍💻闪照脚本：https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedpic.js
 #🧑‍💻会员脚本：https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedvip.js
 #🧑‍💻定位脚本：https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js
-#------------------------------------------#
+#-------------------------------------#
 
 [Rule]
 DOMAIN,caid.shuzilm.cn,REJECT,pre-matching
@@ -26,8 +26,8 @@ URL-REGEX,^https:\/\/social\.blued\.cn\/users\/recommend$,REJECT,pre-matching
 
 [Script]
 blued_闪照 = type=http-request,pattern=^https:\/\/(burn-chatfiles|chatfiles|argo)\.(blued|bldimg)\.(cn|com)\/((chatfiles|ingfiles|burn_chatfiles\/(videos|users))\/.*(mp4|jpg|(jpg|png))|blued\/qiniu\/chat).*,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/mine/Blued/blued闪照.js,requires-body=0,max-size=0,debug=0
-blued_会员 = type=http-response,pattern=^https:\/\/.*\/users.*(setting|is_living=false|more/ios|flash|shadow|fair/exchange/count|\?aaid=|basic|map),requires-body=1,max-size=0,binary-body-mode=0,script-path=https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedvip.js,script-update-interval=0
-blued_定位 = type=http-request,pattern=https://((social|argo).blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(users.*extra_info=|ticktocks/users|groups/nearby|users/selection|ticktocks/popups|blued/qiniu/chat|ticktocks/info|ticktocks/banner).*,requires-body=0,script-path=https://gist.githubusercontent.com/Alex0510/23b38f5ad332e30d11a60a28ee4aa132/raw/bluedlocation.js
+blued_会员 = type=http-response,pattern=^https:\/\/.*\/users.*(setting|is_living=false|more/ios|flash|shadow|fair/exchange/count|\?aaid=|basic|map),requires-body=1,max-size=0,binary-body-mode=0,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/mine/Blued/blued会员.js,script-update-interval=0
+blued_定位 = type=http-request,pattern=https://((social|argo).blued.cn|\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)/(users.*extra_info=|ticktocks/users|groups/nearby|users/selection|ticktocks/popups|blued/qiniu/chat|ticktocks/info|ticktocks/banner).*,requires-body=0,script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/mine/Blued/blued定位.js
 #------------------------------------------#
 #👇<翻咔已失效❗️>👇
 翻咔查看照片 = type=http-response,pattern=https://api.finka.cn/vas/nearby/v2,requires-body=1,max-size=0,binary-body-mode=0,script-path=https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js,script-update-interval=0
