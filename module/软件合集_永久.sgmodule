@@ -1,6 +1,7 @@
 #!name=软件合集(永久有效)
 #!category=📙广告模块
-#!desc=幕布,环球翻译官,变声器,菜谱大全,swiftgram,微商海报
+#!desc=幕布,环球翻译官,变声器,菜谱大全,swiftgram,微商海报，脚本作者WeiGiegie
+
 
 [Script]
 幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/幕布.js, requires-body=true, max-size=-1, timeout=60
