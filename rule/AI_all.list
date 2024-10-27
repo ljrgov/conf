@@ -1,5 +1,6 @@
 # 2024-05-30 15:51:48，除去copilot
 # ChatGPT
+DOMAIN-SUFFIX,ocsp.digicert.com
 DOMAIN-KEYWORD,chatgpt-async-webps-prod-eastus-
 DOMAIN-SUFFIX,webpubsub.azure.com
 DOMAIN,chat.openai.com.cdn.cloudflare.net
