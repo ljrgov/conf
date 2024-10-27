@@ -1,16 +1,16 @@
-#!name=软件合集(一般永久)
+#!name=软件合集(永久有效)
 #!category=📙广告模块
-#!desc=环球翻译官,变声器,菜谱大全,swiftgram,微商海报
-
-
+#!desc=幕布,环球翻译官,变声器,菜谱大全,swiftgram,微商海报
 
 [Script]
+幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/afengye/QX/main/mubu.js, requires-body=true, max-size=-1, timeout=60
+
 # 菜谱大全
-cpdq = type=http-response, pattern=^https:\/\/apiios_dq\.xiangha\.com, script-path=https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/cpdq.js, requires-body=true, max-size=-1, timeout=60
+菜谱大全 = type=http-response, pattern=^https:\/\/apiios_dq\.xiangha\.com, script-path=https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/cpdq.js, requires-body=true, max-size=-1, timeout=60
 #caipu = type=http-response, pattern=^https:\/\/api.*\.xiangha\.com, script-path=https://raw.githubusercontent.com/chxm1023/Rewrite/main/caipu.js, requires-body=true, max-size=-1, timeout=60
 
 # > Nicegram/swiftgram解锁会员####
-Nicegram&swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth), script-path=https://github.com/ddgksf2013/MoYu/raw/master/NicegramProCrack.js, requires-body=true, max-size=-1, timeout=60
+swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth), script-path=https://github.com/ddgksf2013/MoYu/raw/master/NicegramProCrack.js, requires-body=true, max-size=-1, timeout=60
 
 # >环球翻译官-拍照实时语音文字翻译器（永久会员）
 hqfyg = type=http-response, pattern=^https?:\/\/hqfyg.5exg.cn\/translation\/getuserinfo, script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/hqfyg.js, requires-body=true, max-size=-1, timeout=60
@@ -22,5 +22,5 @@ py = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCou
 wshb = type=http-response, pattern=^https?:\/\/api-poster.ycase.cn\/(web\/display\?subject|api\/user\/info|api\/User\/home), script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/wshb.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
-hostname= %APPEND% dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, api-poster.ycase.cn, hqfyg.5exg.cn, xihongshi.dicallapp.com
+hostname= %APPEND% dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, api-poster.ycase.cn, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com
 
