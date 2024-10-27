@@ -6,8 +6,8 @@
 幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/mubu.js, requires-body=true, max-size=-1, timeout=60
 
 # 菜谱大全
-菜谱大全 = type=http-response, pattern=^https:\/\/apiios_dq\.xiangha\.com, script-path=https://raw.githubusercontent.com/89996462/Quantumult-X/main/ycdz/cpdq.js, requires-body=true, max-size=-1, timeout=60
-#caipu = type=http-response, pattern=^https:\/\/api.*\.xiangha\.com, script-path=https://raw.githubusercontent.com/chxm1023/Rewrite/main/caipu.js, requires-body=true, max-size=-1, timeout=60
+菜谱大全 = type=http-response, pattern=^https:\/\/apiios_dq\.xiangha\.com, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/caipu1.js, requires-body=true, max-size=-1, timeout=60
+#caipu = type=http-response, pattern=^https:\/\/api.*\.xiangha\.com, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/caipu2.js, requires-body=true, max-size=-1, timeout=60
 
 # > Nicegram/swiftgram解锁会员####
 swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/Swiftgram.js, requires-body=true, max-size=-1, timeout=60
