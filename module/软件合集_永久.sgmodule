@@ -1,6 +1,6 @@
 #!name=软件合集(永久有效)
 #!category=📙广告模块
-#!desc=幕布[2.32.3]版本,环球翻译官,变声器,菜谱大全,swiftgram,微商海报，脚本作者WeiGiegie
+#!desc=幕布,环球翻译官,配音,菜谱大全,swiftgram
 
 
 [Script]
@@ -14,14 +14,11 @@
 swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/Swiftgram.js, requires-body=true, max-size=-1, timeout=60
 
 # >环球翻译官-拍照实时语音文字翻译器（永久会员）
-hqfyg = type=http-response, pattern=^https?:\/\/hqfyg.5exg.cn\/translation\/getuserinfo, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/环球翻译官.js, requires-body=true, max-size=-1, timeout=60
+环球翻译官 = type=http-response, pattern=^https?:\/\/hqfyg.5exg.cn\/translation\/getuserinfo, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/环球翻译官.js, requires-body=true, max-size=-1, timeout=60
 
 # >配音-变音变声器配音软件（永久会员）
-py = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCount.ashx, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/配音.js, requires-body=true, max-size=-1, timeout=60
-
-# >微商海报-海报制作&搞定海报设计（永久会员）
-wshb = type=http-response, pattern=^https?:\/\/api-poster.ycase.cn\/(web\/display\?subject|api\/user\/info|api\/User\/home), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/微商海报&稿定设计.js, requires-body=true, max-size=-1, timeout=60
+配音 = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCount.ashx, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/配音.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
-hostname= %APPEND% dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, api-poster.ycase.cn, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com
+hostname= %APPEND% dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com
 
