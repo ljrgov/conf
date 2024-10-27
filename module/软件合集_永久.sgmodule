@@ -3,7 +3,7 @@
 #!desc=幕布,环球翻译官,变声器,菜谱大全,swiftgram,微商海报
 
 [Script]
-幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/mubu.js, requires-body=true, max-size=-1, timeout=60
+幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/幕布.js, requires-body=true, max-size=-1, timeout=60
 
 # 菜谱大全
 菜谱大全 = type=http-response, pattern=^https:\/\/apiios_dq\.xiangha\.com, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/caipu1.js, requires-body=true, max-size=-1, timeout=60
@@ -13,13 +13,13 @@
 swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/Swiftgram.js, requires-body=true, max-size=-1, timeout=60
 
 # >环球翻译官-拍照实时语音文字翻译器（永久会员）
-hqfyg = type=http-response, pattern=^https?:\/\/hqfyg.5exg.cn\/translation\/getuserinfo, script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/hqfyg.js, requires-body=true, max-size=-1, timeout=60
+hqfyg = type=http-response, pattern=^https?:\/\/hqfyg.5exg.cn\/translation\/getuserinfo, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/环球翻译官.js, requires-body=true, max-size=-1, timeout=60
 
 # >配音-变音变声器配音软件（永久会员）
-py = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCount.ashx, script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/py.js, requires-body=true, max-size=-1, timeout=60
+py = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCount.ashx, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/配音.js, requires-body=true, max-size=-1, timeout=60
 
 # >微商海报-海报制作&搞定海报设计（永久会员）
-wshb = type=http-response, pattern=^https?:\/\/api-poster.ycase.cn\/(web\/display\?subject|api\/user\/info|api\/User\/home), script-path=https://raw.githubusercontent.com/WeiGiegie/666/main/wshb.js, requires-body=true, max-size=-1, timeout=60
+wshb = type=http-response, pattern=^https?:\/\/api-poster.ycase.cn\/(web\/display\?subject|api\/user\/info|api\/User\/home), script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/微商海报&稿定设计.js, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
 hostname= %APPEND% dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, api-poster.ycase.cn, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com
