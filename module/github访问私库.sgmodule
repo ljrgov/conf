@@ -4,7 +4,7 @@
 #!arguments=USERNAME:GITHUB_USERNAME,TOKEN:GITHUB_TOKEN
 #!arguments-desc=[参数设置]\nUSERNAME: 填入 GitHub 的用户名\nTOKEN: 填入 GitHub 生成的 Token\n\n[Token 获取方式]\n头像菜单 -> Settings -> Developer settings -> Personal access tokens -> Generate new token -> 选择 repo 和 gist 权限
 #------------------------------#
-#创建本地模块形式#
+#建议创建本地模块形式#
 
 [Header Rewrite]
 # GitHub API 访问（私有仓库文件内容）
