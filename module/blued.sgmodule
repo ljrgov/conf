@@ -18,7 +18,9 @@
 #------------------------------------#
 
 [Rule]
-DOMAIN-SUFFIX,*.shuzilm.cn,REJECT,pre-matching
+DOMAIN,caid.shuzilm.cn,REJECT,pre-matching
+DOMAIN,ipv4.shuzilm.cn,REJECT,pre-matching
+#DOMAIN,ipv6.shuzilm.cn,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/promote.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/adms/.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/splash.*,REJECT,pre-matching
