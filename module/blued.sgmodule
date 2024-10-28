@@ -35,4 +35,4 @@ blued_定位 = type=http-request,pattern=https://((social|argo).blued.cn|\b((25[
 Finka_定位 = type=http-request,pattern=https://(gethornet.com|api.finka.cn|api.sqaces.com|api.theorangemeetingplace.com).*,requires-body=1,script-path=https://gist.githubusercontent.com/Alex0510/85c95aeaf2283ab825702d27ed229a54/raw/Finka.js,script-update-interval=0,max-size=0,binary-body-mode=0
 
 [MITM]
-hostname =  %APPEND%  -api.finka.cn, gethornet.com, api.theorangemeetingplace.com, api.sqaces.com, argo.blued.cn, social.blued.cn, *.bldimg.com, -blued.irisdt.cn, -live-im.blued.cn, -h4.blued.cn, -h8.blued.cn, -web.bldimg.com, -112.90.40.157, -120.240.119.73, -120.53.132.216, -49.233.247.68, -111.230.120.150, 116.196.137.183, 116.196.137.183, 220.249.135.81, 112.16.227.102, 36.156.173.44, 112.48.137.53
+hostname =  %APPEND%  -api.finka.cn, gethornet.com, api.theorangemeetingplace.com, api.sqaces.com, argo.blued.cn, social.blued.cn, *.bldimg.com, -blued.irisdt.cn, -live-im.blued.cn, -h4.blued.cn, -h8.blued.cn, -web.bldimg.com, -112.90.40.157, -120.240.119.73, -120.53.132.216, -49.233.247.68, -111.230.120.150, 116.196.137.183, 220.249.135.81, 112.16.227.102, 36.156.173.44, 112.48.137.53
