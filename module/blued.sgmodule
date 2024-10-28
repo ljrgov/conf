@@ -18,7 +18,7 @@
 #------------------------------------#
 
 [Rule]
-DOMAIN,caid.shuzilm.cn,REJECT,pre-matching
+DOMAIN,*.shuzilm.cn,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/promote.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/adms/.*,REJECT,pre-matching
 URL-REGEX,https://argo.blued.cn/blued/splash.*,REJECT,pre-matching
