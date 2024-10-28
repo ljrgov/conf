@@ -1,23 +1,14 @@
-// nsloon_plugin_view.js
+// plugin_view.js
 
-// 从请求 URL 中提取 `plugin` 参数中的实际插件链接
-let pluginUrl = new URL($request.url).searchParams.get("plugin");
+// 获取请求的内容
+let responseBody = $response.body;
 
-if (pluginUrl) {
-    $httpClient.get(pluginUrl, function (error, response, data) {
-        if (error) {
-            $notify("请求失败", "无法访问插件文件", error);
-            $done({});
-            return;
-        }
-        // 将 .plugin 文件内容返回为纯文本显示
-        $done({
-            status: 200,
-            headers: { "Content-Type": "text/plain" },
-            body: data
-        });
-    });
-} else {
-    // 如果未找到 plugin 参数
-    $done({});
-}
+// 设置 Content-Type 为 text/plain 以便浏览器显示
+$done({
+    status: 200,
+    headers: {
+        "Content-Type": "text/plain", // 设置为纯文本
+        "Access-Control-Allow-Origin": "*", // 允许跨域请求
+    },
+    body: responseBody // 返回原始内容
+});
