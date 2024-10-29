@@ -4,7 +4,7 @@
 
 
 [Script]
-Documents = type=http-request, pattern=https://license.pdfexpert.com/api/2.0/documents/subscription/refresh, script-path=https://raw.githubusercontent.com/Yu9191/Rewrite/main/Documents.js, requires-body=true, max-size=-1, timeout=60
+Documents = type=http-request, pattern=https://license.pdfexpert.com/api/2.0/documents/subscription/refresh, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/Document.js, requires-body=true, max-size=-1, timeout=60
 
 幕布 = type=http-response, pattern=^https:\/\/api2\.mubu\.com\/v3\/api\/user\/current_user, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/幕布.js, requires-body=true, max-size=-1, timeout=60
 
