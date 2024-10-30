@@ -1,6 +1,6 @@
 #!name=软件合集(永久有效)
 #!category=📙广告模块
-#!desc=Document,幕布,环球翻译官,配音,菜谱大全,swiftgram
+#!desc=Document,幕布,滚动截屏,环球翻译官,配音,菜谱大全,swiftgram
 
 
 [Script]
@@ -21,6 +21,8 @@ swiftgram = type=http-response, pattern=^https?:\/\/nicegram\.cloud\/api\/v\d\/(
 # >配音-变音变声器配音软件（永久会员）
 配音 = type=http-response, pattern=^https?:\/\/xihongshi.dicallapp.com\/SDGetMeCount.ashx, script-path=https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/配音.js, requires-body=true, max-size=-1, timeout=60
 
+滚动截屏 = type=http-response, pattern=^http://tailor\.tomax\.xyz/api/users/fetch/info, script-path=https://raw.githubusercontent.com/SheepFJ/Sheep/main/gdjp.js, requires-body=true, max-size=-1, timeout=60
+
 [MITM]
-hostname= %APPEND% .pdfexpert.com, dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com
+hostname= %APPEND% .pdfexpert.com, dq.xiangha.com, apiios_dq.xiangha.com, nicegram.cloud, hqfyg.5exg.cn, xihongshi.dicallapp.com, api2.mubu.com, tailor.tomax.xyz
 
