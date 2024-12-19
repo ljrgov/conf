@@ -17,8 +17,5 @@ DOMAIN-SUFFIX,moonton.com
 DOMAIN-SUFFIX,tiltingpoint.com
 DOMAIN-SUFFIX,supercell.com
 # Port 规则
-DEST-PORT,30021
-DEST-PORT,30190
-DEST-PORT,30001
-DEST-PORT,30102
+
 #=======================
