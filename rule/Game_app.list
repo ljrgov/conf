@@ -6,6 +6,7 @@ DEST-PORT,30190
 DEST-PORT,30001
 DEST-PORT,30102
 ##=========
+DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN,privacy-gateway.cloudflare.com
 DOMAIN,ml.config.cdn-aihelp.net.cn
 DOMAIN,p1-config.cdn-aihelp.net.cn
