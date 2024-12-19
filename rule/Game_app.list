@@ -1,5 +1,13 @@
 #mobile legends=============
 ###
+# Port 规则
+DEST-PORT,30071
+DEST-PORT,30190
+DEST-PORT,30001
+DEST-PORT,30102
+##=========
+DOMAIN,ml.config.cdn-aihelp.net.cn
+DOMAIN,p1-config.cdn-aihelp.net.cn
 DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN-SUFFIX,aihelp.net
 DOMAIN-SUFFIX,bytegsdk.com
@@ -16,9 +24,4 @@ DOMAIN-SUFFIX,gamezop.com
 DOMAIN-SUFFIX,moonton.com
 DOMAIN-SUFFIX,tiltingpoint.com
 DOMAIN-SUFFIX,supercell.com
-# Port 规则
-DEST-PORT,30071
-DEST-PORT,30190
-DEST-PORT,30001
-DEST-PORT,30102
 #=======================
