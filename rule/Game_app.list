@@ -7,6 +7,7 @@ DEST-PORT,30001
 DEST-PORT,30102
 DEST-PORT,5002
 ##=========
+DOMAIN,log-va.bytegsdk.com
 DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN,privacy-gateway.cloudflare.com
 DOMAIN,ml.config.cdn-aihelp.net.cn
@@ -26,9 +27,7 @@ DOMAIN-SUFFIX,aihelp.net
 DOMAIN-SUFFIX,bytegsdk.com
 DOMAIN,analytics.adjust.net.in
 DOMAIN,analytics.adjust.world
-DOMAIN-SUFFIX,adjust.com
 DOMAIN-SUFFIX,i.ytimg.com
-DOMAIN-SUFFIX,microsoftonline.com
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
 # 其他可能相关的域名
