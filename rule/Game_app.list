@@ -11,6 +11,15 @@ DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN,privacy-gateway.cloudflare.com
 DOMAIN,ml.config.cdn-aihelp.net.cn
 DOMAIN,p1-config.cdn-aihelp.net.cn
+DOMAIN,sessions.bugsnag.com
+DOMAIN,safebrowsing.googleapis.com
+DOMAIN,wsapi.nimo.tv
+DOMAIN,api.nimo.tv
+DOMAIN,txpic.vod.nimo.tv
+DOMAIN,alpic.vod.nimo.tv
+DOMAIN,m.nimo.tv
+DOMAIN,ep2.facebook.com
+DOMAIN,www.shuyz.com
 DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN,wsavatar.yuanzhanapp.com
 DOMAIN-SUFFIX,aihelp.net
