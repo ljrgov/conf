@@ -13,6 +13,7 @@ DOMAIN,gpsdk-sg.bytegsdk.com
 DOMAIN-SUFFIX,bytegsdk.com
 DOMAIN,akmpicture.youngjoygame.com
 DOMAIN-SUFFIX,youngjoygame.com
+DOMAIN-SUFFIX,i.ytimg.com
 DOMAIN,ohttp-relay1.fastly-edge.com
 DOMAIN,privacy-gateway.cloudflare.com
 DOMAIN,ml.config.cdn-aihelp.net.cn
@@ -30,7 +31,6 @@ DOMAIN,wsavatar.yuanzhanapp.com
 DOMAIN-SUFFIX,aihelp.net
 DOMAIN,analytics.adjust.net.in
 DOMAIN,analytics.adjust.world
-DOMAIN-SUFFIX,i.ytimg.com
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
 # 其他可能相关的域名
