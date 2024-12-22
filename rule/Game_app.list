@@ -5,8 +5,8 @@ DEST-PORT,30071
 DEST-PORT,30190
 DEST-PORT,30001
 DEST-PORT,30102
-DEST-PORT,5002
 ##=========
+DOMAIN,ep2.facebook.com
 DOMAIN,analytics.adjust.com
 DOMAIN,log-va.bytegsdk.com
 DOMAIN,gpsdk-sg.bytegsdk.com
