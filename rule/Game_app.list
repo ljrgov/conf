@@ -32,6 +32,7 @@ DOMAIN,analytics.adjust.net.in
 DOMAIN,analytics.adjust.world
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
+IP-CIDR,43.135.52.60/32
 # 其他可能相关的域名
 DOMAIN-SUFFIX,gameanalytics.com
 DOMAIN-SUFFIX,gamezop.com
