@@ -39,4 +39,5 @@ DOMAIN-SUFFIX,gamezop.com
 DOMAIN-SUFFIX,moonton.com
 DOMAIN-SUFFIX,tiltingpoint.com
 DOMAIN-SUFFIX,supercell.com
+URL-REGEX,^http:\/\/ocsp\.digicert\.com\/ME8wTTBLMEkwRzAHBgUrDgMCGgQU6468nUcrfgKRdxkj8qXxwcUeV7UEFLPbSKT5ocXYrjZBzBFjaWIpvEvGAhAMq6rRzsTpfMJmWIHQITj3$
 #=======================
