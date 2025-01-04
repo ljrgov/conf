@@ -1,16 +1,7 @@
 #mobile legends=============
 ###
 # Port 规则
-DEST-PORT,30071
-DEST-PORT,30190
-DEST-PORT,30001
-DEST-PORT,30102
-DEST-PORT,30103
-DEST-PORT,7591
-DEST-PORT,5051
-DEST-PORT,5054
-DEST-PORT,5004
-DEST-PORT,5001
+DEST-PORT,30071,30190,30001,30102,30103,7591,5051-5054,5001-5004,5551,5552
 ##=========
 DOMAIN,va-effect.byteoversea.com
 DOMAIN,sf-hs-sg.ibytedtos.com
@@ -18,10 +9,12 @@ DOMAIN,tnc16-useastla.isnssdk.com
 DOMAIN,tnc16-alisg.isnssdk.com
 DOMAIN,gplog-sg.byteoversea.com
 DOMAIN,ep2.facebook.com
+DOMAIN,graph.facebook.com
 DOMAIN,analytics.adjust.com
 DOMAIN,log-va.bytegsdk.com
 DOMAIN,gpsdk-sg.bytegsdk.com
 DOMAIN-SUFFIX,bytegsdk.com
+DOMAIN-SUFFIX,isnssdk.com
 DOMAIN,akmpicture.youngjoygame.com
 DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN-SUFFIX,i.ytimg.com
