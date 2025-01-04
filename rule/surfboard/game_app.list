@@ -1,0 +1,44 @@
+#mobile legends=============
+###
+# Port 规则
+DEST-PORT,30071
+DEST-PORT,30190
+DEST-PORT,30001
+DEST-PORT,30102
+DEST-PORT,5501
+##=========
+DOMAIN,ep2.facebook.com
+DOMAIN,analytics.adjust.com
+DOMAIN,log-va.bytegsdk.com
+DOMAIN,gpsdk-sg.bytegsdk.com
+DOMAIN-SUFFIX,bytegsdk.com
+DOMAIN,akmpicture.youngjoygame.com
+DOMAIN-SUFFIX,youngjoygame.com
+DOMAIN-SUFFIX,i.ytimg.com
+DOMAIN,ohttp-relay1.fastly-edge.com
+DOMAIN,privacy-gateway.cloudflare.com
+DOMAIN,ml.config.cdn-aihelp.net.cn
+DOMAIN,p1-config.cdn-aihelp.net.cn
+DOMAIN,sessions.bugsnag.com
+DOMAIN,safebrowsing.googleapis.com
+DOMAIN,wsapi.nimo.tv
+DOMAIN,api.nimo.tv
+DOMAIN,txpic.vod.nimo.tv
+DOMAIN,alpic.vod.nimo.tv
+DOMAIN,m.nimo.tv
+DOMAIN,www.shuyz.com
+DOMAIN,wsavatar.yuanzhanapp.com
+DOMAIN-SUFFIX,aihelp.net
+DOMAIN,analytics.adjust.net.in
+DOMAIN,analytics.adjust.world
+DOMAIN-SUFFIX,mobilelegends.com
+DOMAIN-SUFFIX,mon.isnssdk.com
+IP-CIDR,43.135.52.60/32
+# 其他可能相关的域名
+DOMAIN,api-mayi.django.t.taobao.com
+DOMAIN-SUFFIX,gameanalytics.com
+DOMAIN-SUFFIX,gamezop.com
+DOMAIN-SUFFIX,moonton.com
+DOMAIN-SUFFIX,tiltingpoint.com
+DOMAIN-SUFFIX,supercell.com
+#=======================
