@@ -11,6 +11,7 @@ DEST-PORT,5054
 DEST-PORT,5004
 DEST-PORT,5001
 ##=========
+DOMAIN,sf-hs-sg.ibytedtos.com
 DOMAIN,tnc16-useastla.isnssdk.com
 DOMAIN,tnc16-alisg.isnssdk.com
 DOMAIN,gplog-sg.byteoversea.com
