@@ -13,6 +13,7 @@ DEST-PORT,5004
 DEST-PORT,5001
 DEST-PORT,5552
 DEST-PORT,5053
+DEST-PORT,5052
 ##=========
 DOMAIN,va-effect.byteoversea.com
 DOMAIN,sf-hs-sg.ibytedtos.com
@@ -25,6 +26,7 @@ DOMAIN,analytics.adjust.com
 DOMAIN,log-va.bytegsdk.com
 DOMAIN,gpsdk-sg.bytegsdk.com
 DOMAIN-SUFFIX,bytegsdk.com
+DOMAIN-SUFFIX,isnssdk.com
 DOMAIN,akmpicture.youngjoygame.com
 DOMAIN-SUFFIX,youngjoygame.com
 DOMAIN-SUFFIX,i.ytimg.com
@@ -46,8 +48,6 @@ DOMAIN,analytics.adjust.net.in
 DOMAIN,app.adjust.com
 DOMAIN,analytics.adjust.world
 DOMAIN-SUFFIX,mobilelegends.com
-DOMAIN-SUFFIX,mon.isnssdk.com
-IP-CIDR,43.135.52.60/32
 # 其他可能相关的域名
 DOMAIN,api-mayi.django.t.taobao.com
 DOMAIN-SUFFIX,gameanalytics.com
