@@ -1,11 +1,12 @@
 #mobile legends=============
 ###
 # Port 规则
-DEST-PORT,30071
-DEST-PORT,30190
-DEST-PORT,30001
-DEST-PORT,30102
-DEST-PORT,5501
+MISC-DEST-PORT,30071
+MISC-DEST-PORT,30190
+MISC-DEST-PORT,30001
+MISC-DEST-PORT,30102
+MISC-DEST-PORT,7591
+MISC-DEST-PORT,5501
 ##=========
 DOMAIN,ep2.facebook.com
 DOMAIN,analytics.adjust.com
@@ -30,6 +31,7 @@ DOMAIN,www.shuyz.com
 DOMAIN,wsavatar.yuanzhanapp.com
 DOMAIN-SUFFIX,aihelp.net
 DOMAIN,analytics.adjust.net.in
+DOMAIN,app.adjust.com
 DOMAIN,analytics.adjust.world
 DOMAIN-SUFFIX,mobilelegends.com
 DOMAIN-SUFFIX,mon.isnssdk.com
