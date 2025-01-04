@@ -6,8 +6,12 @@ DEST-PORT,30190
 DEST-PORT,30001
 DEST-PORT,30102
 DEST-PORT,7591
-IP-CIDR,98.98.97.78/24
+DEST-PORT,5051
+DEST-PORT,5054
+DEST-PORT,5004
+DEST-PORT,5001
 ##=========
+DOMAIN,tnc16-alisg.isnssdk.com
 DOMAIN,gplog-sg.byteoversea.com
 DOMAIN,ep2.facebook.com
 DOMAIN,graph.facebook.com
