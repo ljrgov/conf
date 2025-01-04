@@ -1,7 +1,6 @@
 #mobile legends=============
 ###
 # Port 规则
-[Rule]
 DEST-PORT, 30071
 DEST-PORT, 30190
 DEST-PORT, 30001
@@ -10,8 +9,7 @@ DEST-PORT, 30103
 DEST-PORT, 7591
 DEST-PORT, 5051-5054
 DEST-PORT, 5001-5004
-DEST-PORT, 5551
-DEST-PORT, 5552
+DEST-PORT, 5551-5552
 ##=========
 DOMAIN,va-effect.byteoversea.com
 DOMAIN,sf-hs-sg.ibytedtos.com
