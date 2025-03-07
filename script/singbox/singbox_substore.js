@@ -1,9 +1,12 @@
-// https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/singbox/singbox_substore.js#type=组合订阅&name=sublink&outbound=🕳ℹ️all|all-auto🕳ℹ️hk|hk-auto🏷ℹ️港|hk|hongkong|kong kong|🇭🇰🕳ℹ️tw|tw-auto🏷ℹ️台|tw|taiwan|🇹🇼🕳ℹ️jp|jp-auto🏷ℹ️日本|jp|japan|🇯🇵🕳ℹ️sg|sg-auto🏷ℹ️^(?!.*(?:us)).*(新|sg|singapore|🇸🇬)🕳ℹ️us|us-auto🏷ℹ️美|us|unitedstates|united states|🇺🇸
+// https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/script/singbox/singbox_substore.js#type=组合订阅&name=sublink&outbound=🕳ℹ️All🕳ℹ️香港|香港(自动)🕳ℹ️台湾|台湾(自动)🕳ℹ️日本|日本(自动)🕳ℹ️新加坡|新加坡(自动)🕳ℹ️美国|美国(自动)🕳ℹ️Game
 
 // 示例说明
 // 读取 名称为 "sublink" 的 组合订阅 中的节点(单订阅不需要设置 type 参数)
-// 把 所有节点插入匹配 /all|all-auto/i 的 outbound 中(跟在 🕳 后面, ℹ️ 表示忽略大小写, 不筛选节点不需要给 🏷 )
-// 把匹配 /港|hk|hongkong|kong kong|🇭🇰/i  (跟在 🏷 后面, ℹ️ 表示忽略大小写) 的节点插入匹配 /hk|hk-auto/i 的 outbound 中
+// 把 所有节点插入匹配 /All/i 的 outbound 中(跟在 🕳 后面, ℹ️ 表示忽略大小写, 不筛选节点不需要给 🏷 )
+// 把匹配 /港|hk|hongkong|kong kong|🇭🇰/i  (跟在 🏷 后面, ℹ️ 表示忽略大小写) 的节点插入匹配 /香港|香港(自动)/i 的 outbound 中
+
+// 例如：#type=组合订阅&name=sublink&outbound=🕳ℹ️All🕳ℹ️香港|香港(自动)🏷ℹ️港|hk|hongkong|kong kong|🇭🇰🕳ℹ️台湾|台湾(自动)🏷ℹ️台|tw|taiwan|🇹🇼|🇨🇳🕳ℹ️日本|日本(自动)🏷ℹ️日本|jp|japan|🇯🇵🕳ℹ️新加坡|新加坡(自动)🏷ℹ️^(?!.*(?:us)).*(新|sg|singapore|🇸🇬)🕳ℹ️美国|美国(自动)🏷ℹ️美|us|unitedstates|united states|🇺🇸🕳ℹ️Game🏷ℹ️游戏
+
 // ...
 // 可选参数: includeUnsupportedProxy 包含官方/商店版不支持的协议 SSR. 用法: `&includeUnsupportedProxy=true`
 
