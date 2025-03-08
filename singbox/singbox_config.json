@@ -217,26 +217,6 @@
     },
     {
       "type": "selector",
-      "tag": "GLOBAL",
-      "interrupt_exist_connections": true,
-      "default": "Proxy",
-      "outbounds": [
-        "Proxy",
-        "香港(自动)",
-        "香港",
-        "台湾(自动)",
-        "台湾",
-        "美国(自动)",
-        "美国",
-        "日本(自动)",
-        "日本",
-        "新加坡(自动)",
-        "新加坡",
-        "direct"
-      ]
-    },
-    {
-      "type": "selector",
       "tag": "All",
       "interrupt_exist_connections": true,
       "outbounds": []
