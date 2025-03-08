@@ -1,4 +1,4 @@
-// https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/singbox_substore.js#type=组合订阅&name=sublink&outbound=🕳ℹ️All🕳ℹ️香港|香港(自动)🕳ℹ️台湾|台湾(自动)🕳ℹ️日本|日本(自动)🕳ℹ️新加坡|新加坡(自动)🕳ℹ️美国|美国(自动)🕳ℹ️Game
+// https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/singbox_substore.js#type=组合订阅&name=sublink&outbound=🕳ℹ️All🕳ℹ️香港|香港(自动)🏷ℹ️港|hk|hongkong|kong kong|🇭🇰🕳ℹ️台湾|台湾(自动)🏷ℹ️台|tw|taiwan|🇹🇼|🇨🇳🕳ℹ️日本|日本(自动)🏷ℹ️日本|jp|japan|🇯🇵🕳ℹ️新加坡|新加坡(自动)🏷ℹ️^(?!.*(?:us)).*(新|sg|singapore|🇸🇬)🕳ℹ️美国|美国(自动)🏷ℹ️美|us|unitedstates|united states|🇺🇸🕳ℹ️Game🏷ℹ️游戏
 
 // 示例说明
 // 读取 名称为 "sublink" 的 组合订阅 中的节点(单订阅不需要设置 type 参数)
