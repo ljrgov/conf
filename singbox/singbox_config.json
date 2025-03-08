@@ -99,110 +99,83 @@
       "interrupt_exist_connections": true,
       "default": "香港(自动)",
       "outbounds": [
+        "direct",
         "香港(自动)",
-        "香港",
         "台湾(自动)",
-        "台湾",
-        "美国(自动)",
-        "美国",
         "日本(自动)",
-        "日本",
-        "新加坡(自动)",
-        "新加坡",
-        "direct"
+        "美国(自动)",
+        "新加坡(自动）"
       ]
     },
     {
       "type": "selector",
       "tag": "AI",
       "interrupt_exist_connections": true,
-      "default": "美国(自动)",
+      "default": "Proxy",
       "outbounds": [
+        "Proxy",
         "美国(自动)",
-        "美国",
-        "Proxy"
+        "美国"
       ]
     },
     {
       "type": "selector",
       "tag": "Google",
       "interrupt_exist_connections": true,
-      "default": "台湾(自动)",
+      "default": "Proxy",
       "outbounds": [
+        "Proxy",
         "台湾(自动)",
-        "台湾",
-        "Proxy"
+        "台湾"
       ]
     },
     {
       "type": "selector",
       "tag": "Microsoft",
       "interrupt_exist_connections": true,
-      "default": "香港(自动)",
+      "default": "Proxy",
       "outbounds": [
+        "Proxy",
         "香港(自动)",
-        "香港",
-        "Proxy"
+        "香港"
       ]
     },
     {
       "type": "selector",
       "tag": "Twitter",
       "interrupt_exist_connections": true,
-      "default": "日本(自动)",
+      "default": "Proxy",
       "outbounds": [
+        "Proxy",
         "日本(自动)",
-        "日本",
-        "Proxy"
+        "日本"
       ]
     },
     {
       "type": "selector",
       "tag": "Telegram",
       "interrupt_exist_connections": true,
-      "default": "香港(自动)",
+      "default": "Proxy",
       "outbounds": [
-        "香港(自动)",
-        "香港",
         "Proxy"
+        "香港(自动)",
+        "香港"
       ]
     },
     {
       "type": "selector",
       "tag": "Emby",
       "interrupt_exist_connections": true,
-      "default": "新加坡(自动)",
+      "default": "Proxy",
       "outbounds": [
-        "新加坡(自动)",
-        "新加坡",
         "Proxy"
+        "新加坡(自动)",
+        "新加坡"
       ]
     },
     {
       "type": "selector",
       "tag": "Spotify",
-      "interrupt_exist_connections": true,
-      "default": "香港(自动)",
-      "outbounds": [
-        "香港(自动)",
-        "香港",
-        "Proxy"
-      ]
-    },
-    {
-      "type": "selector",
-      "tag": "Game",
-      "interrupt_exist_connections": true,
-      "default": "香港游戏",
-      "outbounds": [
-        "香港游戏",
-        "日本游戏",
-        "Proxy"
-      ]
-    },
-    {
-      "type": "selector",
-      "tag": "Final",
       "interrupt_exist_connections": true,
       "default": "Proxy",
       "outbounds": [
@@ -210,9 +183,34 @@
         "香港(自动)",
         "台湾(自动)",
         "美国(自动)",
-        "日本(自动)",
         "新加坡(自动)",
-        "direct"
+        "日本(自动)"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "Game",
+      "interrupt_exist_connections": true,
+      "default": "Proxy",
+      "outbounds": [
+        "Proxy",
+        "香港游戏",
+        "日本游戏"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "FInal",
+      "interrupt_exist_connections": true,
+      "default": "Proxy",
+      "outbounds": [
+        "direct",
+        "Proxy",
+        "香港(自动)",
+        "台湾(自动)",
+        "日本(自动)",
+        "美国(自动)",
+        "新加坡(自动)"
       ]
     },
     {
@@ -223,8 +221,14 @@
     },
     {
       "type": "selector",
+      "tag": "台湾",
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "selector",
       "tag": "日本",
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
@@ -295,7 +299,7 @@
     },
     {
       "type": "urltest",
-      "tag": "新加坡(自动)",
+      "tag": "新加坡(自动）",
       "url": "http://1.1.1.1/generate_204",
       "interval": "10m",
       "tolerance": 0,
