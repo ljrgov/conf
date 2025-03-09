@@ -194,8 +194,8 @@
       "default": "Proxy",
       "outbounds": [
         "Proxy",
-        "香港游戏",
-        "日本游戏"
+        "🇭🇰 HK游戏",
+        "🇯🇵 JP游戏"
       ]
     },
     {
@@ -245,7 +245,7 @@
     },
     {
       "type": "urltest",
-      "tag": "香港游戏",
+      "tag": "🇭🇰 HK游戏",
       "url": "http://1.1.1.1/generate_204",
       "interval": "10m",
       "tolerance": 0,
@@ -254,7 +254,7 @@
     },
     {
       "type": "urltest",
-      "tag": "日本游戏",
+      "tag": "🇯🇵 JP游戏",
       "url": "http://1.1.1.1/generate_204",
       "interval": "10m",
       "tolerance": 0,
@@ -421,7 +421,7 @@
       {
         "action": "route",
         "port": 30021,
-        "outbound": "日本游戏"
+        "outbound": "🇯🇵 JP游戏"
       },
       {
         "action": "route",
