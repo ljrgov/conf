@@ -43,7 +43,6 @@
     {"type": "urltest","tag": "🇸🇬 新加坡(自动)","url": "http://1.1.1.1/generate_204","interval": "10m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []}
       ],
   "route": {
-    "default_domain_resolver": {"server": "ali"},
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "direct-fix","type": "remote","url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
