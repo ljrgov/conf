@@ -682,11 +682,11 @@
       "mtu": 9000,
       "auto_route": true,
       "strict_route": true,
-      "endpoint_independent_nat": false,
+      "endpoint_independent_nat": true,
       "stack": "mixed",
       "platform": {
         "http_proxy": {
-          "enabled": false,
+          "enabled": true,
           "server": "127.0.0.1",
           "server_port": 7025
         }
