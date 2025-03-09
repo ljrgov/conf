@@ -1,5 +1,5 @@
 {
-   "dns": {
+  "dns": {
         "servers": [
             {"tag": "cloudflare","address": "https://1.1.1.1/dns-query","detour": "Proxy"},
             {"tag": "ali","address": "223.6.6.6","detour": "direct"},
@@ -90,9 +90,9 @@
       {"action": "route","port": 30021,"outbound": "🇯🇵 JP游戏"},
       {"action": "route","rule_set": ["GeoLocation-!CN","AppleProxy"],"outbound": "Proxy"},
       {"action": "route","rule_set": ["ChinaIP","ChinaDomain","Apple","direct-fix"],"outbound": "direct"}
-    ],
-        "auto_detect_interface": true,
-        "final": "Final"
+      ],
+      "auto_detect_interface": true,
+      "final": "Final"
     },
     "log": {
         "disabled": false,
