@@ -299,7 +299,7 @@
     },
     {
       "type": "urltest",
-      "tag": "新加坡(自动）",
+      "tag": "新加坡(自动)",
       "url": "http://1.1.1.1/generate_204",
       "interval": "10m",
       "tolerance": 0,
@@ -413,7 +413,8 @@
         "action": "route",
         "rule_set": [
           "Steam",
-          "Epic"
+          "Epic",
+          "game" 
         ],
         "outbound": "Game"
       },
@@ -435,7 +436,8 @@
         "rule_set": [
           "ChinaIP",
           "ChinaDomain",
-          "Apple"
+          "Apple",
+          "direct-fix"
         ],
         "outbound": "direct"
       }
@@ -448,6 +450,20 @@
         "format": "binary",
         "download_detour": "direct",
         "update_interval": "24h"
+      },
+      {
+        "tag": "direct-fix",
+        "type": "remote",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "format": "binary",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "game",
+        "type": "remote",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
+        "format": "binary",
+        "download_detour": "direct"
       },
       {
         "tag": "Telegram",
