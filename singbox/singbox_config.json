@@ -668,7 +668,7 @@
       "listen": "127.0.0.1",
       "listen_port": 7025,
       "tcp_fast_open": true,
-      "tcp_multi_path": false,
+      "tcp_multi_path": true,
       "udp_fragment": false
     },
     {
@@ -679,10 +679,10 @@
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 9000,
+      "mtu": 1500,
       "auto_route": true,
       "strict_route": true,
-      "endpoint_independent_nat": true,
+      "endpoint_independent_nat": false,
       "stack": "mixed",
       "platform": {
         "http_proxy": {
