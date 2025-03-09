@@ -157,7 +157,7 @@
       "interrupt_exist_connections": true,
       "default": "Proxy",
       "outbounds": [
-        "Proxy"
+        "Proxy", 
         "香港(自动)",
         "香港"
       ]
@@ -168,7 +168,7 @@
       "interrupt_exist_connections": true,
       "default": "Proxy",
       "outbounds": [
-        "Proxy"
+        "Proxy", 
         "新加坡(自动)",
         "新加坡"
       ]
@@ -330,7 +330,7 @@
         "action": "route",
         "ip_is_private": true,
         "outbound": "direct"
-      }
+      }, 
       {
         "action": "route",
         "clash_mode": "direct",
@@ -715,3 +715,4 @@
     }
   ]
 }
+
