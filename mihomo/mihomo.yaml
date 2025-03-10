@@ -23,7 +23,7 @@ proxy-providers:
   #Subscribe3: {url: http://your-service-provider, <<: *p}
   #Subscribe4: {url: http://your-service-provider, <<: *p}
 
-mixed-port: 7025
+mixed-port: 7890
 tcp-concurrent: true
 allow-lan: true
 ipv6: false
