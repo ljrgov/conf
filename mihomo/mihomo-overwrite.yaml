@@ -85,7 +85,6 @@ rule-providers:
   Steam: {<<: *c, path: ./rules/Steam.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Steam.list}
   Epic: {<<: *c, path: ./rules/Epic.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Epic.list}
   game: {<<: *c, path: ./rules/game.list, url: https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/rule/mihomo/game.list}
-  port-30021: {<<: *c, path: ./rules/port-30021.list, url: https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/rule/mihomo/port-30021.list}
   AI: {<<: *c, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AI.list}
   Emby: {<<: *c, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Emby.list}
   Spotify: {<<: *c, path: ./rules/Spotify.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Spotify.list}
@@ -107,7 +106,7 @@ rules:
   - RULE-SET,Twitter,推特消息
   - RULE-SET,Steam,游戏平台
   - RULE-SET,Epic,游戏平台
-  - RULE-SET,port-30021,日本游戏
+  - DST-PORT,30021,日本游戏
   - RULE-SET,game,游戏平台
   - RULE-SET,Emby,Emby
   - RULE-SET,Spotify,Spotify
