@@ -1,0 +1,41 @@
+#mobile legends=============
+###
+# Port 
+PORT,30071
+PORT,30190
+PORT,30001
+PORT,30102
+PORT,30103
+PORT,7591
+PORT,5551-5552
+PORT,5051-5054
+PORT,5001-5004
+##=========
+DOMAIN,va-effect.byteoversea.com
+DOMAIN,sf-hs-sg.ibytedtos.com
+DOMAIN,tnc16-useastla.isnssdk.com
+DOMAIN,tnc16-alisg.isnssdk.com
+DOMAIN,gplog-sg.byteoversea.com
+DOMAIN,log-va.bytegsdk.com
+DOMAIN,gpsdk-sg.bytegsdk.com
+DOMAIN-SUFFIX,bytegsdk.com
+DOMAIN-SUFFIX,isnssdk.com
+DOMAIN,akmpicture.youngjoygame.com
+DOMAIN-SUFFIX,youngjoygame.com
+DOMAIN,sessions.bugsnag.com
+DOMAIN,safebrowsing.googleapis.com
+DOMAIN,www.shuyz.com
+DOMAIN,wsavatar.yuanzhanapp.com
+DOMAIN-SUFFIX,aihelp.net
+DOMAIN,analytics.adjust.net.in
+DOMAIN,analytics.adjust.world
+DOMAIN-SUFFIX,mobilelegends.com
+DOMAIN-SUFFIX,mon.isnssdk.com
+IP-CIDR,43.135.52.60/32
+# 其他可能相关的域名
+DOMAIN,api-mayi.django.t.taobao.com
+DOMAIN-SUFFIX,gameanalytics.com
+DOMAIN-SUFFIX,gamezop.com
+DOMAIN-SUFFIX,moonton.com
+DOMAIN-SUFFIX,tiltingpoint.com
+DOMAIN-SUFFIX,supercell.com
