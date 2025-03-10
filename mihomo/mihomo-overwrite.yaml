@@ -63,7 +63,7 @@ proxy-groups:
   - {name: 电报消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
   - {name: 推特消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
   - {name: AI, <<: *pg, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
-  - {name: 游戏平台, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
+  - {name: 游戏平台, type: select, proxies: [香港游戏, 日本游戏, 手动切换, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: Emby, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
   - {name: Spotify, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png}
   - {name: 兜底分流, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
@@ -72,6 +72,8 @@ proxy-groups:
   - {name: 狮城节点, <<: *url-test, filter: "(?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
   - {name: 日本节点, <<: *url-test, filter: "(?i)🇯🇵|日本|东京|(\b(JP|Japan)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
   - {name: 台湾节点, <<: *url-test, filter: "(?i)🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
+  - {name: 香港游戏, <<: *url-test, filter: "^.*🇭🇰.*游戏.*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
+  - {name: 日本游戏, <<: *url-test, filter: "^.*🇯🇵.*游戏.*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
 
 rule-providers:
   AD: {<<: *c, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Reject.list}
@@ -82,6 +84,7 @@ rule-providers:
   Twitter: {<<: *c, path: ./rules/Twitter.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Twitter.list}
   Steam: {<<: *c, path: ./rules/Steam.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Steam.list}
   Epic: {<<: *c, path: ./rules/Epic.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Epic.list}
+  game: {<<: *c, path: ./rules/game.list, url: https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/rule/mihomo/game.list}
   AI: {<<: *c, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AI.list}
   Emby: {<<: *c, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Emby.list}
   Spotify: {<<: *c, path: ./rules/Spotify.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Spotify.list}
@@ -103,6 +106,7 @@ rules:
   - RULE-SET,Twitter,推特消息
   - RULE-SET,Steam,游戏平台
   - RULE-SET,Epic,游戏平台
+  - RULE-SET,game,游戏平台
   - RULE-SET,Emby,Emby
   - RULE-SET,Spotify,Spotify
   - RULE-SET,Bahamut,国际媒体
