@@ -2,7 +2,7 @@
   "dns": {
         "servers": [
             {"tag": "cloudflare","address": "https://1.1.1.1/dns-query","detour": "Proxy"},
-            {"tag": "ali","address": "223.6.6.6","detour": "direct"},
+            {"tag": "ali","address": "223.5.5.5","detour": "direct"},
             {"tag": "remote_fakeip","address": "fakeip"}
         ],
         "rules": [
