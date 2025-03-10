@@ -106,6 +106,7 @@ rules:
   - RULE-SET,Twitter,推特消息
   - RULE-SET,Steam,游戏平台
   - RULE-SET,Epic,游戏平台
+  - PORT,30021,日本游戏
   - RULE-SET,game,游戏平台
   - RULE-SET,Emby,Emby
   - RULE-SET,Spotify,Spotify
