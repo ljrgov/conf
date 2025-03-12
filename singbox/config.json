@@ -45,8 +45,8 @@
   "route": {
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
-      {"tag": "direct-fix","type": "remote","url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
-      {"tag": "game","type": "remote","url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "direct-fix","type": "remote","url": "https://git.repcz.link/github.com/ljrgov/conf/blob/main/singbox/rules/direct-fix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "game","type": "remote","url": "https://git.repcz.link/github.com/ljrgov/conf/blob/main/singbox/rules/game.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "Telegram","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "YouTube","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "Google","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
