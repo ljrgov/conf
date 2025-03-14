@@ -85,7 +85,7 @@
           type: Built-in
           tag: direct
       interrupt_exist_connections: true
-      url: ""
+      url: http://1.1.1.1/generate_204
       interval: 10m
       tolerance: 0
       include: ""
