@@ -36,7 +36,8 @@
       {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []}
+      ],
   "route": {
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
