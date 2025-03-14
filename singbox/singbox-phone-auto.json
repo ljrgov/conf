@@ -28,7 +28,7 @@
       {"type": "selector","tag": "Twitter","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇯🇵 日本","Proxy","direct"]},
       {"type": "selector","tag": "Spotify","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","Proxy","direct"]},
       {"type": "selector","tag": "Emby","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇸🇬 新加坡","Proxy","direct"]},
-      {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
+      {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇯🇵 日本","🇭🇰 香港","🇨🇳 台湾","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
       {"type": "urltest","tag": "🇭🇰 HK游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 10,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇯🇵 JP游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 10,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
