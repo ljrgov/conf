@@ -31,11 +31,11 @@
       {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
       {"type": "urltest","tag": "🇭🇰 HK游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 10,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇯🇵 JP游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 10,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []}
+      {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 20,"interrupt_exist_connections": false,"outbounds": []}
       ],
   "route": {
     "rule_set": [
