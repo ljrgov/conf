@@ -12,7 +12,7 @@
       external_ui_download_url: https://git.repcz.link/github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
       external_ui_download_detour: outbound-global
       secret: ID_vzciscrm
-      default_mode: 规则模式
+      default_mode: rule
       access_control_allow_origin:
         - "*"
       access_control_allow_private_network: false
@@ -399,7 +399,7 @@
         server: ""
       - id: ID_poxe4805
         type: clash_mode
-        payload: 全局直连
+        payload: direct
         invert: false
         action: route
         outbound: outbound-direct
@@ -408,7 +408,7 @@
         server: ""
       - id: ID_8lf3zqn5
         type: clash_mode
-        payload: 全局代理
+        payload: Global
         invert: false
         action: route
         outbound: outbound-global
