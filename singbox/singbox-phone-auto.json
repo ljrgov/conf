@@ -52,7 +52,7 @@
         "rewrite_ttl": 1
       },
       {
-        "rule_set": "cn_domain",
+        "rule_set": "ChinaDomain",
         "action": "route",
         "server": "ali"
       }
