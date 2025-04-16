@@ -21,45 +21,6 @@
         "address": "fakeip"
       }
     ],
-    "rules": [
-      {
-        "outbound": "any",
-        "action": "route",
-        "server": "ali",
-        "disable_cache": true
-      },
-      {
-        "clash_mode": "Direct",
-        "action": "route",
-        "server": "ali"
-      },
-      {
-        "clash_mode": "Global",
-        "action": "route",
-        "server": "fakeip"
-      },
-      {
-        "query_type": "HTTPS",
-        "action": "reject"
-      },
-      {
-        "query_type": [
-          "A",
-          "AAAA"
-        ],
-        "action": "route",
-        "server": "fakeip",
-        "rewrite_ttl": 1
-      },
-      {
-        "rule_set": "ChinaDomain",
-        "action": "route",
-        "server": "ali"
-      }
-    ],
-    "final": "google",
-    "independent_cache": true
-    },
   "outbounds": [
       {"type": "direct","tag": "direct"},
       {"type": "selector","tag": "Proxy","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","direct"]},
@@ -115,7 +76,6 @@
       {"action": "route","ip_is_private": true,"outbound": "direct"}, 
       {"action": "route","clash_mode": "全局直连","outbound": "direct"},
       {"action": "route","clash_mode": "全局代理","outbound": "Proxy"},
-      {"action": "reject","protocol": "quic"},
       {"action": "reject","rule_set": ["Ads"]},
       {"action": "route","rule_set": ["YouTube","Google"],"outbound": "Google"},
       {"action": "route","rule_set": ["AI"],"outbound": "AI"},
@@ -157,6 +117,7 @@
   ],
   "experimental": {
     "clash_api": {
+      "default_mode": "规则模式",
       "external_controller": "127.0.0.1:9090",
       "external_ui": "ui",
       "external_ui_download_url": "https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
