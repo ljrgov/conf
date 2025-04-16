@@ -1,5 +1,5 @@
 {
-    "dns": {
+  "dns": {
     "fakeip": {
       "enabled": true,
       "inet4_range": "198.18.0.0/15",
@@ -21,26 +21,35 @@
         "address": "fakeip"
       }
     ],
-  "outbounds": [
-      {"type": "direct","tag": "direct"},
-      {"type": "selector","tag": "Proxy","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","direct"]},
-      {"type": "selector","tag": "Game","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 HK游戏","🇯🇵 JP游戏","Proxy","direct"]},
-      {"type": "selector","tag": "AI","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇺🇸 美国","Proxy","direct"]},
-      {"type": "selector","tag": "Google","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇨🇳 台湾","Proxy","direct"]},
-      {"type": "selector","tag": "Microsoft","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
-      {"type": "selector","tag": "Telegram","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","🇯🇵 日本","Proxy","direct"]},
-      {"type": "selector","tag": "Twitter","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","Proxy","direct"]},
-      {"type": "selector","tag": "Spotify","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
-      {"type": "selector","tag": "Emby","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇸🇬 新加坡","Proxy","direct"]},
-      {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","🇭🇰 香港","🇨🇳 台湾","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
-      {"type": "urltest","tag": "🇭🇰 HK游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇯🇵 JP游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
-      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []}
-      ],
+    "rules": [
+      {
+        "outbound": "any",
+        "action": "route",
+        "server": "ali",
+        "disable_cache": true
+      },
+      {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "ChinaDomain",
+        "action": "route",
+        "server": "ali"
+      }
+    ],
+    "final": "google",
+    "independent_cache": true
+  },
   "route": {
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Anti-ad-sing-box.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
@@ -92,6 +101,26 @@
       "auto_detect_interface": true,
       "final": "Final"
     },
+  "outbounds": [
+      {"type": "direct","tag": "direct"},
+      {"type": "selector","tag": "Proxy","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","direct"]},
+      {"type": "selector","tag": "Game","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 HK游戏","🇯🇵 JP游戏","Proxy","direct"]},
+      {"type": "selector","tag": "AI","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇺🇸 美国","Proxy","direct"]},
+      {"type": "selector","tag": "Google","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇨🇳 台湾","Proxy","direct"]},
+      {"type": "selector","tag": "Microsoft","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
+      {"type": "selector","tag": "Telegram","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","🇯🇵 日本","Proxy","direct"]},
+      {"type": "selector","tag": "Twitter","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","Proxy","direct"]},
+      {"type": "selector","tag": "Spotify","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
+      {"type": "selector","tag": "Emby","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇸🇬 新加坡","Proxy","direct"]},
+      {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","🇭🇰 香港","🇨🇳 台湾","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
+      {"type": "urltest","tag": "🇭🇰 HK游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇯🇵 JP游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []}
+      ],
 "inbounds": [
     {
       "type": "tun",
