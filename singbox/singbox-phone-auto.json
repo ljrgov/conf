@@ -1,21 +1,64 @@
 {
     "dns": {
-        "servers": [
-            {"tag": "cloudflare","address": "https://1.1.1.1/dns-query","detour": "Proxy"},
-            {"tag": "ali","address": "223.5.5.5","detour": "direct"},
-            {"tag": "remote_fakeip","address": "fakeip"}
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "servers": [
+      {
+        "tag": "google",
+        "address": "https://8.8.8.8/dns-query",
+        "detour": "proxy"
+      },
+      {
+        "tag": "ali",
+        "address": "https://223.5.5.5/dns-query",
+        "detour": "direct"
+      },
+      {
+        "tag": "fakeip",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "action": "route",
+        "server": "ali",
+        "disable_cache": true
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "server": "ali"
+      },
+      {
+        "clash_mode": "Global",
+        "action": "route",
+        "server": "fakeip"
+      },
+      {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
         ],
-        "rules": [
-            {"outbound": "any","server": "ali"},
-            {"clash_mode": "全局直连","action": "route","server": "ali"},
-            {"clash_mode": "全局代理","action": "route","server": "remote_fakeip"},
-            {"query_type": "HTTPS","action": "reject"},
-            {"query_type": ["A","AAAA"],"action": "route","server": "remote_fakeip","rewrite_ttl": 1},
-            {"rule_set": ["ChinaDomain","Apple"],"action": "route","server": "ali"}
-        ],
-        "final": "cloudflare",
-        "fakeip": {"enabled": true,"inet4_range": "198.18.0.0/15","inet6_range": "fc00::/18"},
-        "independent_cache": true
+        "action": "route",
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "cn_domain",
+        "action": "route",
+        "server": "ali"
+      }
+    ],
+    "final": "google",
+    "independent_cache": true
     },
   "outbounds": [
       {"type": "direct","tag": "direct"},
@@ -89,47 +132,45 @@
       "auto_detect_interface": true,
       "final": "Final"
     },
-    "log": {
-        "disabled": false,
-        "level": "info",
-        "output": "sing-box.log",
-        "timestamp": true
-    },
-    "experimental": {
-        "cache_file": {
-            "enabled": true,
-            "store_fakeip": true
-        },
-        "clash_api": {
-            "default_mode": "规则模式",
-            "external_controller": "127.0.0.1:9090",
-            "external_ui": "ui",
-            "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-            "external_ui_download_detour": "direct"
+"inbounds": [
+    {
+      "type": "tun",
+      "address": [
+        "172.19.0.0/30",
+        "fdfe:dcba:9876::0/126"
+      ],
+      "stack": "mixed",
+      "auto_route": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
         }
+      }
     },
-    "inbounds": [
-        {
-            "type": "mixed",
-            "listen": "127.0.0.1",
-            "listen_port": 7025,
-            "set_system_proxy": false
-        },
-        {
-            "type": "tun",
-            "address": [
-                "172.18.0.1/30",
-                "fdfe:dcba:9876::1/126"
-            ],
-            "platform": {
-                "http_proxy": {
-                    "enabled": true,
-                    "server": "127.0.0.1",
-                    "server_port": 7025
-                }
-            },
-            "stack": "mixed",
-            "auto_route": true
-        }
-    ]
+    {
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 7890
+    }
+  ],
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "direct"
+    },
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    }
+  },
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  }
+}
 }
