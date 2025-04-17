@@ -51,25 +51,6 @@
     "independent_cache": true
   },
   "route": {
-      "rules": [
-      {"action": "sniff","sniffer": ["http","tls","quic","dns"],"timeout": "500ms"},
-      {"type": "logical","mode": "or","rules": [{"port": 53},{"protocol": "dns"}],"action": "hijack-dns"},
-      {"action": "route","ip_is_private": true,"outbound": "direct"}, 
-      {"action": "route","clash_mode": "全局直连","outbound": "direct"},
-      {"action": "route","clash_mode": "全局代理","outbound": "Proxy"},
-      {"action": "reject","rule_set": ["Ads"]},
-      {"action": "route","rule_set": ["YouTube","Google"],"outbound": "Google"},
-      {"action": "route","rule_set": ["AI"],"outbound": "AI"},
-      {"action": "route","rule_set": ["Microsoft","OneDrive","Github"],"outbound": "Microsoft"},
-      {"action": "route","rule_set": ["Twitter"],"outbound": "Twitter"},
-      {"action": "route","rule_set": ["Telegram"],"outbound": "Telegram"},
-      {"action": "route","rule_set": ["Spotify"],"outbound": "Spotify"},
-      {"action": "route","rule_set": ["Emby","Netflix","Bahamut","HBO","PrimeVideo","Disney","TikTok"],"outbound": "Emby"},
-      {"action": "route","rule_set": ["Steam","Epic","game" ],"outbound": "Game"},
-      {"action": "route","port": 30021,"outbound": "🇯🇵 JP游戏"},
-      {"action": "route","rule_set": ["GeoLocation-!CN","AppleProxy"],"outbound": "Proxy"},
-      {"action": "route","rule_set": ["ChinaIP","ChinaDomain","Apple","direct-fix"],"outbound": "direct"}
-      ],
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "direct-fix","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
@@ -98,6 +79,25 @@
       {"tag": "ChinaIP","type": "remote","url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
       {"tag": "GeoLocation-!CN","type": "remote","url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs","format": "binary","download_detour": "direct","update_interval": "24h"}
     ],
+    "rules": [
+      {"action": "sniff","sniffer": ["http","tls","quic","dns"],"timeout": "500ms"},
+      {"type": "logical","mode": "or","rules": [{"port": 53},{"protocol": "dns"}],"action": "hijack-dns"},
+      {"action": "route","ip_is_private": true,"outbound": "direct"}, 
+      {"action": "route","clash_mode": "全局直连","outbound": "direct"},
+      {"action": "route","clash_mode": "全局代理","outbound": "Proxy"},
+      {"action": "reject","rule_set": ["Ads"]},
+      {"action": "route","rule_set": ["YouTube","Google"],"outbound": "Google"},
+      {"action": "route","rule_set": ["AI"],"outbound": "AI"},
+      {"action": "route","rule_set": ["Microsoft","OneDrive","Github"],"outbound": "Microsoft"},
+      {"action": "route","rule_set": ["Twitter"],"outbound": "Twitter"},
+      {"action": "route","rule_set": ["Telegram"],"outbound": "Telegram"},
+      {"action": "route","rule_set": ["Spotify"],"outbound": "Spotify"},
+      {"action": "route","rule_set": ["Emby","Netflix","Bahamut","HBO","PrimeVideo","Disney","TikTok"],"outbound": "Emby"},
+      {"action": "route","rule_set": ["Steam","Epic","game" ],"outbound": "Game"},
+      {"action": "route","port": 30021,"outbound": "🇯🇵 JP游戏"},
+      {"action": "route","rule_set": ["GeoLocation-!CN","AppleProxy"],"outbound": "Proxy"},
+      {"action": "route","rule_set": ["ChinaIP","ChinaDomain","Apple","direct-fix"],"outbound": "direct"}
+      ],
      "auto_detect_interface": true,
      "final": "Final"
     },
