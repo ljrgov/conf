@@ -21,7 +21,7 @@
         "address": "fakeip"
       }
     ],
-    "rules": [
+  "rules": [
       {
         "outbound": "any",
         "action": "route",
@@ -50,6 +50,29 @@
     "final": "google",
     "independent_cache": true
   },
+  "inbounds": [
+    {
+      "type": "tun",
+      "address": [
+        "172.19.0.0/30",
+        "fdfe:dcba:9876::0/126"
+      ],
+      "stack": "mixed",
+      "auto_route": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
+        }
+      }
+    },
+    {
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 7890
+    }
+  ],
   "route": {
     "rule_set": [
       {"tag": "Ads","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
@@ -121,29 +144,6 @@
       {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
       {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []}
       ],
-"inbounds": [
-    {
-      "type": "tun",
-      "address": [
-        "172.19.0.0/30",
-        "fdfe:dcba:9876::0/126"
-      ],
-      "stack": "mixed",
-      "auto_route": true,
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 7890
-        }
-      }
-    },
-    {
-      "type": "mixed",
-      "listen": "127.0.0.1",
-      "listen_port": 7890
-    }
-  ],
   "experimental": {
       "clash_api": {
       "default_mode": "规则模式",
