@@ -57,6 +57,7 @@
       {"action": "route","ip_is_private": true,"outbound": "direct"}, 
       {"action": "route","clash_mode": "全局直连","outbound": "direct"},
       {"action": "route","clash_mode": "全局代理","outbound": "Proxy"},
+      {"action": "reject","protocol": "quic"},
       {"action": "reject","rule_set": ["Ads"]},
       {"action": "route","rule_set": ["YouTube","Google"],"outbound": "Google"},
       {"action": "route","rule_set": ["AI"],"outbound": "AI"},
