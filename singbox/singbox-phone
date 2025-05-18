@@ -1,0 +1,165 @@
+{
+  "dns": {
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "servers": [
+      {
+        "tag": "google",
+        "address": "https://8.8.8.8/dns-query",
+        "detour": "proxy"
+      },
+      {
+        "tag": "ali",
+        "address": "https://223.5.5.5/dns-query",
+        "detour": "direct"
+      },
+      {
+        "tag": "fakeip",
+        "address": "fakeip"
+      }
+    ],
+  "rules": [
+      {
+        "outbound": "any",
+        "action": "route",
+        "server": "ali",
+        "disable_cache": true
+      },
+      {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "ChinaDomain",
+        "action": "route",
+        "server": "ali"
+      }
+    ],
+    "final": "google",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "address": [
+        "172.19.0.0/30",
+        "fdfe:dcba:9876::0/126"
+      ],
+      "stack": "mixed",
+      "auto_route": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
+        }
+      }
+    },
+    {
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 7890
+    }
+  ],
+  "route": {
+    "rule_set": [
+      {"tag": "Ads","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "direct-fix","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "game","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Telegram","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "YouTube","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Google","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Microsoft","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Microsoft.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "OneDrive","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/OneDrive.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Github","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Github.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Twitter","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Twitter.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Apple","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Apple.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "AppleProxy","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AppleProxy.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "AI","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Emby","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Epic","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Epic.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Steam","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Steam.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Spotify","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Spotify.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Bahamut","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Bahamut.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Netflix","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Netflix.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "HBO","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/HBO.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "PrimeVideo","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/PrimeVideo.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "Disney","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Disney.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "TikTok","type": "remote","url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/TikTok.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "ChinaDomain","type": "remote","url": "https://ghfast.top/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "ChinaIP","type": "remote","url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs","format": "binary","download_detour": "direct","update_interval": "24h"},
+      {"tag": "GeoLocation-!CN","type": "remote","url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs","format": "binary","download_detour": "direct","update_interval": "24h"}
+    ],
+    "rules": [
+      {"action": "sniff","sniffer": ["http","tls","quic","dns"],"timeout": "500ms"},
+      {"type": "logical","mode": "or","rules": [{"port": 53},{"protocol": "dns"}],"action": "hijack-dns"},
+      {"action": "route","ip_is_private": true,"outbound": "direct"}, 
+      {"action": "route","clash_mode": "全局直连","outbound": "direct"},
+      {"action": "route","clash_mode": "全局代理","outbound": "Proxy"},
+      {"action": "reject","rule_set": ["Ads"]},
+      {"action": "route","rule_set": ["YouTube","Google"],"outbound": "Google"},
+      {"action": "route","rule_set": ["AI"],"outbound": "AI"},
+      {"action": "route","rule_set": ["Microsoft","OneDrive","Github"],"outbound": "Microsoft"},
+      {"action": "route","rule_set": ["Twitter"],"outbound": "Twitter"},
+      {"action": "route","rule_set": ["Telegram"],"outbound": "Telegram"},
+      {"action": "route","rule_set": ["Spotify"],"outbound": "Spotify"},
+      {"action": "route","rule_set": ["Emby","Netflix","Bahamut","HBO","PrimeVideo","Disney","TikTok"],"outbound": "Emby"},
+      {"action": "route","rule_set": ["Steam","Epic","game" ],"outbound": "Game"},
+      {"action": "route","port": 30021,"outbound": "🇯🇵 JP游戏"},
+      {"action": "route","rule_set": ["GeoLocation-!CN","AppleProxy"],"outbound": "Proxy"},
+      {"action": "route","rule_set": ["ChinaIP","ChinaDomain","Apple","direct-fix"],"outbound": "direct"}
+      ],
+     "auto_detect_interface": true,
+     "final": "Final"
+    },
+  "outbounds": [
+      {"type": "direct","tag": "direct"},
+      {"type": "selector","tag": "Proxy","interrupt_exist_connections": true,"default": "direct","outbounds": ["🇭🇰 香港","🇨🇳 台湾","🇯🇵 日本","🇺🇸 美国","🇸🇬 新加坡","direct"]},
+      {"type": "selector","tag": "Game","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 HK游戏","🇯🇵 JP游戏","Proxy","direct"]},
+      {"type": "selector","tag": "AI","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇺🇸 美国","Proxy","direct"]},
+      {"type": "selector","tag": "Google","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇨🇳 台湾","Proxy","direct"]},
+      {"type": "selector","tag": "Microsoft","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
+      {"type": "selector","tag": "Telegram","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","🇯🇵 日本","Proxy","direct"]},
+      {"type": "selector","tag": "Twitter","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","Proxy","direct"]},
+      {"type": "selector","tag": "Spotify","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇭🇰 香港","Proxy","direct"]},
+      {"type": "selector","tag": "Emby","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇸🇬 新加坡","Proxy","direct"]},
+      {"type": "selector","tag": "Final","interrupt_exist_connections": true,"default": "Proxy","outbounds": ["🇯🇵 日本","🇭🇰 香港","🇨🇳 台湾","🇺🇸 美国","🇸🇬 新加坡","Proxy","direct"]},
+      {"type": "urltest","tag": "🇭🇰 HK游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇯🇵 JP游戏","url": "http://1.1.1.1/generate_204","interval": "3m","tolerance": 0,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇭🇰 香港","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇨🇳 台湾","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇯🇵 日本","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇺🇸 美国","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []},
+      {"type": "urltest","tag": "🇸🇬 新加坡","url": "http://1.1.1.1/generate_204","interval": "5m","tolerance": 5,"interrupt_exist_connections": false,"outbounds": []}
+      ],
+  "experimental": {
+      "clash_api": {
+      "default_mode": "规则模式",
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "direct"
+    },
+      "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    }
+  },
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  }
+}
