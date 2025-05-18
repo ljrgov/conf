@@ -528,12 +528,12 @@
       },
       {
         "action": "route",
-        "clash_mode": "direct",
+        "clash_mode": "全局直连",
         "server": "Local-DNS"
       },
       {
         "action": "route",
-        "clash_mode": "global",
+        "clash_mode": "全局代理",
         "server": "Remote-DNS"
       },
       {
