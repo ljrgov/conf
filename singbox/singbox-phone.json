@@ -202,6 +202,15 @@
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
+    },
+    {
+      "type": "urltest",
+      "tag": "🇸🇬 新加坡",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m",
+      "tolerance": 20,
+      "interrupt_exist_connections": true,
+      "outbounds": []
     }
   ],
   "route": {
