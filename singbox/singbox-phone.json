@@ -59,8 +59,8 @@
       "tag": "Proxy",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇯🇵 日本",
         "🇭🇰 香港",
+        "🇯🇵 日本",
         "🇨🇳 台湾",
         "🇺🇸 美国",
         "🇸🇬 新加坡"
@@ -171,7 +171,7 @@
       "type": "urltest",
       "tag": "🇭🇰 香港",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "5m",
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -180,7 +180,7 @@
       "type": "urltest",
       "tag": "🇨🇳 台湾",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "5m",
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -189,7 +189,7 @@
       "type": "urltest",
       "tag": "🇯🇵 日本",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "5m",
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -198,7 +198,7 @@
       "type": "urltest",
       "tag": "🇺🇸 美国",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "5m",
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -207,7 +207,7 @@
       "type": "urltest",
       "tag": "🇸🇬 新加坡",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "5m",
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
