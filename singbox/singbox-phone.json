@@ -18,6 +18,14 @@
       ],
       "access_control_allow_private_network": false
     }
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "cache_id": "",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "7d"
+    }
   },
   "inbounds": [
     {
@@ -34,7 +42,8 @@
       "tag": "tun-in",
       "interface_name": "",
       "address": [
-        "172.18.0.1/30"
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
       ],
       "mtu": 9000,
       "auto_route": true,
@@ -174,7 +183,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -183,7 +192,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -192,7 +201,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -201,7 +210,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -210,7 +219,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     }
   ],
@@ -284,17 +293,17 @@
       },
       {
         "action": "route",
+        "port": 30021,
+        "outbound": "🇯🇵 JP游戏"
+      },      
+      {
+        "action": "route",
         "rule_set": [
           "Steam",
           "Epic",
           "game"
         ],
         "outbound": "Game"
-      },
-      {
-        "action": "route",
-        "port": 30021,
-        "outbound": "🇯🇵 JP游戏"
       },
       {
         "action": "route",
