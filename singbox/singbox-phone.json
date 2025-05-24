@@ -16,14 +16,6 @@
         "*"
       ],
       "access_control_allow_private_network": false
-    },
-    "cache_file": {
-      "enabled": true,
-      "path": "cache.db",
-      "cache_id": "",
-      "store_fakeip": true,
-      "store_rdrc": true,
-      "rdrc_timeout": "7d"
     }
   },
   "inbounds": [
