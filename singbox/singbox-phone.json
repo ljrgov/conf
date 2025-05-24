@@ -17,7 +17,7 @@
         "*"
       ],
       "access_control_allow_private_network": false
-    }
+    },
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
