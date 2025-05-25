@@ -24,8 +24,93 @@
       "cache_id": "",
       "store_fakeip": true,
       "store_rdrc": true,
-      "rdrc_timeout": "7d"
-    }
+      "rdrc_timeout": "3d"
+    },
+  "dns": {
+    "servers": [
+      {
+        "tag": "Local-DNS",
+        "address": "https://223.5.5.5:443/dns-query",
+        "address_resolver": "Local-DNS-Resolver",
+        "detour": "Direct"
+      },
+      {
+        "tag": "Local-DNS-Resolver",
+        "address": "udp://223.5.5.5:53",
+        "detour": "Direct"
+      },
+      {
+        "tag": "Remote-DNS",
+        "address": "tls://1.1.1.1:853",
+        "address_resolver": "Remote-DNS-Resolver",
+        "detour": "Proxy"
+      },
+      {
+        "tag": "Remote-DNS-Resolver",
+        "address": "udp://1.1.1.1:53",
+        "detour": "Proxy"
+      }
+    ],
+    "rules": [
+      {
+        "action": "route",
+        "clash_mode": "全局直连",
+        "server": "Local-DNS"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局代理",
+        "server": "Remote-DNS"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "ChinaDomain",
+          "ChinaIP",
+          "direct-fix",
+          "Apple"
+        ],
+        "server": "Local-DNS"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "GeoLocation-!CN",
+          "AI",
+          "Google",
+          "TikTok",
+          "Bahamut",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "Netflix",
+          "Spotify",
+          "Steam",
+          "Epic",
+          "YouTube",
+          "Telegram",
+          "Github",
+          "Microsoft",
+          "Twitter",
+          "game",
+          "OneDrive",
+          "AppleProxy",
+          "Emby"
+        ],
+        "server": "Remote-DNS"
+      },
+      {
+        "action": "route",
+        "server": "Local-DNS",
+        "outbound": "any"
+      }
+    ],
+    "disable_cache": false,
+    "disable_expire": false,
+    "independent_cache": true,
+    "final": "Remote-DNS",
+    "strategy": "prefer_ipv4"
+  }
   },
   "inbounds": [
     {
@@ -44,7 +129,7 @@
       "address": [
         "172.18.0.1/30"
       ],
-      "mtu": 9000,
+      "mtu": 1500,
       "auto_route": true,
       "strict_route": true,
       "endpoint_independent_nat": true,
@@ -348,245 +433,186 @@
         "tag": "Ad",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "AI",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Google",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "TikTok",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/TikTok.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Bahamut",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Bahamut.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Disney",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Disney.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "PrimeVideo",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/PrimeVideo.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "HBO",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/HBO.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Netflix",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Netflix.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Spotify",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Spotify.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Steam",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Steam.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Epic",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Epic.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Emby",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "AppleProxy",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AppleProxy.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Apple",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Apple.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Twitter",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Twitter.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Github",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Github.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "OneDrive",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/OneDrive.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Microsoft",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Microsoft.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "YouTube",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "Telegram",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "game",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "direct-fix",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "ChinaDomain",
         "type": "remote",
         "url": "https://ghfast.top/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "ChinaIP",
         "type": "remote",
         "url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       },
       {
         "tag": "GeoLocation-!CN",
         "type": "remote",
         "url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "format": "binary"
+        "format": "binary",
+        "update_interval": "24h"
       }
     ],
     "auto_detect_interface": true,
     "final": "Final"
-  },
-  "dns": {
-    "servers": [
-      {
-        "tag": "Local-DNS",
-        "address": "https://223.5.5.5:443/dns-query",
-        "address_resolver": "Local-DNS-Resolver",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Local-DNS-Resolver",
-        "address": "udp://223.5.5.5:53",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Remote-DNS",
-        "address": "tls://8.8.8.8:853",
-        "address_resolver": "Remote-DNS-Resolver",
-        "detour": "Proxy"
-      },
-      {
-        "tag": "Remote-DNS-Resolver",
-        "address": "udp://8.8.8.8:53",
-        "detour": "Proxy"
-      }
-    ],
-    "rules": [
-      {
-        "action": "route",
-        "server": "Local-DNS",
-        "outbound": "any"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局直连",
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局代理",
-        "server": "Remote-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "ChinaDomain",
-          "ChinaIP",
-          "direct-fix",
-          "Apple"
-        ],
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "GeoLocation-!CN",
-          "AI",
-          "Google",
-          "TikTok",
-          "Bahamut",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "Netflix",
-          "Spotify",
-          "Steam",
-          "Epic",
-          "YouTube",
-          "Telegram",
-          "Github",
-          "Microsoft",
-          "Twitter",
-          "game",
-          "OneDrive",
-          "AppleProxy",
-          "Emby"
-        ],
-        "server": "Remote-DNS"
-      }
-    ],
-    "disable_cache": false,
-    "disable_expire": false,
-    "independent_cache": true,
-    "final": "Remote-DNS",
-    "strategy": "ipv4_only"
   }
 }
