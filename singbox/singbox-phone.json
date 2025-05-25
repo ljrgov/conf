@@ -2,6 +2,7 @@
   "log": {
     "disabled": false,
     "level": "info",
+    "output": "singbox.log",
     "timestamp": true
   },
   "experimental": {
@@ -11,11 +12,19 @@
       "external_ui_download_url": "https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
       "external_ui_download_detour": "Direct",
       "secret": "ID_u5u84ruk",
-      "default_mode": "规则模式",
+      "default_mode": "rule",
       "access_control_allow_origin": [
         "*"
       ],
       "access_control_allow_private_network": false
+    },
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "cache_id": "",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "7d"
     }
   },
   "inbounds": [
@@ -33,8 +42,7 @@
       "tag": "tun-in",
       "interface_name": "",
       "address": [
-        "172.18.0.1/30",
-        "fdfe:dcba:9876::1/126"
+        "172.18.0.1/30"
       ],
       "mtu": 9000,
       "auto_route": true,
