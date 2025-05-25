@@ -182,7 +182,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
@@ -191,7 +191,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
@@ -200,7 +200,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
@@ -209,7 +209,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
@@ -218,7 +218,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "interrupt_exist_connections": true,
       "outbounds": []
     }
   ],
