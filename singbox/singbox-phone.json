@@ -12,7 +12,7 @@
       "external_ui_download_url": "https://ghfast.top/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
       "external_ui_download_detour": "Direct",
       "secret": "ID_u5u84ruk",
-      "default_mode": "rule",
+      "default_mode": "规则模式",
       "access_control_allow_origin": [
         "*"
       ],
