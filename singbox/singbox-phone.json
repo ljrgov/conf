@@ -54,6 +54,11 @@
     "rules": [
       {
         "action": "route",
+        "server": "Local-DNS",
+        "outbound": "any"
+      },
+      {
+        "action": "route",
         "clash_mode": "全局直连",
         "server": "Local-DNS"
       },
@@ -98,11 +103,6 @@
           "Emby"
         ],
         "server": "Remote-DNS"
-      },
-      {
-        "action": "route",
-        "server": "Local-DNS",
-        "outbound": "any"
       }
     ],
     "disable_cache": false,
