@@ -292,6 +292,11 @@
       },
       {
         "action": "route",
+        "port": 23332,
+        "outbound": "Direct"
+      },
+      {
+        "action": "route",
         "port": 30021,
         "outbound": "🇯🇵 JP游戏"
       },      
