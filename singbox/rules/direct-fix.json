@@ -3,7 +3,9 @@
   "rules": [
     {
       "domain_suffix": [
-        "kelote.com"
+        "kelote.com", 
+        "zhihu.com", 
+        "zhimg.com"
 ]
     },
     {
