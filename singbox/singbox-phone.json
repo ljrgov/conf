@@ -110,7 +110,7 @@
     "independent_cache": true,
     "final": "Remote-DNS",
     "strategy": "prefer_ipv4"
-  },
+  }
   },
   "inbounds": [
     {
