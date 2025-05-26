@@ -26,7 +26,7 @@
       "store_rdrc": true,
       "rdrc_timeout": "3d"
     },
- "dns": {
+  "dns": {
     "servers": [
       {
         "tag": "Local-DNS",
