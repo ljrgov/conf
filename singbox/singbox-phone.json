@@ -5,6 +5,91 @@
     "output": "singbox.log",
     "timestamp": true
   },
+ "dns": {
+    "servers": [
+      {
+        "tag": "Local-DNS",
+        "address": "https://223.5.5.5:443/dns-query",
+        "address_resolver": "Local-DNS-Resolver",
+        "detour": "Direct"
+      },
+      {
+        "tag": "Local-DNS-Resolver",
+        "address": "udp://223.5.5.5:53",
+        "detour": "Direct"
+      },
+      {
+        "tag": "Remote-DNS",
+        "address": "tls://1.1.1.1:853",
+        "address_resolver": "Remote-DNS-Resolver",
+        "detour": "Proxy"
+      },
+      {
+        "tag": "Remote-DNS-Resolver",
+        "address": "udp://1.1.1.1:53",
+        "detour": "Proxy"
+      }
+    ],
+    "rules": [
+      {
+        "action": "route",
+        "server": "Local-DNS",
+        "outbound": "any"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局直连",
+        "server": "Local-DNS"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局代理",
+        "server": "Remote-DNS"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "ChinaDomain",
+          "ChinaIP",
+          "direct-fix",
+          "Apple"
+        ],
+        "server": "Local-DNS"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "GeoLocation-!CN",
+          "AI",
+          "Google",
+          "TikTok",
+          "Bahamut",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "Netflix",
+          "Spotify",
+          "Steam",
+          "Epic",
+          "YouTube",
+          "Telegram",
+          "Github",
+          "Microsoft",
+          "Twitter",
+          "game",
+          "OneDrive",
+          "AppleProxy",
+          "Emby"
+        ],
+        "server": "Remote-DNS"
+      }
+    ],
+    "disable_cache": false,
+    "disable_expire": false,
+    "independent_cache": true,
+    "final": "Remote-DNS",
+    "strategy": "prefer_ipv4"
+  },
   "experimental": {
     "clash_api": {
       "external_controller": "127.0.0.1:9999",
@@ -555,90 +640,5 @@
     ],
     "auto_detect_interface": true,
     "final": "Proxy"
-  },
- "dns": {
-    "servers": [
-      {
-        "tag": "Local-DNS",
-        "address": "https://223.5.5.5:443/dns-query",
-        "address_resolver": "Local-DNS-Resolver",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Local-DNS-Resolver",
-        "address": "udp://223.5.5.5:53",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Remote-DNS",
-        "address": "tls://1.1.1.1:853",
-        "address_resolver": "Remote-DNS-Resolver",
-        "detour": "Proxy"
-      },
-      {
-        "tag": "Remote-DNS-Resolver",
-        "address": "udp://1.1.1.1:53",
-        "detour": "Proxy"
-      }
-    ],
-    "rules": [
-      {
-        "action": "route",
-        "server": "Local-DNS",
-        "outbound": "any"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局直连",
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局代理",
-        "server": "Remote-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "ChinaDomain",
-          "ChinaIP",
-          "direct-fix",
-          "Apple"
-        ],
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "GeoLocation-!CN",
-          "AI",
-          "Google",
-          "TikTok",
-          "Bahamut",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "Netflix",
-          "Spotify",
-          "Steam",
-          "Epic",
-          "YouTube",
-          "Telegram",
-          "Github",
-          "Microsoft",
-          "Twitter",
-          "game",
-          "OneDrive",
-          "AppleProxy",
-          "Emby"
-        ],
-        "server": "Remote-DNS"
-      }
-    ],
-    "disable_cache": false,
-    "disable_expire": false,
-    "independent_cache": true,
-    "final": "Remote-DNS",
-    "strategy": "prefer_ipv4"
   }
 }
