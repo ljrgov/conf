@@ -352,7 +352,7 @@
       {
         "tag": "Ad",
         "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_AWAvenue.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
