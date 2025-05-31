@@ -11,51 +11,127 @@
       "external_ui": "UI",
       "external_ui_download_url": "https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
       "external_ui_download_detour": "Proxy",
-      "secret": "ID_u5u84ruk",
       "default_mode": "规则模式",
-      "access_control_allow_origin": [
-        "*"
-      ],
       "access_control_allow_private_network": false
     },
     "cache_file": {
       "enabled": true,
-      "path": "cache.db",
-      "cache_id": "",
       "store_fakeip": true,
       "store_rdrc": true,
       "rdrc_timeout": "3d"
     }
   },
+    "dns": {
+    "servers": [
+      {
+        "tag": "cloudflare",
+        "address": "https://1.1.1.1/dns-query",
+        "detour": "Proxy"
+      },
+      {
+        "tag": "ali",
+        "address": "https://223.6.6.6/dns-query",
+        "detour": "direct"
+      },
+      {
+        "tag": "remote",
+        "address": "fakeip"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "server": "ali"
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "server": "ali"
+      },
+      {
+        "clash_mode": "Global",
+        "action": "route",
+        "server": "cloudflare"
+      },
+      {
+        "rule_set": [
+          "alibaba",
+          "category-games@cn"
+        ],
+        "action": "route",
+        "server": "ali"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "AWAvenue-Ads",
+              "category-ads-all"
+            ]
+          }
+        ],
+        "action": "route-options",
+        "server": "block",
+        "disable_cache": true
+      },
+      {
+        "rule_set": [
+          "cn-domain"
+        ],
+        "action": "route",
+        "server": "ali"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "remote"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "independent_cache": true,
+    "strategy": "prefer_ipv4"
+  },
   "inbounds": [
     {
       "type": "mixed",
       "tag": "mixed-in",
-      "listen": "127.0.0.1",
-      "listen_port": 20122,
-      "tcp_fast_open": true,
-      "tcp_multi_path": false,
-      "udp_fragment": false
+      "listen": "::",
+      "listen_port": 7080,
+      "set_system_proxy": false
     },
     {
       "type": "tun",
       "tag": "tun-in",
-      "interface_name": "",
       "address": [
-        "172.18.0.1/30"
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 1500,
-      "auto_route": true,
-      "strict_route": true,
-      "endpoint_independent_nat": true,
-      "stack": "mixed",
       "platform": {
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 20122
+          "server_port": 7080
         }
-      }
+      },
+      "stack": "mixed",
+      "auto_route": true
     }
   ],
   "outbounds": [
@@ -560,90 +636,5 @@
     ],
     "auto_detect_interface": true,
     "final": "Proxy"
-  },
-  "dns": {
-    "servers": [
-      {
-        "tag": "Local-DNS",
-        "address": "https://223.5.5.5:443/dns-query",
-        "address_resolver": "Local-DNS-Resolver",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Local-DNS-Resolver",
-        "address": "udp://223.5.5.5:53",
-        "detour": "Direct"
-      },
-      {
-        "tag": "Remote-DNS",
-        "address": "tls://1.1.1.1:853",
-        "address_resolver": "Remote-DNS-Resolver",
-        "detour": "Proxy"
-      },
-      {
-        "tag": "Remote-DNS-Resolver",
-        "address": "udp://1.1.1.1:53",
-        "detour": "Proxy"
-      }
-    ],
-    "rules": [
-      {
-        "action": "route",
-        "server": "Local-DNS",
-        "outbound": "any"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局直连",
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局代理",
-        "server": "Remote-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "ChinaDomain",
-          "ChinaIP",
-          "direct-fix",
-          "Apple"
-        ],
-        "server": "Local-DNS"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "GeoLocation-!CN",
-          "AI",
-          "Google",
-          "TikTok",
-          "Bahamut",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "Netflix",
-          "Spotify",
-          "Steam",
-          "Epic",
-          "YouTube",
-          "Telegram",
-          "Github",
-          "Microsoft",
-          "Twitter",
-          "game",
-          "OneDrive",
-          "AppleProxy",
-          "Emby"
-        ],
-        "server": "Remote-DNS"
-      }
-    ],
-    "disable_cache": false,
-    "disable_expire": false,
-    "independent_cache": true,
-    "final": "Remote-DNS",
-    "strategy": "prefer_ipv4"
   }
 }
