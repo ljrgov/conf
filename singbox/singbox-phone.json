@@ -240,7 +240,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
       "tolerance": 10,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -249,7 +249,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
       "tolerance": 10,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -258,7 +258,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -267,7 +267,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -276,7 +276,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -285,7 +285,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -294,136 +294,11 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     }
   ],
   "route": {
-    "rules": [
-      {
-        "action": "sniff",
-        "inbound": "tun-in"
-      },
-      {
-        "action": "hijack-dns",
-        "protocol": "dns"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局直连",
-        "outbound": "Direct"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局代理",
-        "outbound": "Proxy"
-      },
-      {
-        "action": "reject",
-        "protocol": "quic"
-      },
-      {
-        "action": "reject",
-        "rule_set": [
-          "Ad"
-        ]
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "AI"
-        ],
-        "outbound": "AI"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Google",
-          "YouTube"
-        ],
-        "outbound": "Google"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Microsoft",
-          "Github",
-          "OneDrive"
-        ],
-        "outbound": "Microsoft"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Twitter"
-        ],
-        "outbound": "Twitter"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Telegram"
-        ],
-        "outbound": "Telegram"
-      },
-      {
-        "action": "route",
-        "port": 23332,
-        "outbound": "Direct"
-      },
-      {
-        "action": "route",
-        "port": 30021,
-        "outbound": "🇯🇵 JP游戏"
-      },      
-      {
-        "action": "route",
-        "rule_set": [
-          "Steam",
-          "Epic",
-          "game"
-        ],
-        "outbound": "Game"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "TikTok",
-          "Bahamut",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "Netflix",
-          "Emby"
-        ],
-        "outbound": "Emby"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Spotify"
-        ],
-        "outbound": "Spotify"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "GeoLocation-!CN",
-          "AppleProxy"
-        ],
-        "outbound": "Proxy"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Apple",
-          "direct-fix",
-          "ChinaIP",
-          "ChinaDomain"
-        ],
-        "outbound": "Direct"
-      }
-    ],
     "rule_set": [
       {
         "tag": "Ad",
@@ -634,6 +509,132 @@
         "update_interval": "24h"
       }
     ],
+    "rules": [
+      {
+        "action": "sniff",
+        "inbound": "tun-in"
+      },
+      {
+        "action": "hijack-dns",
+        "protocol": "dns"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局直连",
+        "outbound": "Direct"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局代理",
+        "outbound": "Proxy"
+      },
+      {
+        "action": "reject",
+        "protocol": "quic"
+      },
+      {
+        "action": "reject",
+        "rule_set": [
+          "Ad"
+        ]
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "AI"
+        ],
+        "outbound": "AI"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Google",
+          "YouTube"
+        ],
+        "outbound": "Google"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Microsoft",
+          "Github",
+          "OneDrive"
+        ],
+        "outbound": "Microsoft"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Twitter"
+        ],
+        "outbound": "Twitter"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Telegram"
+        ],
+        "outbound": "Telegram"
+      },
+      {
+        "action": "route",
+        "port": 23332,
+        "outbound": "Direct"
+      },
+      {
+        "action": "route",
+        "port": 30021,
+        "outbound": "🇯🇵 JP游戏"
+      },      
+      {
+        "action": "route",
+        "rule_set": [
+          "Steam",
+          "Epic",
+          "game"
+        ],
+        "outbound": "Game"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "TikTok",
+          "Bahamut",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "Netflix",
+          "Emby"
+        ],
+        "outbound": "Emby"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Spotify"
+        ],
+        "outbound": "Spotify"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "GeoLocation-!CN",
+          "AppleProxy"
+        ],
+        "outbound": "Proxy"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Apple",
+          "direct-fix",
+          "ChinaIP",
+          "ChinaDomain"
+        ],
+        "outbound": "Direct"
+      }
+    ],
+    "find_process": true,
     "auto_detect_interface": true,
     "final": "Proxy"
   }
