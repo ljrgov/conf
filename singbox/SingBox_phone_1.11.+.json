@@ -193,7 +193,7 @@
       "tag": "🍎 苹果",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 游戏节点",
+        "🇭🇰 香港节点",
         "🇺🇸 美国节点",
         "🔗 全球直连"
       ]
@@ -251,7 +251,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇭🇰 HK游戏",
+      "tag": "🇭🇰 游戏节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
       "tolerance": 10,
@@ -260,7 +260,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇯🇵 JP游戏",
+      "tag": "🇯🇵 游戏节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
       "tolerance": 10,
@@ -269,7 +269,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇭🇰 香港",
+      "tag": "🇭🇰 香港节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
@@ -278,7 +278,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇨🇳 台湾",
+      "tag": "🇨🇳 台湾节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
@@ -287,7 +287,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇯🇵 日本",
+      "tag": "🇯🇵 日本节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
@@ -296,7 +296,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇺🇸 美国",
+      "tag": "🇺🇸 美国节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
@@ -305,7 +305,7 @@
     },
     {
       "type": "urltest",
-      "tag": "🇸🇬 新加坡",
+      "tag": "🇸🇬 新加坡节点",
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m",
       "tolerance": 20,
@@ -340,6 +340,14 @@
         "update_interval": "24h"
       },
       {
+        "tag": "game",
+        "type": "remote",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "update_interval": "24h"
+      },
+      {
         "tag": "AI",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs",
@@ -351,6 +359,14 @@
         "tag": "Google",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "YouTube",
+        "type": "remote",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
@@ -484,25 +500,9 @@
         "update_interval": "24h"
       },
       {
-        "tag": "YouTube",
-        "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
-        "format": "binary",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
         "tag": "Telegram",
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs",
-        "format": "binary",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "game",
-        "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
@@ -552,7 +552,12 @@
       {
         "action": "route",
         "clash_mode": "直连模式",
-        "outbound": "Direct"
+        "outbound": "🔗 全球直连"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局代理",
+        "outbound": "🌏 手动选择"
       },
       {
         "action": "route",
@@ -560,7 +565,7 @@
           "direct-fix",
           "game@cn"
         ],
-        "outbound": "Direct"
+        "outbound": "🔗 全球直连"
       },
       {
         "action": "reject",
@@ -581,12 +586,12 @@
       {
         "action": "route",
         "port": 23332,
-        "outbound": "Direct"
+        "outbound": "🔗 全球直连"
       },
       {
         "action": "route",
         "port": 30021,
-        "outbound": "🇯🇵 JP游戏"
+        "outbound": "🇯🇵 游戏节点"
       },
       {
         "action": "route",
@@ -595,14 +600,14 @@
           "Epic",
           "game"
         ],
-        "outbound": "Game"
+        "outbound": "🎮 游戏"
       },
       {
         "action": "route",
         "rule_set": [
           "AI"
         ],
-        "outbound": "AI"
+        "outbound": "🤖 AI"
       },
       {
         "action": "route",
@@ -610,30 +615,45 @@
           "Google",
           "YouTube"
         ],
-        "outbound": "Google"
+        "outbound": "🌐 谷歌"
+      },
+      {
+        "action": "route",
+        "rule_set": [      {
+        "action": "route",
+        "rule_set": [
+          "AppleProxy"
+        ],
+        "outbound": "🍎 苹果"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Github"
+        ],
+        "outbound": "🐙 Github"
       },
       {
         "action": "route",
         "rule_set": [
           "Microsoft",
-          "Github",
           "OneDrive"
         ],
-        "outbound": "Microsoft"
+        "outbound": " 👩‍💻 微软"
       },
       {
         "action": "route",
         "rule_set": [
           "Twitter"
         ],
-        "outbound": "Twitter"
+        "outbound": "🐦 推特"
       },
       {
         "action": "route",
         "rule_set": [
           "Telegram"
         ],
-        "outbound": "Telegram"
+        "outbound": "💬 电报"
       },
       {
         "action": "route",
@@ -646,22 +666,21 @@
           "Netflix",
           "Emby"
         ],
-        "outbound": "Emby"
+        "outbound": "🎬 流媒体"
       },
       {
         "action": "route",
         "rule_set": [
           "Spotify"
         ],
-        "outbound": "Spotify"
+        "outbound": "🎵 Spotify"
       },
       {
         "action": "route",
         "rule_set": [
-          "GeoLocation-!CN",
-          "AppleProxy"
+          "GeoLocation-!CN"
         ],
-        "outbound": "Proxy"
+        "outbound": "🌏 手动选择"
       },
       {
         "action": "route",
@@ -670,16 +689,16 @@
           "ChinaIP",
           "ChinaDomain"
         ],
-        "outbound": "Direct"
+        "outbound": "🔗 全球直连"
       },
       {
         "action": "route",
         "ip_is_private": true,
-        "outbound": "Direct"
+        "outbound": "🔗 全球直连"
       }
     ],
     "find_process": true,
     "auto_detect_interface": true,
-    "final": "Proxy"
+    "final": "🌏 手动选择"
   }
 }
