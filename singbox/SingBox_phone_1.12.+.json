@@ -25,21 +25,20 @@
     "servers": [
       {
         "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query",
+        "type": "https",
+        "server": "1.1.1.1",
         "detour": "Proxy"
       },
       {
         "tag": "ali",
-        "address": "https://223.6.6.6/dns-query",
-        "detour": "Direct"
+        "type": "https",
+        "server": "223.6.6.6"
       },
       {
         "tag": "remote",
-        "address": "fakeip"
-      },
-      {
-        "tag": "block",
-        "address": "rcode://success"
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
@@ -67,7 +66,7 @@
         "server": "ali"
       },
       {
-        "action": "route-options",
+        "action": "reject",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -82,7 +81,6 @@
             ]
           }
         ],
-        "server": "block",
         "disable_cache": true
       },
       {
