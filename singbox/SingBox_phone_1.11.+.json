@@ -26,12 +26,12 @@
       {
         "tag": "cloudflare",
         "address": "https://1.1.1.1/dns-query",
-        "detour": "Proxy"
+        "detour": "🌏 手动选择"
       },
       {
         "tag": "ali",
         "address": "https://223.6.6.6/dns-query",
-        "detour": "Direct"
+        "detour": "🔗 全球直连"
       },
       {
         "tag": "remote",
@@ -132,101 +132,121 @@
   "outbounds": [
     {
       "type": "direct",
-      "tag": "Direct"
+      "tag": "🔗 全球直连"
     },
     {
       "type": "selector",
-      "tag": "Proxy",
+      "tag": "🌏 手动选择",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "Direct"
+        "🔗 全球直连"
       ]
     },
     {
       "type": "selector",
-      "tag": "AI",
+      "tag": "🤖 AI",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇺🇸 美国",
-        "Proxy"
+        "🇺🇸 美国节点",
+        "🌏 手动选择"
       ]
     },
     {
       "type": "selector",
-      "tag": "Game",
+      "tag": "🎮 游戏",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 HK游戏",
-        "🇯🇵 JP游戏"
+        "🇭🇰 游戏节点",
+        "🇯🇵 游戏节点"
       ]
     },
     {
       "type": "selector",
-      "tag": "Google",
+      "tag": "🌐 谷歌",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇨🇳 台湾",
-        "Proxy"
+        "🇨🇳 台湾节点",
+        "🌏 手动选择"
       ]
     },
     {
       "type": "selector",
-      "tag": "Microsoft",
+      "tag": "🐙 Github",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 香港",
-        "Proxy",
-        "Direct"
+        "🇭🇰 香港节点",
+        "🌏 手动选择"
       ]
     },
     {
       "type": "selector",
-      "tag": "Telegram",
+      "tag": " 👩‍💻 微软",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 香港",
-        "Proxy"
+        "🇭🇰 香港节点",
+        "🌏 手动选择",
+        "🔗 全球直连"
       ]
     },
     {
       "type": "selector",
-      "tag": "Twitter",
+      "tag": "🍎 苹果",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇯🇵 日本",
-        "Proxy"
+        "🇭🇰 游戏节点",
+        "🇺🇸 美国节点",
+        "🔗 全球直连"
       ]
     },
     {
       "type": "selector",
-      "tag": "Spotify",
+      "tag": "💬 电报",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡",
-        "🇭🇰 香港",
-        "Proxy"
+        "🇭🇰 香港节点",
+        "🌏 手动选择"
       ]
     },
     {
       "type": "selector",
-      "tag": "Emby",
+      "tag": "🐦 推特",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡",
-        "Proxy"
+        "🇯🇵 日本节点",
+        "🌏 手动选择"
       ]
     },
     {
       "type": "selector",
-      "tag": "Final",
+      "tag": "🎵 Spotify",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "Proxy",
-        "🇭🇰 香港",
-        "🇯🇵 日本",
-        "🇨🇳 台湾",
-        "🇺🇸 美国",
-        "🇸🇬 新加坡"
+        "🇸🇬 新加坡节点",
+        "🇭🇰 香港节点",
+        "🌏 手动选择"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "🎬 流媒体",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇸🇬 新加坡节点",
+        "🌏 手动选择"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "🐟 漏网之鱼",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🌏 手动选择",
+        "🇭🇰 香港节点",
+        "🇨🇳 台湾节点",
+        "🇯🇵 日本节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔗 全球直连"
       ]
     },
     {
