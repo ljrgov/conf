@@ -72,7 +72,7 @@
         "mode": "and",
         "rules": [
           {
-            "clash_mode": "规则(允许广告)",
+            "clash_mode": "规则-允许广告",
             "invert": true
           },
           {
@@ -558,7 +558,7 @@
         "mode": "and",
         "rules": [
           {
-            "clash_mode": "规则(允许广告)",
+            "clash_mode": "规则-允许广告",
             "invert": true
           },
           {
