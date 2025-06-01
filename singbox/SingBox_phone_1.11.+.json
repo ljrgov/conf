@@ -77,8 +77,7 @@
           },
           {
             "rule_set": [
-              "AWAvenue-Ads",
-              "category-ads-all"
+              "Ads_SukkaW"
             ]
           }
         ],
@@ -302,17 +301,9 @@
   "route": {
     "rule_set": [
       {
-        "tag": "AWAvenue-Ads",
+        "tag": "Ads_SukkaW",
         "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
-        "format": "binary",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "category-ads-all",
-        "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
@@ -572,8 +563,7 @@
           },
           {
             "rule_set": [
-              "AWAvenue-Ads",
-              "category-ads-all"
+              "Ads_SukkaW"
             ]
           }
         ]
