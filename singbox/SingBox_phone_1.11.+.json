@@ -18,10 +18,10 @@
       "enabled": true,
       "store_fakeip": true,
       "store_rdrc": true,
-      "rdrc_timeout": "3d"
+      "rdrc_timeout": "7d"
     }
   },
-    "dns": {
+  "dns": {
     "servers": [
       {
         "tag": "cloudflare",
@@ -31,7 +31,7 @@
       {
         "tag": "ali",
         "address": "https://223.6.6.6/dns-query",
-        "detour": "direct"
+        "detour": "Direct"
       },
       {
         "tag": "remote",
@@ -44,28 +44,30 @@
     ],
     "rules": [
       {
-        "outbound": "any",
+        "action": "route",
+        "server": "ali",
+        "outbound": "any"
+      },
+      {
+        "action": "route",
+        "clash_mode": "直连模式",
         "server": "ali"
       },
       {
-        "clash_mode": "Direct",
         "action": "route",
-        "server": "ali"
-      },
-      {
-        "clash_mode": "Global",
-        "action": "route",
+        "clash_mode": "全局代理",
         "server": "cloudflare"
       },
       {
-        "rule_set": [
-          "alibaba",
-          "category-games@cn"
-        ],
         "action": "route",
+        "rule_set": [
+          "direct-fix",
+          "game@cn"
+        ],
         "server": "ali"
       },
       {
+        "action": "route-options",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -80,23 +82,22 @@
             ]
           }
         ],
-        "action": "route-options",
         "server": "block",
         "disable_cache": true
       },
       {
-        "rule_set": [
-          "cn-domain"
-        ],
         "action": "route",
+        "rule_set": [
+          "ChinaDomain"
+        ],
         "server": "ali"
       },
       {
+        "action": "route",
         "query_type": [
           "A",
           "AAAA"
         ],
-        "action": "route",
         "server": "remote"
       }
     ],
@@ -144,11 +145,7 @@
       "tag": "Proxy",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 香港",
-        "🇯🇵 日本",
-        "🇨🇳 台湾",
-        "🇺🇸 美国",
-        "🇸🇬 新加坡"
+        "Direct"
       ]
     },
     {
@@ -231,7 +228,11 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "Proxy",
-        "Direct"
+        "🇭🇰 香港",
+        "🇯🇵 日本",
+        "🇨🇳 台湾",
+        "🇺🇸 美国",
+        "🇸🇬 新加坡"
       ]
     },
     {
@@ -301,9 +302,33 @@
   "route": {
     "rule_set": [
       {
-        "tag": "Ad",
+        "tag": "AWAvenue-Ads",
         "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "category-ads-all",
+        "type": "remote",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "direct-fix",
+        "type": "remote",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "game@cn",
+        "type": "remote",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
@@ -477,9 +502,9 @@
         "update_interval": "24h"
       },
       {
-        "tag": "direct-fix",
+        "tag": "GeoLocation-!CN",
         "type": "remote",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
         "format": "binary",
         "download_detour": "Proxy",
         "update_interval": "24h"
@@ -495,18 +520,10 @@
       {
         "tag": "ChinaIP",
         "type": "remote",
-        "url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
         "format": "binary",
         "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "GeoLocation-!CN",
-        "type": "remote",
-        "url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "format": "binary",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
+        "update_interval": "10d"
       }
     ],
     "rules": [
