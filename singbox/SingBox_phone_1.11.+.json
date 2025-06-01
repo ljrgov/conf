@@ -528,16 +528,24 @@
     ],
     "rules": [
       {
-        "action": "sniff",
-        "inbound": "tun-in"
+        "action": "sniff"
       },
       {
         "action": "hijack-dns",
-        "protocol": "dns"
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 53
+          },
+          {
+            "protocol": "dns"
+          }
+        ]
       },
       {
         "action": "route",
-        "clash_mode": "全局直连",
+        "clash_mode": "直连模式",
         "outbound": "Direct"
       },
       {
@@ -546,14 +554,48 @@
         "outbound": "Proxy"
       },
       {
-        "action": "reject",
-        "protocol": "quic"
+        "action": "route",
+        "rule_set": [
+          "direct-fix",
+          "game@cn"
+        ],
+        "outbound": "Direct"
       },
       {
         "action": "reject",
-        "rule_set": [
-          "Ad"
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "AWAvenue-Ads",
+              "category-ads-all"
+            ]
+          }
         ]
+      },
+      {
+        "action": "route",
+        "port": 23332,
+        "outbound": "Direct"
+      },
+      {
+        "action": "route",
+        "port": 30021,
+        "outbound": "🇯🇵 JP游戏"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Steam",
+          "Epic",
+          "game"
+        ],
+        "outbound": "Game"
       },
       {
         "action": "route",
@@ -595,25 +637,6 @@
       },
       {
         "action": "route",
-        "port": 23332,
-        "outbound": "Direct"
-      },
-      {
-        "action": "route",
-        "port": 30021,
-        "outbound": "🇯🇵 JP游戏"
-      },      
-      {
-        "action": "route",
-        "rule_set": [
-          "Steam",
-          "Epic",
-          "game"
-        ],
-        "outbound": "Game"
-      },
-      {
-        "action": "route",
         "rule_set": [
           "TikTok",
           "Bahamut",
@@ -644,10 +667,14 @@
         "action": "route",
         "rule_set": [
           "Apple",
-          "direct-fix",
           "ChinaIP",
           "ChinaDomain"
         ],
+        "outbound": "Direct"
+      },
+      {
+        "action": "route",
+        "ip_is_private": true,
         "outbound": "Direct"
       }
     ],
