@@ -11,7 +11,7 @@
       "external_ui": "ui",
       "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
       "external_ui_download_detour": "🌏 手动选择",
-      "default_mode": "规则模式",
+      "default_mode": "规则分流",
       "access_control_allow_private_network": false
     },
     "cache_file": {
@@ -174,6 +174,7 @@
       "tag": "🐙 Github",
       "interrupt_exist_connections": true,
       "outbounds": [
+        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
         "🌏 手动选择"
       ]
@@ -204,6 +205,7 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
         "🌏 手动选择"
       ]
     },
@@ -232,6 +234,7 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇸🇬 新加坡节点",
+        "🇯🇵 日本节点",
         "🌏 手动选择"
       ]
     },
@@ -252,64 +255,64 @@
     {
       "type": "urltest",
       "tag": "🇭🇰 游戏节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
-      "tolerance": 10,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "5m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇯🇵 游戏节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
-      "tolerance": 10,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "5m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "10m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "10m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "10m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "10m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 20,
-      "interrupt_exist_connections": false,
+      "url": "https://1.1.1.1/generate_204",
+      "interval": "10m",
+      "tolerance": 0,
+      "interrupt_exist_connections": true,
       "outbounds": []
     }
   ],
