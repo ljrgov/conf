@@ -6,20 +6,18 @@
     "timestamp": true
   },
   "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9999",
-      "external_ui": "ui",
-      "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
-      "external_ui_download_detour": "🌏 手动选择",
-      "default_mode": "规则分流",
-      "access_control_allow_private_network": false
-    },
     "cache_file": {
       "enabled": true,
       "store_fakeip": true,
       "store_rdrc": true,
       "rdrc_timeout": "7d"
-    }
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9999",
+      "external_ui": "ui",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_download_detour": "🌏 手动选择",
+      "default_mode": "规则分流"
   },
   "dns": {
     "servers": [
