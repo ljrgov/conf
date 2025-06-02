@@ -142,6 +142,7 @@
     {
       "type": "selector",
       "tag": "🌏 手动选择",
+      "url": "https://1.1.1.1/generate_204",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🔗 全球直连"
@@ -186,7 +187,7 @@
     },
     {
       "type": "selector",
-      "tag": " 👩‍💻 微软",
+      "tag": "👩‍💻 微软",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇭🇰 香港节点",
