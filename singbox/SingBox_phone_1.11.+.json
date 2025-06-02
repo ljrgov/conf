@@ -448,7 +448,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs",
         "format": "binary",
-        "download_detour": 🌏 手动选择",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
