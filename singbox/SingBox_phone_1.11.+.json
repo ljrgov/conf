@@ -142,7 +142,6 @@
     {
       "type": "selector",
       "tag": "🌏 手动选择",
-      "url": "https://1.1.1.1/generate_204",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🔗 全球直连"
