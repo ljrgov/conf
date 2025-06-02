@@ -598,6 +598,14 @@
       },
       {
         "action": "route",
+        "rule_set": [
+          "Google",
+          "YouTube"
+        ],
+        "outbound": "🌐 谷歌"
+      },
+      {
+        "action": "route",
         "port": 30021,
         "outbound": "🇯🇵 游戏节点"
       },
@@ -616,14 +624,6 @@
           "AI"
         ],
         "outbound": "🤖 AI"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Google",
-          "YouTube"
-        ],
-        "outbound": "🌐 谷歌"
       },
       {
         "action": "route",
