@@ -320,7 +320,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -328,7 +328,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -336,7 +336,7 @@
         "type": "remote",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -344,7 +344,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -352,7 +352,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -360,7 +360,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -368,7 +368,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -376,7 +376,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/TikTok.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -384,7 +384,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Bahamut.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -392,7 +392,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Disney.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -400,7 +400,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/PrimeVideo.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -408,7 +408,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/HBO.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -416,7 +416,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Netflix.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -424,7 +424,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Spotify.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -432,7 +432,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Steam.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -440,7 +440,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Epic.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -448,7 +448,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": 🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -456,7 +456,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AppleProxy.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -464,7 +464,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Apple.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -472,7 +472,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Twitter.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -480,7 +480,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Github.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -488,7 +488,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/OneDrive.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -496,7 +496,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Microsoft.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -504,7 +504,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -512,7 +512,7 @@
         "type": "remote",
         "url": "https://ghfast.top/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -520,7 +520,7 @@
         "type": "remote",
         "url": "https://ghfast.top/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "24h"
       },
       {
@@ -528,7 +528,7 @@
         "type": "remote",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
         "format": "binary",
-        "download_detour": "Proxy",
+        "download_detour": "🌏 手动选择",
         "update_interval": "10d"
       }
     ],
