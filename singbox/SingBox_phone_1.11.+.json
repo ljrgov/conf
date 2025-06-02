@@ -10,7 +10,7 @@
       "external_controller": "127.0.0.1:9999",
       "external_ui": "ui",
       "external_ui_download_url": "https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
-      "external_ui_download_detour": "Proxy",
+      "external_ui_download_detour": "🌏 手动选择",
       "default_mode": "规则模式",
       "access_control_allow_private_network": false
     },
@@ -701,3 +701,4 @@
     "auto_detect_interface": true,
     "final": "🌏 手动选择"
   }
+}
