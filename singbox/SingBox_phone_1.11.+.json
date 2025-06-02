@@ -619,8 +619,6 @@
       },
       {
         "action": "route",
-        "rule_set": [      {
-        "action": "route",
         "rule_set": [
           "AppleProxy"
         ],
