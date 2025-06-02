@@ -703,7 +703,7 @@
           "Microsoft",
           "OneDrive"
         ],
-        "outbound": " 👩‍💻 微软"
+        "outbound": "👩‍💻 微软"
       },
       {
         "action": "route",
