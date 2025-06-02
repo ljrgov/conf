@@ -158,20 +158,20 @@
     },
     {
       "type": "selector",
-      "tag": "🎮 游戏",
-      "interrupt_exist_connections": true,
-      "outbounds": [
-        "🇭🇰 游戏节点",
-        "🇯🇵 游戏节点"
-      ]
-    },
-    {
-      "type": "selector",
       "tag": "🌐 谷歌",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇨🇳 台湾节点",
         "🌏 手动选择"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "🎮 游戏",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇭🇰 游戏节点",
+        "🇯🇵 游戏节点"
       ]
     },
     {
