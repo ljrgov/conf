@@ -106,14 +106,15 @@
       "inet6_range": "fc00::/18"
     },
     "independent_cache": true,
+    "final": "cloudflare",
     "strategy": "prefer_ipv4"
   },
   "inbounds": [
     {
       "type": "mixed",
       "tag": "mixed-in",
-      "listen": "::",
-      "listen_port": 7080,
+      "listen": "127.0.0.1",
+      "listen_port": 20577,
       "set_system_proxy": false
     },
     {
@@ -127,7 +128,7 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 7080
+          "server_port": 20577
         }
       },
       "stack": "mixed",
