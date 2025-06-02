@@ -55,6 +55,11 @@
       },
       {
         "action": "route",
+        "clash_mode": "全局代理",
+        "server": "cloudflare"
+      },
+      {
+        "action": "route",
         "rule_set": [
           "direct-fix",
           "game@cn"
