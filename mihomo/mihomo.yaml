@@ -14,7 +14,7 @@
 p: &p {type: http, interval: 86400, health-check: {enable: true, url: http://1.1.1.1/generate_204, interval: 1800, timeout: 5000}}
 proxy-providers:
   Subscribe: # 在此将 "http://your-service-provider" 替换为你的机场订阅，推荐使用 base64 或者 node list
-    url: http://your-service-provider
+    url: https://v3nWMs.prosubnet02.eu:8443/api/v1/client/55272325c3b0bb9125e96159b95dea0a?flag=clashmeta
     <<: *p
     #override: # 修改节点前后缀时，需移除前方的 "#" 符号
       #additional-prefix: "节点前缀"
