@@ -7,7 +7,7 @@
 #
 # Mihomo Version ≥ 1.8.10
 #
-# 最后更新时间: 2025-02-13 22:10
+# 最后更新时间: 2025-02-27 23:00
 #
 # ================
 
@@ -34,10 +34,10 @@ find-process-mode: strict
 
 geodata-mode: true
 geox-url:
-  geoip: "https://git.repcz.link/raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip.dat"
-  geosite: "https://git.repcz.link/github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://git.repcz.link/raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
-  asn: "https://git.repcz.link/raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
+  geoip: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip.dat"
+  geosite: "https://mirror.ghproxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+  asn: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
 
 profile: { store-selected: true, store-fake-ip: false }
 sniffer: { enable: true, sniff: { HTTP: { ports: [80], override-destination: true }, TLS: { ports: [443, 8443] }, QUIC: { ports: [443, 8443] } } }
@@ -58,7 +58,6 @@ dns:
 
 # 锚点参数
 pg: &pg {type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
-yx: &yx {type: select, proxies: [香港游戏, 日本游戏, 香港节点, DIRECT]}
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
 select: &select {type: select, include-all: true}
 fallback: &fallback {type: fallback, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
@@ -76,12 +75,10 @@ proxy-groups:
   - {name: 电报消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
   - {name: 推特消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
   - {name: AI, <<: *pg, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
-  - {name: 游戏平台, <<: *yx, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
+  - {name: 游戏平台, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: Emby, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
   - {name: Spotify, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png}
   - {name: 兜底分流, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
-  - {name: 日本游戏, <<: *url-test, filter: "^.*🇯🇵.*游戏.*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
-  - {name: 香港游戏, <<: *url-test, filter: "^.*🇭🇰.*游戏.*$", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
   - {name: 香港节点, <<: *url-test, filter: "(?i)🇭🇰|香港|(\b(HK|Hong)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
   - {name: 美国节点, <<: *url-test, filter: "(?i)🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
   - {name: 狮城节点, <<: *url-test, filter: "(?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
@@ -89,24 +86,23 @@ proxy-groups:
   - {name: 台湾节点, <<: *url-test, filter: "(?i)🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
 
 rule-providers:
-  AD: {<<: *c, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Reject.list}
-  game: {<<: *c, path: ./rules/game.list, url: https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/rule/mihomo/game.list}
-  Apple: {<<: *c, path: ./rules/Apple.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Apple.list}
-  YouTube: {<<: *c, path: ./rules/YouTube.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/YouTube.list}
-  Google: {<<: *c, path: ./rules/Google.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Google.list}
-  Telegram: {<<: *c, path: ./rules/Telegram.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Telegram.list}
-  Twitter: {<<: *c, path: ./rules/Twitter.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Twitter.list}
-  Steam: {<<: *c, path: ./rules/Steam.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Steam.list}
-  Epic: {<<: *c, path: ./rules/Epic.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Epic.list}
-  AI: {<<: *c, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/AI.list}
-  Emby: {<<: *c, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Emby.list}
-  Spotify: {<<: *c, path: ./rules/Spotify.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Spotify.list}
-  Bahamut: {<<: *c, path: ./rules/Bahamut.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Bahamut.list}
-  Netflix: {<<: *c, path: ./rules/Netflix.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Netflix.list}
-  Disney: {<<: *c, path: ./rules/Disney.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Disney.list}
-  PrimeVideo: {<<: *c, path: ./rules/PrimeVideo.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/PrimeVideo.list}
-  HBO: {<<: *c, path: ./rules/HBO.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/HBO.list}
-  TikTok: {<<: *c, path: ./rules/TikTok.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/TikTok.list}
+  AD: {<<: *c, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Reject.list}
+  Apple: {<<: *c, path: ./rules/Apple.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Apple.list}
+  YouTube: {<<: *c, path: ./rules/YouTube.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/YouTube.list}
+  Google: {<<: *c, path: ./rules/Google.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Google.list}
+  Telegram: {<<: *c, path: ./rules/Telegram.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Telegram.list}
+  Twitter: {<<: *c, path: ./rules/Twitter.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Twitter.list}
+  Steam: {<<: *c, path: ./rules/Steam.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Steam.list}
+  Epic: {<<: *c, path: ./rules/Epic.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Epic.list}
+  AI: {<<: *c, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AI.list}
+  Emby: {<<: *c, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Emby.list}
+  Spotify: {<<: *c, path: ./rules/Spotify.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Spotify.list}
+  Bahamut: {<<: *c, path: ./rules/Bahamut.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Bahamut.list}
+  Netflix: {<<: *c, path: ./rules/Netflix.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Netflix.list}
+  Disney: {<<: *c, path: ./rules/Disney.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Disney.list}
+  PrimeVideo: {<<: *c, path: ./rules/PrimeVideo.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/PrimeVideo.list}
+  HBO: {<<: *c, path: ./rules/HBO.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/HBO.list}
+  TikTok: {<<: *c, path: ./rules/TikTok.list, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/TikTok.list}
 
 rules:
   - RULE-SET,AD,REJECT
@@ -117,10 +113,8 @@ rules:
   - RULE-SET,Telegram,电报消息
 # - PROCESS-NAME,Telegram,REJECT-DROP # For Telegram macOS
   - RULE-SET,Twitter,推特消息
-  - DST-PORT,30021,日本游戏
   - RULE-SET,Steam,游戏平台
   - RULE-SET,Epic,游戏平台
-  - RULE-SET,game,游戏平台
   - RULE-SET,Emby,Emby
   - RULE-SET,Spotify,Spotify
   - RULE-SET,Bahamut,国际媒体
