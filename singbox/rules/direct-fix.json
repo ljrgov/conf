@@ -2,6 +2,12 @@
   "version": 2,
   "rules": [
     {
+      "port": [23332]
+    },
+    {
+      "domain": []
+    },
+    {
       "domain_suffix": [
         "kelote.com"
 ]

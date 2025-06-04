@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "port": [30071,30102,30001,30190,30103,7591,5551,5552,5501,5502,5051,5052,5053,5054,5001,5002,5003,5004,5228,13701,13054,17101,14556,14506,14503,14553,14501,14551,14502,14552,14504,14554,14505,14555,30106,30021,30031,10200
+      ]
+    },
+// domain只匹配当前域名，不扩展
+    {
+      "domain": [
+        "va-effect.byteoversea.com",
+        "sf-hs-sg.ibytedtos.com",
+        "tnc16-useastla.isnssdk.com",
+        "tnc16-alisg.isnssdk.com",
+        "gplog-sg.byteoversea.com",
+        "log-va.bytegsdk.com",
+        "gpsdk-sg.bytegsdk.com",
+        "sessions.bugsnag.com",
+        "wsavatar.yuanzhanapp.com",
+        "update.9mod.com"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "bytegsdk.com",
+        "isnssdk.com",
+        "youngjoygame.com",
+        "aihelp.net",
+        "mobilelegends.com",
+        "gameanalytics .com",
+        "gamezop.com",
+        "app.adjust.com",
+        "api.mobapay.com",
+        "moontontech.com",
+        "moonton.com"
+      ]
+    }
+  ]
+}
