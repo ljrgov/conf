@@ -356,9 +356,17 @@
   "route": {
     "rule_set": [
       {
-        "tag": "Ads_SukkaW",
+        "tag": "AWAvenue-Ads",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
+        "url": "https://git.repcz.link/https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "format": "binary",
+        "download_detour": "🔍 手动选择",
+        "update_interval": "24h"
+      },
+      {
+        "type": "remote",
+        "tag": "category-ads-all",
+        "url": "https://git.repcz.link/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
         "format": "binary",
         "download_detour": "🔍 手动选择",
         "update_interval": "24h"
@@ -618,7 +626,8 @@
           },
           {
             "rule_set": [
-              "Ads_SukkaW"
+              "AWAvenue-Ads",
+              "category-ads-all"
             ]
           }
         ]
@@ -740,7 +749,7 @@
       "external_ui": "ui",
       "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "external_ui_download_detour": "🔍 手动选择",
-      "default_mode": "规则",
+      "default_mode": "规则"
     }
   }
 }
