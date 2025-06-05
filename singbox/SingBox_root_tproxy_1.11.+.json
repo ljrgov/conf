@@ -749,7 +749,6 @@
       }
     ],
     "final": "🔍 手动选择",
-    "find_process": true,
     "auto_detect_interface": true
   }
 }
