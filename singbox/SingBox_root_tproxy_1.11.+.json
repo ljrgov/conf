@@ -5,6 +5,20 @@
     "output": "sing-box.log",
     "timestamp": true
   },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:7025",
+      "screct": ""
+      "external_ui": "ui",
+      "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_download_detour": "🔍 手动选择",
+      "default_mode": "规则"
+    }
+  },
   "dns": {
     "servers": [
       {
@@ -736,20 +750,6 @@
     ],
     "final": "🔍 手动选择",
 //    "find_process": true,
-    "auto_detect_interface": true,
-  },
-    "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "store_fakeip": true
-    },
-    "clash_api": {
-      "external_controller": "127.0.0.1:7025",
-      "screct": ""
-      "external_ui": "ui",
-      "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "🔍 手动选择",
-      "default_mode": "规则"
-    }
+    "auto_detect_interface": true
   }
 }
