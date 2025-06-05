@@ -2,35 +2,20 @@
   "log": {
     "disabled": false,
     "level": "info",
-    "output": "singbox.log",
+    "output": "sing-box.log",
     "timestamp": true
-  },
-  "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "store_fakeip": true,
-      "store_rdrc": true,
-      "rdrc_timeout": "7d"
-    },
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "ui",
-      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "🌏 手动选择",
-      "default_mode": "规则分流"
-    }
   },
   "dns": {
     "servers": [
       {
         "tag": "cloudflare",
         "address": "https://1.1.1.1/dns-query",
-        "detour": "🌏 手动选择"
+        "detour": "🔍 手动选择"
       },
       {
         "tag": "ali",
         "address": "https://223.6.6.6/dns-query",
-        "detour": "🔗 全球直连"
+        "detour": "🔗 大陆直连"
       },
       {
         "tag": "remote",
@@ -49,12 +34,12 @@
       },
       {
         "action": "route",
-        "clash_mode": "直连模式",
+        "clash_mode": "直连",
         "server": "ali"
       },
       {
         "action": "route",
-        "clash_mode": "全局代理",
+        "clash_mode": "全局",
         "server": "cloudflare"
       },
       {
@@ -76,7 +61,8 @@
           },
           {
             "rule_set": [
-              "Ads_SukkaW"
+              "AWAvenue-Ads",
+              "category-ads-all"
             ]
           }
         ],
@@ -137,11 +123,11 @@
   "outbounds": [
     {
       "type": "direct",
-      "tag": "🔗 全球直连"
+      "tag": "🔗 大陆直连"
     },
     {
       "type": "selector",
-      "tag": "🌏 手动选择",
+      "tag": "🔍 手动选择",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇸🇬 新加坡节点",
@@ -149,11 +135,11 @@
         "🇯🇵 日本节点",
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "🏰 欧洲区域",
+        "🇪🇺 欧洲区域",
         "🦅 美洲区域",
         "🐉 亚洲区域",
         "🪘 非洲区域",
-        "🔗 全球直连"
+        "🔗 大陆直连"
       ]
     },
     {
@@ -163,8 +149,8 @@
       "outbounds": [
         "🇯🇵 日本节点",
         "🇺🇸 美国节点",
-        "🏰 欧洲区域",
-        "🌏 手动选择"
+        "🇪🇺 欧洲区域",
+        "🔍 手动选择"
       ]
     },
     {
@@ -174,9 +160,9 @@
       "outbounds": [
         "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
-        "🏰 欧洲区域",
+        "🇪🇺 欧洲区域",
         "🦅 美洲区域",
-        "🌏 手动选择"
+        "🔍 手动选择"
       ]
     },
     {
@@ -194,9 +180,9 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇯🇵 日本节点",
-        "🏰 欧洲区域",
+        "🇪🇺 欧洲区域",
         "🦅 美洲区域",
-        "🌏 手动选择"
+        "🔍 手动选择"
       ]
     },
     {
@@ -205,8 +191,8 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇯🇵 日本节点",
-        "🌏 手动选择",
-        "🔗 全球直连"
+        "🔍 手动选择",
+        "🔗 大陆直连"
       ]
     },
     {
@@ -216,7 +202,7 @@
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "🔗 全球直连"
+        "🔗 大陆直连"
       ]
     },
     {
@@ -226,9 +212,9 @@
       "outbounds": [
         "🇸🇬 新加坡节点",
         "🇯🇵 日本节点",
-        "🏰 欧洲区域",
+        "🇪🇺 欧洲区域",
         "🦅 美洲区域",
-        "🌏 手动选择"
+        "🔍 手动选择"
       ]
     },
     {
@@ -237,7 +223,7 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇯🇵 日本节点",
-        "🌏 手动选择"
+        "🔍 手动选择"
       ]
     },
     {
@@ -248,8 +234,8 @@
         "🇸🇬 新加坡节点",
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
-        "🏰 欧洲区域",
-        "🌏 手动选择"
+        "🇪🇺 欧洲区域",
+        "🔍 手动选择"
       ]
     },
     {
@@ -259,8 +245,8 @@
       "outbounds": [
         "🇸🇬 新加坡节点",
         "🇯🇵 日本节点",
-        "🏰 欧洲区域",
-        "🌏 手动选择"
+        "🇪🇺 欧洲区域",
+        "🔍 手动选择"
       ]
     },
     {
@@ -268,22 +254,22 @@
       "tag": "🐟 漏网之鱼",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🌏 手动选择",
+        "🔍 手动选择",
         "🦅 美洲区域",
         "🇭🇰 香港节点",
         "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🏰 欧洲区域"
+        "🇪🇺 欧洲区域"
       ]
     },
     {
       "type": "urltest",
       "tag": "🇭🇰 游戏节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "2m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -291,8 +277,8 @@
       "type": "urltest",
       "tag": "🇯🇵 游戏节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "2m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -300,8 +286,8 @@
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -309,8 +295,8 @@
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -318,8 +304,8 @@
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -327,8 +313,8 @@
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -336,17 +322,17 @@
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
         {
       "type": "urltest",
-      "tag": "🏰 欧洲区域",
+      "tag": "🇪🇺 欧洲区域",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -354,8 +340,8 @@
       "type": "urltest",
       "tag": "🦅 美洲区域",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -363,8 +349,8 @@
       "type": "urltest",
       "tag": "🐉 亚洲区域",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -372,8 +358,8 @@
       "type": "urltest",
       "tag": "🪘 非洲区域",
       "url": "https://1.1.1.1/generate_204",
-      "interval": "10m",
-      "tolerance": 0,
+      "interval": "3m",
+      "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
     }
@@ -381,11 +367,19 @@
   "route": {
     "rule_set": [
       {
-        "tag": "Ads_SukkaW",
+        "tag": "AWAvenue-Ads",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Ads_SukkaW.srs",
+        "url": "https://git.repcz.link/https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
+        "update_interval": "24h"
+      },
+      {
+        "type": "remote",
+        "tag": "category-ads-all",
+        "url": "https://git.repcz.link/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
+        "format": "binary",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -393,7 +387,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -401,7 +395,7 @@
         "type": "remote",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -409,7 +403,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -417,7 +411,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -425,7 +419,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -433,7 +427,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -441,7 +435,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/TikTok.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -449,7 +443,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Bahamut.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -457,7 +451,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Disney.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -465,7 +459,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/PrimeVideo.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -473,7 +467,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/HBO.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -481,7 +475,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Netflix.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -489,7 +483,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Spotify.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -497,7 +491,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Steam.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -505,7 +499,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Epic.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -513,7 +507,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -521,7 +515,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AppleProxy.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -529,7 +523,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Apple.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -537,7 +531,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Twitter.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -545,7 +539,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Github.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -553,7 +547,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/OneDrive.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -561,7 +555,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Microsoft.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -569,7 +563,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -577,7 +571,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -585,7 +579,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "24h"
       },
       {
@@ -593,7 +587,7 @@
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
         "format": "binary",
-        "download_detour": "🌏 手动选择",
+        "download_detour": "🔍 手动选择",
         "update_interval": "10d"
       }
     ],
@@ -616,13 +610,13 @@
       },
       {
         "action": "route",
-        "clash_mode": "直连模式",
-        "outbound": "🔗 全球直连"
+        "clash_mode": "直连",
+        "outbound": "🔗 大陆直连"
       },
       {
         "action": "route",
-        "clash_mode": "全局代理",
-        "outbound": "🌏 手动选择"
+        "clash_mode": "全局",
+        "outbound": "🔍 手动选择"
       },
       {
         "action": "route",
@@ -630,7 +624,7 @@
           "direct-fix",
           "game@cn"
         ],
-        "outbound": "🔗 全球直连"
+        "outbound": "🔗 大陆直连"
       },
       {
         "action": "reject",
@@ -643,15 +637,11 @@
           },
           {
             "rule_set": [
-              "Ads_SukkaW"
+              "AWAvenue-Ads",
+              "category-ads-all"
             ]
           }
         ]
-      },
-      {
-        "action": "route",
-        "port": 23332,
-        "outbound": "🔗 全球直连"
       },
       {
         "action": "route",
@@ -660,11 +650,6 @@
           "YouTube"
         ],
         "outbound": "🌐 谷歌"
-      },
-      {
-        "action": "route",
-        "port": 30021,
-        "outbound": "🇯🇵 游戏节点"
       },
       {
         "action": "route",
@@ -743,7 +728,7 @@
         "rule_set": [
           "GeoLocation-!CN"
         ],
-        "outbound": "🌏 手动选择"
+        "outbound": "🔍 手动选择"
       },
       {
         "action": "route",
@@ -752,16 +737,30 @@
           "ChinaIP",
           "ChinaDomain"
         ],
-        "outbound": "🔗 全球直连"
+        "outbound": "🔗 大陆直连"
       },
       {
         "action": "route",
         "ip_is_private": true,
-        "outbound": "🔗 全球直连"
+        "outbound": "🔗 大陆直连"
       }
     ],
+    "final": "🔍 手动选择",
     "find_process": true,
     "auto_detect_interface": true,
-    "final": "🌏 手动选择"
+  },
+    "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:7025",
+      "screct": ""
+      "external_ui": "ui",
+      "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_download_detour": "🔍 手动选择",
+      "default_mode": "规则"
+    }
   }
 }
