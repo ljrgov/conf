@@ -14,7 +14,7 @@
       "external_controller": "127.0.0.1:7025",
       "secret": "",
       "external_ui": "ui",
-      "external_ui_download_url": "https://git.repcz.link/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "external_ui_download_detour": "🔍 手动选择",
       "default_mode": "规则"
     }
