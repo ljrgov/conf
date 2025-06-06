@@ -23,21 +23,22 @@
     "servers": [
       {
         "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query",
-        "detour": "🔍 手动选择"
+        "type": "https",
+        "detour": "🔍 手动选择",
+        "server": "1.1.1.1",
+        "path": "/dns-query"
       },
       {
         "tag": "ali",
-        "address": "https://223.6.6.6/dns-query",
-        "detour": "🔗 大陆直连"
+        "type": "https",
+        "server": "223.6.6.6",
+        "path": "/dns-query"
       },
       {
         "tag": "remote",
-        "address": "fakeip"
-      },
-      {
-        "tag": "block",
-        "address": "rcode://success"
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
