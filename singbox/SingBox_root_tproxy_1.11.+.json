@@ -75,8 +75,7 @@
           },
           {
             "rule_set": [
-              "AWAvenue-Ads",
-              "category-ads-all"
+              "Ads"
             ]
           }
         ],
@@ -370,21 +369,13 @@
   "route": {
     "rule_set": [
       {
-        "tag": "AWAvenue-Ads",
+        "tag": "Ads",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "url": "https://git.repcz.link/https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
         "format": "binary",
         "download_detour": "🔍 手动选择",
         "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "category-ads-all",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
-      },
+      },       
       {
         "tag": "direct-fix",
         "type": "remote",
@@ -640,8 +631,7 @@
           },
           {
             "rule_set": [
-              "AWAvenue-Ads",
-              "category-ads-all"
+              "Ads"
             ]
           }
         ]
