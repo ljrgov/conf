@@ -98,16 +98,27 @@
   "inbounds": [
     {
       "type": "mixed",
-      "tag": "mixed",
-      "listen": "::",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
       "listen_port": 20577,
       "set_system_proxy": false
     },
     {
-      "type": "tproxy",
-      "tag": "tproxy",
-      "listen": "::",
-      "listen_port": 2057
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 20577
+        }
+      },
+      "stack": "mixed",
+      "auto_route": true
     }
   ],
   "outbounds": [
@@ -728,6 +739,7 @@
       }
     ],
     "final": "🔍 手动选择",
+    "find_process": true,
     "auto_detect_interface": true
   }
 }
