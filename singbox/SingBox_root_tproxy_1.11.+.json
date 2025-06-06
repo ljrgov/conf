@@ -371,7 +371,7 @@
       {
         "tag": "Ads",
         "type": "remote",
-        "url": "https://git.repcz.link/https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
         "format": "binary",
         "download_detour": "🔍 手动选择",
         "update_interval": "24h"
