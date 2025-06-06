@@ -44,11 +44,6 @@
     "rules": [
       {
         "action": "route",
-        "server": "ali",
-        "outbound": "any"
-      },
-      {
-        "action": "route",
         "clash_mode": "直连",
         "server": "ali"
       },
@@ -66,7 +61,7 @@
         "server": "ali"
       },
       {
-        "action": "route-options",
+        "action": "reject",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -80,7 +75,6 @@
             ]
           }
         ],
-        "server": "block",
         "disable_cache": true
       },
       {
@@ -99,11 +93,6 @@
         "server": "remote"
       }
     ],
-    "fakeip": {
-      "enabled": true,
-      "inet4_range": "198.18.0.0/15",
-      "inet6_range": "fc00::/18"
-    },
     "final": "cloudflare",
     "independent_cache": true,
     "strategy": "prefer_ipv4"
