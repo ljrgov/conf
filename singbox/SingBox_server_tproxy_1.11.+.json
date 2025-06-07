@@ -65,7 +65,6 @@
         "server": "ali"
       },
       {
-        "action": "route-options",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -79,6 +78,7 @@
             ]
           }
         ],
+        "action": "route-options",
         "server": "block",
         "disable_cache": true
       },
