@@ -643,8 +643,7 @@
     ],
     "rules": [
       {
-        "action": "sniff",
-        "inbound": "tun-in"
+        "action": "sniff"
       },
       {
         "action": "hijack-dns",
