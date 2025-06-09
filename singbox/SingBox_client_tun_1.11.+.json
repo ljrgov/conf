@@ -677,12 +677,12 @@
       },
       {
         "action": "route",
-        "clash_mode": "direct",
+        "clash_mode": "全局直连",
         "outbound": "🔗 大陆直连"
       },
       {
         "action": "route",
-        "clash_mode": "global",
+        "clash_mode": "全局代理",
         "outbound": "🔍 手动选择"
       },
       {
