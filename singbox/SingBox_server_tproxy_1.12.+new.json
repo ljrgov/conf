@@ -175,33 +175,17 @@
   "inbounds": [
     {
       "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "127.0.0.1",
+      "tag": "mixed",
+      "listen": "::",
       "listen_port": 20577,
       "tcp_fast_open": true,
-      "tcp_multi_path": false,
-      "udp_fragment": false
+      "set_system_proxy": false
     },
     {
-      "type": "tun",
-      "tag": "tun-in",
-      "interface_name": "tun-in",
-      "address": [
-        "172.18.0.1/30",
-        "fdfe:dcba:9876::1/126"
-      ],
-      "mtu": 9000,
-      "auto_route": true,
-      "strict_route": true,
-      "endpoint_independent_nat": false,
-      "stack": "mixed",
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 20577
-        }
-      }
+      "type": "tproxy",
+      "tag": "tproxy",
+      "listen": "::",
+      "listen_port": 2057
     }
   ],
   "outbounds": [
@@ -658,8 +642,7 @@
     ],
     "rules": [
       {
-        "action": "sniff",
-        "inbound": "tun-in"
+        "action": "sniff"
       },
       {
         "action": "hijack-dns",
@@ -818,7 +801,6 @@
       }
     ],
     "auto_detect_interface": true,
-    "find_process": true,
     "final": "🔍 手动选择",
     "default_domain_resolver": {
       "server": "ali"
