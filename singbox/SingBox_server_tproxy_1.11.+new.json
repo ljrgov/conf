@@ -21,7 +21,7 @@
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "cache_id": "",
+      "cache_id": "I",
       "store_fakeip": true,
       "store_rdrc": true,
       "rdrc_timeout": "7d"
@@ -224,6 +224,7 @@
       "tag": "🌐 谷歌",
       "interrupt_exist_connections": true,
       "outbounds": [
+        "🇭🇰 香港节点",
         "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
         "🇸🇬 新加坡节点",
@@ -300,7 +301,7 @@
       "outbounds": [
         "🇯🇵 日本节点",
         "🇸🇬 新加坡节点",
-        "🇭🇰 香港节点",
+        
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🔍 手动选择"
@@ -338,7 +339,7 @@
       "type": "urltest",
       "tag": "🇭🇰 游戏节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "2m",
+      "interval": "1m",
       "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -347,7 +348,7 @@
       "type": "urltest",
       "tag": "🇯🇵 游戏节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "2m",
+      "interval": "1m",
       "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
@@ -356,8 +357,8 @@
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
-      "tolerance": 0,
+      "interval": "1m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -365,8 +366,8 @@
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "1m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -374,8 +375,8 @@
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "1m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -383,8 +384,8 @@
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "1m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -392,8 +393,8 @@
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "interval": "1m",
+      "tolerance": 10,
       "interrupt_exist_connections": true,
       "outbounds": []
     }
@@ -786,6 +787,6 @@
       }
     ],
     "auto_detect_interface": true,
-    "final": "🔍 手动选择"
+    "final": "🐟 漏网之鱼"
   }
 }
