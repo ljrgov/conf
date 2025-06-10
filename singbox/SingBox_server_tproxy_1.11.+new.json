@@ -1,6 +1,6 @@
 {
   "log": {
-    "disabled": false,
+    "disabled": true,
     "level": "info",
     "output": "sing-box.log",
     "timestamp": true
