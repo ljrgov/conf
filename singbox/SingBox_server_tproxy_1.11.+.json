@@ -1,6 +1,6 @@
 {
   "log": {
-    "disabled": false,
+    "disabled": true,
     "level": "info",
     "output": "sing-box.log",
     "timestamp": true
@@ -16,7 +16,7 @@
       "external_ui": "ui",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "external_ui_download_detour": "🔍 手动选择",
-      "default_mode": "规则"
+      "default_mode": "规则分流"
     }
   },
   "dns": {
@@ -48,12 +48,12 @@
       },
       {
         "action": "route",
-        "clash_mode": "直连",
+        "clash_mode": "全局直连",
         "server": "ali"
       },
       {
         "action": "route",
-        "clash_mode": "全局",
+        "clash_mode": "全局代理",
         "server": "cloudflare"
       },
       {
@@ -624,12 +624,12 @@
       },
       {
         "action": "route",
-        "clash_mode": "直连",
+        "clash_mode": "全局直连",
         "outbound": "🔗 大陆直连"
       },
       {
         "action": "route",
-        "clash_mode": "全局",
+        "clash_mode": "全局代理",
         "outbound": "🔍 手动选择"
       },
       {
