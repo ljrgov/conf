@@ -73,7 +73,8 @@
           },
           {
             "rule_set": [
-              "Ads"
+              "Ads",
+              "Category-Ads"
             ]
           }
         ],
@@ -650,7 +651,8 @@
           },
           {
             "rule_set": [
-              "Ads"
+              "Ads",
+              "Category-Ads"
             ]
           }
         ]
