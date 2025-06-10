@@ -59,8 +59,7 @@
       {
         "action": "route",
         "rule_set": [
-          "direct-fix",
-          "game@cn"
+          "direct-fix"
         ],
         "server": "ali"
       },
@@ -79,23 +78,72 @@
           }
         ],
         "action": "route-options",
-        "server": "block",
-        "disable_cache": true
+        "disable_cache": true,
+        "server": "block"
       },
       {
         "action": "route",
         "rule_set": [
-          "ChinaDomain"
+          "Telegram",
+          "YouTube",
+          "Google",
+          "Github",
+          "Twitter",
+          "Apple-proxy",
+          "AI",
+          "game-proxy",
+          "Epic",
+          "Steam",
+          "Emby",
+          "Spotify",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "TikTok",
+          "GeoLocation-!CN"
+        ],
+        "server": "cloudflare"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "ChinaDomain",
+          "GeoIP-CN",
+          "Apple-direct",
+          "game@cn"
         ],
         "server": "ali"
       },
       {
         "action": "route",
-        "query_type": [
-          "A",
-          "AAAA"
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "domain_suffix": [
+              ".lan",
+              ".localdomain",
+              ".example",
+              ".invalid",
+              ".localhost",
+              ".test",
+              ".local",
+              ".home.arpa",
+              ".msftconnecttest.com",
+              ".msftncsi.com"
+            ],
+            "invert": true
+          },
+          {
+            "query_type": [
+              "A",
+              "AAAA"
+            ]
+          }
         ],
-        "server": "remote"
+        "server": "fakeip"
       }
     ],
     "final": "cloudflare",
@@ -132,17 +180,14 @@
       "tag": "🔍 手动选择",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡节点",
-        "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
-        "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "🇪🇺 欧洲区域",
-        "🦅 美洲区域",
-        "🐉 亚洲区域",
-        "🪘 非洲区域",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🇯🇵 游戏节点",
+        "🇭🇰 游戏节点",
         "🔗 大陆直连"
-      ]
     },
     {
       "type": "selector",
@@ -151,7 +196,6 @@
       "outbounds": [
         "🇯🇵 日本节点",
         "🇺🇸 美国节点",
-        "🇪🇺 欧洲区域",
         "🔍 手动选择"
       ]
     },
@@ -162,8 +206,7 @@
       "outbounds": [
         "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
-        "🇪🇺 欧洲区域",
-        "🦅 美洲区域",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
       ]
     },
@@ -172,8 +215,8 @@
       "tag": "🎮 游戏",
       "interrupt_exist_connections": true,
       "outbounds": [
-        "🇭🇰 游戏节点",
-        "🇯🇵 游戏节点"
+        "🇯🇵 游戏节点",
+        "🇭🇰 游戏节点"
       ]
     },
     {
@@ -181,9 +224,9 @@
       "tag": "🐙 Github",
       "interrupt_exist_connections": true,
       "outbounds": [
+        "🇸🇬 新加坡节点",
         "🇯🇵 日本节点",
-        "🇪🇺 欧洲区域",
-        "🦅 美洲区域",
+        "🇭🇰 香港节点",
         "🔍 手动选择"
       ]
     },
@@ -192,9 +235,10 @@
       "tag": "👩‍💻 微软",
       "interrupt_exist_connections": true,
       "outbounds": [
+        "🔗 大陆直连",
         "🇯🇵 日本节点",
-        "🔍 手动选择",
-        "🔗 大陆直连"
+        "🇭🇰 香港节点",
+        "🔍 手动选择"
       ]
     },
     {
@@ -204,7 +248,7 @@
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "🔗 大陆直连"
+        "🔍 手动选择"
       ]
     },
     {
@@ -214,8 +258,7 @@
       "outbounds": [
         "🇸🇬 新加坡节点",
         "🇯🇵 日本节点",
-        "🇪🇺 欧洲区域",
-        "🦅 美洲区域",
+        "🇨🇳 台湾节点",
         "🔍 手动选择"
       ]
     },
@@ -225,6 +268,8 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🇯🇵 日本节点",
+        "🇸🇬 新加坡节点",
+        "🇨🇳 台湾节点",
         "🔍 手动选择"
       ]
     },
@@ -233,10 +278,11 @@
       "tag": "🎵 Spotify",
       "interrupt_exist_connections": true,
       "outbounds": [
+        "🇯🇵 日本节点",
         "🇸🇬 新加坡节点",
         "🇭🇰 香港节点",
-        "🇯🇵 日本节点",
-        "🇪🇺 欧洲区域",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
         "🔍 手动选择"
       ]
     },
@@ -247,7 +293,9 @@
       "outbounds": [
         "🇸🇬 新加坡节点",
         "🇯🇵 日本节点",
-        "🇪🇺 欧洲区域",
+        "🇭🇰 香港节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
         "🔍 手动选择"
       ]
     },
@@ -257,13 +305,13 @@
       "interrupt_exist_connections": true,
       "outbounds": [
         "🔍 手动选择",
-        "🦅 美洲区域",
         "🇭🇰 香港节点",
-        "🇨🇳 台湾节点",
         "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
-        "🇸🇬 新加坡节点",
-        "🇪🇺 欧洲区域"
+        "🇭🇰 游戏节点",
+        "🇯🇵 游戏节点",
+        "🇸🇬 新加坡节点"
       ]
     },
     {
@@ -328,58 +376,110 @@
       "tolerance": 20,
       "interrupt_exist_connections": true,
       "outbounds": []
-    },
-        {
-      "type": "urltest",
-      "tag": "🇪🇺 欧洲区域",
-      "url": "https://1.1.1.1/generate_204",
-      "interval": "3m",
-      "tolerance": 20,
-      "interrupt_exist_connections": true,
-      "outbounds": []
-    },
-        {
-      "type": "urltest",
-      "tag": "🦅 美洲区域",
-      "url": "https://1.1.1.1/generate_204",
-      "interval": "3m",
-      "tolerance": 20,
-      "interrupt_exist_connections": true,
-      "outbounds": []
-    },
-    {
-      "type": "urltest",
-      "tag": "🐉 亚洲区域",
-      "url": "https://1.1.1.1/generate_204",
-      "interval": "3m",
-      "tolerance": 20,
-      "interrupt_exist_connections": true,
-      "outbounds": []
-    },
-    {
-      "type": "urltest",
-      "tag": "🪘 非洲区域",
-      "url": "https://1.1.1.1/generate_204",
-      "interval": "3m",
-      "tolerance": 20,
-      "interrupt_exist_connections": true,
-      "outbounds": []
     }
   ],
   "route": {
     "rule_set": [
       {
-        "tag": "Ads",
-        "type": "remote",
-        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },       
-      {
         "tag": "direct-fix",
         "type": "remote",
         "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Ads",
+        "type": "remote",
+        "url": "https://git.repcz.link/raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Category-Ads",
+        "type": "remote",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Telegram",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "YouTube",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Google",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Microsoft",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Microsoft.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "OneDrive",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/OneDrive.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Github",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Github.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Twitter",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Apple-direct",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Apple-proxy",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/AppleProxy.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "AI",
+        "type": "remote",
+        "url": "https://git.repcz.link/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
@@ -393,97 +493,9 @@
         "update_interval": "24h"
       },
       {
-        "tag": "game",
+        "tag": "game-proxy",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "AI",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AI.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Google",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Google.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "YouTube",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/YouTube.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "TikTok",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/TikTok.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Bahamut",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Bahamut.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Disney",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Disney.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "PrimeVideo",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/PrimeVideo.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "HBO",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/HBO.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Netflix",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Netflix.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Spotify",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Spotify.srs",
-        "format": "binary",
-        "download_detour": "🔗 大陆直连",
-        "update_interval": "24h"
-      },
-      {
-        "tag": "Steam",
-        "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Steam.srs",
+        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game-proxy.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
@@ -491,7 +503,15 @@
       {
         "tag": "Epic",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Epic.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
+        "format": "binary",
+        "download_detour": "🔗 大陆直连",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "Steam",
+        "type": "remote",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
@@ -499,63 +519,63 @@
       {
         "tag": "Emby",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Emby.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "AppleProxy",
+        "tag": "Spotify",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/AppleProxy.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Spotify.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "Apple",
+        "tag": "Bahamut",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Apple.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "Twitter",
+        "tag": "Netflix",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Twitter.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "Github",
+        "tag": "Disney",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Github.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "OneDrive",
+        "tag": "PrimeVideo",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/OneDrive.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "Microsoft",
+        "tag": "HBO",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Microsoft.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "Telegram",
+        "tag": "TikTok",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/Telegram.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/TikTok.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
@@ -571,15 +591,15 @@
       {
         "tag": "ChinaDomain",
         "type": "remote",
-        "url": "https://git.repcz.link/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
       },
       {
-        "tag": "ChinaIP",
+        "tag": "GeoIP-CN",
         "type": "remote",
-        "url": "https://git.repcz.link/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
+        "url": "https://git.repcz.link/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "10d"
@@ -615,8 +635,7 @@
       {
         "action": "route",
         "rule_set": [
-          "direct-fix",
-          "game@cn"
+          "direct-fix"
         ],
         "outbound": "🔗 大陆直连"
       },
@@ -639,19 +658,9 @@
       {
         "action": "route",
         "rule_set": [
-          "Google",
-          "YouTube"
+          "game@cn"
         ],
-        "outbound": "🌐 谷歌"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Steam",
-          "Epic",
-          "game"
-        ],
-        "outbound": "🎮 游戏"
+        "outbound": "🔗 大陆直连"
       },
       {
         "action": "route",
@@ -663,9 +672,40 @@
       {
         "action": "route",
         "rule_set": [
-          "AppleProxy"
+          "YouTube",
+          "Google"
+        ],
+        "outbound": "🌐 谷歌"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "game-proxy",
+          "Epic",
+          "Steam"
+        ],
+        "outbound": "🎮 游戏"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Twitter"
+        ],
+        "outbound": "🐦 推特"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Apple-proxy"
         ],
         "outbound": "🍎 苹果"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Telegram"
+        ],
+        "outbound": "💬 电报"
       },
       {
         "action": "route",
@@ -680,32 +720,18 @@
           "Microsoft",
           "OneDrive"
         ],
-        "outbound": "👩‍💻 微软"
+        "outbound": "‍💻 微软"
       },
       {
         "action": "route",
         "rule_set": [
-          "Twitter"
-        ],
-        "outbound": "🐦 推特"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Telegram"
-        ],
-        "outbound": "💬 电报"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "TikTok",
+          "Emby",
           "Bahamut",
+          "Netflix",
           "Disney",
           "PrimeVideo",
           "HBO",
-          "Netflix",
-          "Emby"
+          "TikTok"
         ],
         "outbound": "🎬 流媒体"
       },
@@ -726,15 +752,10 @@
       {
         "action": "route",
         "rule_set": [
-          "Apple",
-          "ChinaIP",
-          "ChinaDomain"
+          "ChinaDomain",
+          "GeoIP-CN",
+          "Apple-direct"
         ],
-        "outbound": "🔗 大陆直连"
-      },
-      {
-        "action": "route",
-        "ip_is_private": true,
         "outbound": "🔗 大陆直连"
       }
     ],
