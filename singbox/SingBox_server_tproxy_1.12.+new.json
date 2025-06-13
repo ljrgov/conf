@@ -664,6 +664,10 @@
         "outbound": "🔗 大陆直连"
       },
       {
+        "protocol": "quic",
+        "action": "reject"
+      },
+      {
         "action": "reject",
         "type": "logical",
         "mode": "and",
