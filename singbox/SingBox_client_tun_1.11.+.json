@@ -427,7 +427,7 @@
       {
         "tag": "Ads",
         "type": "remote",
-        "url": "https://git.repcz.link/raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "url": "https://git.repcz.link/github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
         "format": "binary",
         "download_detour": "🔗 大陆直连",
         "update_interval": "24h"
