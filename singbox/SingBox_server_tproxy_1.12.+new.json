@@ -181,7 +181,7 @@
       "set_system_proxy": false,
       "tcp_fast_open": false,
       "tcp_multi_path": false,
-      "udp_fragment": true
+      "udp_fragment": false
     },
     {
       "type": "tproxy",
