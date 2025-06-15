@@ -180,7 +180,8 @@
       "listen": "::",
       "listen_port": 20577,
       "tcp_fast_open": true,
-      "set_system_proxy": false
+      "set_system_proxy": false,
+      "udp_fragment": true
     },
     {
       "type": "tproxy",
