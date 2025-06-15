@@ -178,9 +178,9 @@
       "tag": "mixed-in",
       "listen": "127.0.0.1",
       "listen_port": 20577,
-      "tcp_fast_open": true,
+      "tcp_fast_open": false,
       "tcp_multi_path": false,
-      "udp_fragment": false
+      "udp_fragment": true
     },
     {
       "type": "tun",
