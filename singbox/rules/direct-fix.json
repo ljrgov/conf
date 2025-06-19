@@ -1,0 +1,26 @@
+{
+	"version": 2,
+	"rules": [
+		{
+			"port": [
+				23332
+			]
+		},
+		{
+			"domain": [
+				"gh-proxy.net"
+			]
+		},
+		{
+			"domain_suffix": [
+				"kelote.com",
+				"meizubl.com"
+			]
+		},
+		{
+			"domain_keyword": [
+				"eset"
+			]
+		}
+	]
+}
