@@ -178,7 +178,7 @@
 			"tag": "mixed-in",
 			"listen": "127.0.0.1",
 			"listen_port": 20577,
-   "set_system_proxy": true,
+                        "set_system_proxy": true,
 			"tcp_fast_open": false,
 			"tcp_multi_path": false,
 			"udp_fragment": true
