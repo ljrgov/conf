@@ -782,7 +782,7 @@
           "Microsoft",
           "OneDrive"
         ],
-        "outbound": "💻 微软"
+        "outbound": "‍💻 微软"
       },
       {
         "action": "route",
@@ -823,9 +823,6 @@
     ],
     "auto_detect_interface": true,
     "find_process": true,
-    "final": "🔍 手动选择",
-    "default_domain_resolver": {
-      "server": "ali"
-    }
+    "final": "🔍 手动选择"
   }
 }
