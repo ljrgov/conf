@@ -1,8 +1,8 @@
 {
   "log": {
     "disabled": false,
-    "level": "info",
-    "output": "sing-box.log",
+    "level": "error",
+    "output": "../run/sing-box.log",
     "timestamp": true
   },
   "experimental": {
@@ -823,6 +823,7 @@
       }
     ],
     "auto_detect_interface": true,
+    "find_process": false, 
     "final": "🔍 手动选择",
     "default_domain_resolver": {
       "server": "ali"
