@@ -174,9 +174,19 @@
   },
   "inbounds": [
     {
+      "type": "tproxy",
+      "listen": "::",
+      "listen_port": 9898
+    },
+    {
+      "type": "redir-port",
+      "listen": "::",
+      "listen_port": 9797
+    },
+    {
       "type": "mixed",
-      "listen": "127.0.0.1",
-      "listen_port": 20577
+      "listen": "::",
+      "listen_port": 7890
     },
     {
       "type": "tun",
@@ -191,7 +201,7 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 20577
+          "server_port": 7890
         }
       }
     }
