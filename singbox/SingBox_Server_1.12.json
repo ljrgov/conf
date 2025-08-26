@@ -175,16 +175,13 @@
   "inbounds": [
     {
       "type": "mixed",
+      "tag": "mixed-in",
       "listen": "::",
       "listen_port": 7890,
       "users": [
         {
           "username": "admin",
           "password": "your_strong_password"
-        },
-        {
-          "username": "guest", 
-          "password": "guest_password"
         }
       ],
       "set_system_proxy": false
