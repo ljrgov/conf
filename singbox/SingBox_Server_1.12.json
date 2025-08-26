@@ -5,28 +5,6 @@
     "output": "../run/sing-box.log",
     "timestamp": true
   },
-  "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "dashboard",
-      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
-      "external_ui_download_detour": "🔍 手动选择",
-      "secret": "password",
-      "default_mode": "规则分流",
-      "access_control_allow_origin": [
-        "*"
-      ],
-      "access_control_allow_private_network": false
-    },
-    "cache_file": {
-      "enabled": true,
-      "path": "cache.db",
-      "cache_id": "",
-      "store_fakeip": true,
-      "store_rdrc": true,
-      "rdrc_timeout": "7d"
-    }
-  },
   "dns": {
     "servers": [
       {
@@ -811,5 +789,28 @@
     "default_domain_resolver": {
       "server": "ali"
     }
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "🔍 手动选择",
+      "secret": "password",
+      "default_mode": "规则分流",
+      "access_control_allow_origin": [
+        "*"
+      ],
+      "access_control_allow_private_network": false
+    },
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "cache_id": "",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "7d"
+    }
   }
 }
+  
