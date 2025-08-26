@@ -174,16 +174,6 @@
   },
   "inbounds": [
     {
-      "type": "tproxy",
-      "listen": "::",
-      "listen_port": 9898
-    },
-    {
-      "type": "redir-port",
-      "listen": "::",
-      "listen_port": 9797
-    },
-    {
       "type": "mixed",
       "listen": "::",
       "listen_port": 7890,
@@ -219,6 +209,16 @@
           "server_port": 7890
         }
       }
+    },
+    {
+      "type": "tproxy",
+      "listen": "::",
+      "listen_port": 9898
+    },
+    {
+      "type": "redir-port",
+      "listen": "::",
+      "listen_port": 9797
     }
   ],
   "outbounds": [
