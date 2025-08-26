@@ -213,7 +213,7 @@
       "listen_port": 9898
     },
     {
-      "type": "redir-port",
+      "type": "redirect",
       "listen": "::",
       "listen_port": 9797
     }
