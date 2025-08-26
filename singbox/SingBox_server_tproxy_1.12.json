@@ -8,7 +8,7 @@
   "experimental": {
     "clash_api": {
       "external_controller": "127.0.0.1:7025",
-      "external_ui": "Web UI",
+      "external_ui": "dashboard",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "external_ui_download_detour": "🔍 手动选择",
       "secret": "**",
@@ -177,17 +177,19 @@
       "type": "mixed",
       "tag": "mixed",
       "listen": "::",
-      "listen_port": 20577,
-      "set_system_proxy": false,
-      "tcp_fast_open": false,
-      "tcp_multi_path": false,
-      "udp_fragment": false
+      "listen_port": 7890
     },
     {
       "type": "tproxy",
       "tag": "tproxy",
       "listen": "::",
-      "listen_port": 2057
+      "listen_port": 9898
+    },
+    {
+      "type": "redir-port",
+      "tag": "redir-port",
+      "listen": "::",
+      "listen_port": 9797
     }
   ],
   "outbounds": [
