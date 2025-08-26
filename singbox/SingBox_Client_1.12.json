@@ -282,7 +282,7 @@
     },
     {
       "type": "selector",
-      "tag": "\u200d💻 微软",
+      "tag": "💻 微软",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🔗 大陆直连",
@@ -781,7 +781,7 @@
           "Microsoft",
           "OneDrive"
         ],
-        "outbound": "\u200d💻 微软"
+        "outbound": "💻 微软"
       },
       {
         "action": "route",
