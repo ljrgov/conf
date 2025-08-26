@@ -1,6 +1,5 @@
 {
   "log": {
-  "log": {
     "disabled": false,
     "level": "error",
     "output": "../run/sing-box.log",
@@ -284,7 +283,7 @@
     },
     {
       "type": "selector",
-      "tag": "\u200d💻 微软",
+      "tag": "💻 微软",
       "interrupt_exist_connections": true,
       "outbounds": [
         "🔗 大陆直连",
