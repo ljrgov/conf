@@ -659,7 +659,8 @@
     ],
     "rules": [
       {
-        "action": "sniff"
+        "action": "sniff",
+        "inbound": "tun-in"
       },
       {
         "action": "hijack-dns",
@@ -782,7 +783,7 @@
           "Microsoft",
           "OneDrive"
         ],
-        "outbound": "\u200d💻 微软"
+        "outbound": "‍💻 微软"
       },
       {
         "action": "route",
@@ -822,10 +823,7 @@
       }
     ],
     "auto_detect_interface": true,
-    "find_process": false, 
-    "final": "🔍 手动选择",
-    "default_domain_resolver": {
-      "server": "ali"
-    }
+    "find_process": false,
+    "final": "🔍 手动选择"
   }
 }
