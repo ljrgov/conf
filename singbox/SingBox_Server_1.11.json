@@ -177,19 +177,14 @@
     {
       "type": "mixed",
       "tag": "mixed-in",
-      "listen": "::",
+      "listen": "127.0.0.1",
       "listen_port": 7890,
-      "users": [
-        {
-          "username": "admin",
-          "password": "your_strong_password"
-        }
-      ],
-      "set_system_proxy": false
+      "set_system_proxy": false,
     },
     {
       "type": "tun",
       "tag": "tun-in",
+      "interface_name": "tun-in",
       "address": [
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
@@ -197,9 +192,9 @@
       "mtu": 1408,
       "auto_route": true,
       "strict_route": true,
-      "stack": "mixed",
-      "sniff": true,
+      "endpoint_independent_nat": false,
       "sniff_override_destination": true,
+      "stack": "mixed",
       "platform": {
         "http_proxy": {
           "enabled": true,
@@ -207,16 +202,6 @@
           "server_port": 7890
         }
       }
-    },
-    {
-      "type": "tproxy",
-      "listen": "::",
-      "listen_port": 9898
-    },
-    {
-      "type": "redir-port",
-      "listen": "::",
-      "listen_port": 9797
     }
   ],
   "outbounds": [
