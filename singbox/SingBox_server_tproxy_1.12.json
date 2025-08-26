@@ -174,22 +174,19 @@
   },
   "inbounds": [
     {
-      "type": "mixed",
-      "tag": "mixed",
-      "listen": "::",
-      "listen_port": 7890
-    },
-    {
       "type": "tproxy",
-      "tag": "tproxy",
       "listen": "::",
       "listen_port": 9898
     },
     {
       "type": "redir-port",
-      "tag": "redir-port",
       "listen": "::",
       "listen_port": 9797
+    },
+    {
+      "type": "mixed",
+      "listen": "::",
+      "listen_port": 7890
     }
   ],
   "outbounds": [
