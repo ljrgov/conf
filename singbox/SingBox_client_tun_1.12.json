@@ -1,14 +1,14 @@
 {
   "log": {
-    "disabled": true,
-    "level": "warn",
+    "disabled": false,
+    "level": "info",
     "output": "../logs/sing-box.log",
     "timestamp": true
   },
   "experimental": {
     "clash_api": {
       "external_controller": "127.0.0.1:9090",
-      "external_ui": "Web UI",
+      "external_ui": "dashboard",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
       "external_ui_download_detour": "🔍 手动选择",
       "secret": "**",
@@ -175,25 +175,17 @@
   "inbounds": [
     {
       "type": "mixed",
-      "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 20577,
-      "tcp_fast_open": false,
-      "tcp_multi_path": false,
-      "udp_fragment": true
+      "listen_port": 20577
     },
     {
       "type": "tun",
-      "tag": "tun-in",
-      "interface_name": "tun-in",
       "address": [
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 9000,
       "auto_route": true,
       "strict_route": true,
-      "endpoint_independent_nat": false,
       "stack": "mixed",
       "platform": {
         "http_proxy": {
