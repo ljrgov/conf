@@ -178,7 +178,7 @@
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 9898,
+      "listen_port": 20577,
       "set_system_proxy": false,
     },
     {
@@ -199,7 +199,7 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 9898
+          "server_port": 20577
         }
       }
     }
