@@ -18,10 +18,10 @@ bind-address: '*'
 log-level: silent
 unified-delay: true
 ipv6: true
-external-ui: "dashboard"
+external-ui: 'dashboard'
 external-controller: '127.0.0.1:9090'
 secret:'***',
-external-ui-url: 'https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip'
+external-ui-url: https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
 global-client-fingerprint: chrome
 find-process-mode: strict
 geo-auto-update: true
