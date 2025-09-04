@@ -34,7 +34,7 @@ geox-url:
   asn: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
 tcp-concurrent: true
 tun:
-  enable: false
+  enable: true
   mtu: 9000
   stack: mixed
   dns-hijack:
