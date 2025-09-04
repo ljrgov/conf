@@ -131,209 +131,206 @@
   "outbounds": [
     {
       "type": "direct",
-      "tag": "🔗 大陆直连"
+      "tag": "COMPATIBLE"
     },
     {
       "type": "selector",
       "tag": "🔍 手动选择",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🇯🇵 游戏节点",
-        "🇭🇰 游戏节点",
-        "🔗 大陆直连"
+        "COMPATIBLE"
       ]
+       "default": "🇯🇵 日本节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🤖 AI",
-      "interrupt_exist_connections": true,
       "outbounds": [
+        "🇭🇰 香港节点",
         "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇺🇸 美国节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🌐 谷歌",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇨🇳 台湾节点",
+        "🇭🇰 香港节点",
         "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇯🇵 日本节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🎮 游戏",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇯🇵 游戏节点",
-        "🇭🇰 游戏节点",
-        "🔍 手动选择"
-      ]
+        "COMPATIBLE"
+      ],
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🐙 Github",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡节点",
-        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "💻 微软",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🔗 大陆直连",
+        "COMPATIBLE",
         "🇯🇵 日本节点",
         "🇭🇰 香港节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🔗 大陆直连",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🍎 苹果",
-      "interrupt_exist_connections": true,
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇺🇸 美国节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "💬 电报",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡节点",
+        "🇭🇰 香港节点",
         "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🐦 推特",
-      "interrupt_exist_connections": true,
       "outbounds": [
+        "🇭🇰 香港节点",
         "🇯🇵 日本节点",
-        "🇸🇬 新加坡节点",
         "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇯🇵 日本节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🎵 Spotify",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇯🇵 日本节点",
-        "🇸🇬 新加坡节点",
         "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🎬 流媒体",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🇸🇬 新加坡节点",
-        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
         "🔍 手动选择"
-      ]
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
     },
     {
       "type": "selector",
       "tag": "🐟 漏网之鱼",
-      "interrupt_exist_connections": true,
       "outbounds": [
-        "🔍 手动选择",
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
-        "🇭🇰 游戏节点",
-        "🇯🇵 游戏节点",
-        "🇸🇬 新加坡节点"
-      ]
-    },
-    {
-      "type": "urltest",
-      "tag": "🇭🇰 游戏节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "2m",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
-      "outbounds": []
-    },
-    {
-      "type": "urltest",
-      "tag": "🇯🇵 游戏节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "2m",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
-      "outbounds": []
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "interrupt_exist_connections": true
     },
     {
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
-      "tolerance": 0,
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m",
-      "tolerance": 0,
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": true,
       "outbounds": []
     }
