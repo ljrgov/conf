@@ -1,68 +1,40 @@
 {
   "log": {
     "disabled": true,
-    "level": "info",
-    "output": "../run/sing-box.log",
+    "level": "error",
+    "output": "",
     "timestamp": true
   },
   "dns": {
     "servers": [
       {
-        "tag": "ali",
         "type": "https",
-        "domain_resolver": "ali-resolver",
-        "server_port": 443,
-        "server": "223.5.5.5",
-        "path": "/dns-query"
+        "tag": "ali",
+        "server": "223.6.6.6"
       },
       {
-        "tag": "ali-resolver",
-        "type": "udp",
-        "server_port": 53,
-        "server": "223.5.5.5"
-      },
-      {
+        "type": "https",
         "tag": "cloudflare",
-        "type": "tls",
         "detour": "🔍 手动选择",
-        "domain_resolver": "cloudflare-resolver",
-        "server_port": 853,
         "server": "1.1.1.1"
       },
       {
-        "tag": "cloudflare-resolver",
-        "type": "udp",
-        "detour": "🔍 手动选择",
-        "server_port": 53,
-        "server": "1.1.1.1"
-      },
-      {
-        "tag": "fakeip",
         "type": "fakeip",
+        "tag": "remote",
         "inet4_range": "198.18.0.0/15",
         "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
       {
-        "action": "route",
         "clash_mode": "全局直连",
         "server": "ali"
       },
       {
-        "action": "route",
         "clash_mode": "全局代理",
-        "server": "cloudflare"
+        "server": "remote"
       },
       {
-        "action": "route",
-        "rule_set": [
-          "direct-fix"
-        ],
-        "server": "ali"
-      },
-      {
-        "action": "route-options",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -77,45 +49,19 @@
             ]
           }
         ],
+        "action": "route-options",
         "disable_cache": true
       },
       {
-        "action": "route",
         "rule_set": [
-          "Telegram",
-          "YouTube",
-          "Google",
-          "Github",
-          "Twitter",
-          "Apple-proxy",
-          "AI",
-          "game-proxy",
-          "Epic",
-          "Steam",
-          "Emby",
-          "Spotify",
-          "Bahamut",
-          "Netflix",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "TikTok",
-          "GeoLocation-!CN"
-        ],
-        "server": "cloudflare"
-      },
-      {
-        "action": "route",
-        "rule_set": [
+          "direct-fix",
           "ChinaDomain",
           "GeoIP-CN",
-          "Apple-direct",
           "game@cn"
         ],
         "server": "ali"
       },
       {
-        "action": "route",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -141,14 +87,14 @@
             ]
           }
         ],
-        "server": "fakeip"
+        "server": "remote"
       }
     ],
+    "final": "cloudflare",
     "disable_cache": false,
     "disable_expire": false,
-    "independent_cache": true,
-    "final": "cloudflare",
-    "strategy": "prefer_ipv4"
+    "strategy": "prefer_ipv4",
+    "independent_cache": true
   },
   "inbounds": [
     {
