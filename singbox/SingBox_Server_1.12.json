@@ -326,228 +326,200 @@
   "route": {
     "rule_set": [
       {
+        "type": "remote",
         "tag": "direct-fix",
-        "type": "remote",
-        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Ads",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Category-Ads",
-        "type": "remote",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Telegram",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "YouTube",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Google",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Microsoft",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Microsoft.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Microsoft.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "OneDrive",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/OneDrive.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/OneDrive.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Github",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Github.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Github.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Twitter",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Apple-direct",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Apple-proxy",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/AppleProxy.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/AppleProxy.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "AI",
-        "type": "remote",
-        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "game@cn",
-        "type": "remote",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "game-proxy",
-        "type": "remote",
-        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game-proxy.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game-proxy.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Epic",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Steam",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Emby",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Spotify",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Spotify.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Spotify.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Bahamut",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Netflix",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "Disney",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "PrimeVideo",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "HBO",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "TikTok",
-        "type": "remote",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/TikTok.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/TikTok.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "GeoLocation-!CN",
-        "type": "remote",
-        "url": "https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
+        "type": "remote",
         "tag": "ChinaDomain",
-        "type": "remote",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "24h"
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
       },
       {
-        "tag": "GeoIP-CN",
         "type": "remote",
-        "url": "https://github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
-        "format": "binary",
-        "download_detour": "🔍 手动选择",
-        "update_interval": "10d"
+        "tag": "GeoIP-CN",
+        "url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "240h0m0s"
       }
     ],
     "rules": [
