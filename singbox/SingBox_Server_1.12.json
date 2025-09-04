@@ -553,7 +553,13 @@
     "rules": [
       {
         "action": "sniff",
-        "inbound": "tun-in"
+        "sniffer": [
+          "http",
+          "tls",
+          "quic",
+          "dns"
+        ],
+        "timeout": "500ms"
       },
       {
         "action": "hijack-dns",
@@ -570,6 +576,11 @@
       },
       {
         "action": "route",
+        "protocol": "quic",
+        "action": "reject"
+      },
+      {
+        "action": "route",
         "clash_mode": "全局直连",
         "outbound": "🔗 大陆直连"
       },
@@ -580,19 +591,10 @@
       },
       {
         "action": "route",
-        "ip_is_private": true,
-        "outbound": "🔗 大陆直连"
-      },
-      {
-        "action": "route",
         "rule_set": [
           "direct-fix"
         ],
         "outbound": "🔗 大陆直连"
-      },
-      {
-        "protocol": "quic",
-        "action": "reject"
       },
       {
         "action": "reject",
@@ -610,6 +612,35 @@
             ]
           }
         ]
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "Google"
+            ]
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": "TikTok"
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
       },
       {
         "action": "route",
@@ -707,6 +738,11 @@
       },
       {
         "action": "route",
+        "ip_is_private": true,
+        "outbound": "🔗 大陆直连"
+      },
+      {
+        "action": "route",
         "rule_set": [
           "ChinaDomain",
           "GeoIP-CN",
@@ -717,7 +753,7 @@
     ],
     "auto_detect_interface": true,
     "find_process": false, 
-    "final": "🔍 手动选择",
+    "final": "🐟 漏网之鱼",
     "default_domain_resolver": {
       "server": "ali"
     }
@@ -726,8 +762,8 @@
     "clash_api": {
       "external_controller": "127.0.0.1:9090",
       "external_ui": "dashboard",
-      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
-      "external_ui_download_detour": "🔍 手动选择",
+      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "COMPATIBLE",
       "secret": "password",
       "default_mode": "规则分流",
       "access_control_allow_origin": [
