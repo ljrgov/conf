@@ -88,6 +88,7 @@
           }
         ],
         "server": "remote"
+        "rewrite_ttl": 1
       }
     ],
     "final": "cloudflare",
