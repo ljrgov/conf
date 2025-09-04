@@ -764,7 +764,7 @@
       "external_ui": "dashboard",
       "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
       "external_ui_download_detour": "COMPATIBLE",
-      "secret": "password",
+      "secret": "***",
       "default_mode": "规则分流",
       "access_control_allow_origin": [
         "*"
