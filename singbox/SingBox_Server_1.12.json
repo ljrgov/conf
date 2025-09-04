@@ -190,7 +190,7 @@
         "🇭🇰 香港节点",
         "🔍 手动选择"
       ],
-      "default": "🔗 大陆直连",
+      "default": "COMPATIBLE",
       "interrupt_exist_connections": true
     },
     {
