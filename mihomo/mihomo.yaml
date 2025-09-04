@@ -8,10 +8,6 @@ proxy-providers:
     # override:
       # additional-prefix: "[节点前缀]"
       # additional-suffix: "[节点后缀]"
-proxies: 
-  - name: "直连"
-    type: direct
-    udp: true
 
 mixed-port: 20577
 redir-port: 9797
