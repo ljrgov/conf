@@ -112,31 +112,31 @@ proxy-groups:
 
 rule-providers:
 
-  Direct: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Direct.list}
-  Lan: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Lan.list}
-  Reject: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Reject.list}
-  AppleCN: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AppleCN.list}
-  AppleProxy: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AppleServers.list}
-  Microsoft: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Microsoft.list}
-  OneDrive: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/OneDrive.list}
-  Github: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Github.list}
-  YouTube: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/YouTube.list}
-  Google: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Google.list}
-  Telegram: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Telegram.list}
-  Twitter: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Twitter.list}
-  Steam: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Steam.list}
-  Epic: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Epic.list}
-  AI: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AI.list}
-  Emby: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Emby.list}
-  Spotify: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Spotify.list}
-  Bahamut: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Bahamut.list}
-  Netflix: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Netflix.list}
-  Disney: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Disney.list}
-  PrimeVideo: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/PrimeVideo.list}
-  HBO: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/HBO.list}
-  TikTok: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/TikTok.list}
-  CDN: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/CDN.list}
-  Proxy: {<<:*c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Proxy.list}
+  Direct: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Direct.list}
+  Lan: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Lan.list}
+  Reject: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Reject.list}
+  AppleCN: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AppleCN.list}
+  AppleProxy: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AppleServers.list}
+  Microsoft: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Microsoft.list}
+  OneDrive: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/OneDrive.list}
+  Github: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Github.list}
+  YouTube: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/YouTube.list}
+  Google: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Google.list}
+  Telegram: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Telegram.list}
+  Twitter: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Twitter.list}
+  Steam: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Steam.list}
+  Epic: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Epic.list}
+  AI: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/AI.list}
+  Emby: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Emby.list}
+  Spotify: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Spotify.list}
+  Bahamut: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Bahamut.list}
+  Netflix: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Netflix.list}
+  Disney: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Disney.list}
+  PrimeVideo: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/PrimeVideo.list}
+  HBO: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/HBO.list}
+  TikTok: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/TikTok.list}
+  CDN: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/CDN.list}
+  Proxy: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Proxy.list}
 
 rules:
   - RULE-SET,Direct,DIRECT
