@@ -87,7 +87,7 @@
             ]
           }
         ],
-        "server": "remote"
+        "server": "remote",
         "rewrite_ttl": 1
       }
     ],
