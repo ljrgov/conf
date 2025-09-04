@@ -118,10 +118,6 @@
       "tag": "COMPATIBLE"
     },
     {
-      "type": "direct",
-      "tag": "🔗 大陆直连"
-    },
-    {
       "type": "selector",
       "tag": "🔍 手动选择",
       "outbounds": [
@@ -130,7 +126,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔗 大陆直连"
+        "COMPATIBLE"
       ]
        "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": true
@@ -167,7 +163,7 @@
       "type": "selector",
       "tag": "🎮 游戏",
       "outbounds": [
-        "🔍 手动选择"
+        "COMPATIBLE"
       ],
       "interrupt_exist_connections": true
     },
@@ -189,7 +185,7 @@
       "type": "selector",
       "tag": "💻 微软",
       "outbounds": [
-        "🔗 大陆直连",
+        "COMPATIBLE",
         "🇯🇵 日本节点",
         "🇭🇰 香港节点",
         "🔍 手动选择"
@@ -582,7 +578,7 @@
       {
         "action": "route",
         "clash_mode": "全局直连",
-        "outbound": "🔗 大陆直连"
+        "outbound": "COMPATIBLE"
       },
       {
         "action": "route",
@@ -594,7 +590,7 @@
         "rule_set": [
           "direct-fix"
         ],
-        "outbound": "🔗 大陆直连"
+        "outbound": "COMPATIBLE"
       },
       {
         "action": "reject",
@@ -647,7 +643,7 @@
         "rule_set": [
           "game@cn"
         ],
-        "outbound": "🔗 大陆直连"
+        "outbound": "COMPATIBLE"
       },
       {
         "action": "route",
@@ -739,7 +735,7 @@
       {
         "action": "route",
         "ip_is_private": true,
-        "outbound": "🔗 大陆直连"
+        "outbound": "COMPATIBLE"
       },
       {
         "action": "route",
@@ -748,7 +744,7 @@
           "GeoIP-CN",
           "Apple-direct"
         ],
-        "outbound": "🔗 大陆直连"
+        "outbound": "COMPATIBLE"
       }
     ],
     "auto_detect_interface": true,
