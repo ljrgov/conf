@@ -9,7 +9,7 @@ unified-delay: true
 ipv6: true
 keep-alive-interval: 15
 external-ui: dashboard
-secret: password
+secret: '***'
 external-controller-cors:
   allow-origins:
     - '*'
