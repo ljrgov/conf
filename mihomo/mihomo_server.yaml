@@ -81,7 +81,7 @@ proxy-providers:
     url: ""
     type: http
     interval: 86400
-    health-check: {enable: true,url: "https://1.1.1.1", interval: 300}
+    health-check: {disable: true,url: "https://1.1.1.1", interval: 300}
     # override:
       # additional-prefix: "[节点前缀]"
       # additional-suffix: "[节点后缀]"
