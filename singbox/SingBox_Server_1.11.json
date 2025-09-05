@@ -336,6 +336,17 @@
       "download_detour": "",
       "disable_user_agent": false,
       "cache_file": "provider.txt"
+    },
+    {
+      "type": "local",
+      "tag": "provider",
+      "path": "provider.txt",
+      "health_check": {
+        "enabled": false,
+        "url": "",
+        "interval": "",
+        "timeout": "",
+      }
     }
   ],
   "route": {
