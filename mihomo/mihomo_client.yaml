@@ -43,7 +43,7 @@ tun:
   auto-detect-interface: true
 profile:
   store-selected: true
-  store-fake-ip: false
+  store-fake-ip: true
 sniffer:
   enable: true
   force-dns-mapping: false
