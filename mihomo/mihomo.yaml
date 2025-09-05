@@ -15,7 +15,7 @@ secret: "***"
 external-controller-cors:
   allow-origins:
     - '*'
-  allow-private-network: true
+  allow-private-network: false
 global-client-fingerprint: chrome
 find-process-mode: strict
 geo-auto-update: true
