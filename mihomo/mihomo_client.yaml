@@ -38,7 +38,9 @@ tun:
   enable: true
   mtu: 9000
   stack: mixed
-  dns-hijack: [any:53]
+  dns-hijack:
+    - any:53
+    - tcp://any:53
   auto-route: true
   strict-route: true
   auto-redirect: true
