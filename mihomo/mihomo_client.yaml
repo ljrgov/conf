@@ -46,8 +46,6 @@ profile:
   store-fake-ip: true
 sniffer:
   enable: true
-  force-dns-mapping: false
-  parse-pure-ip: false
   override-destination: true
   sniff:
     QUIC:
