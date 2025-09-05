@@ -1,3 +1,14 @@
+# url 里填写自己的订阅,名称不能重复
+proxy-providers:
+  provider1:
+    url: ""
+    type: http
+    interval: 86400
+    health-check: {enable: false,url: "https://1.1.1.1", interval: 300}
+    # override:
+      # additional-prefix: "[节点前缀]"
+      # additional-suffix: "[节点后缀]"
+
 mixed-port: 20577
 redir-port: 9797
 tproxy-port: 9898
@@ -69,17 +80,6 @@ dns:
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter: ['*', '+.lan', '+.local', '+.direct', '+.msftconnecttest.com', '+.msftncsi.com']
   nameserver: [223.5.5.5, 119.29.29.29]
-
-# url 里填写自己的订阅,名称不能重复
-proxy-providers:
-  provider1:
-    url: ""
-    type: http
-    interval: 86400
-    health-check: {enable: false,url: "https://1.1.1.1", interval: 300}
-    # override:
-      # additional-prefix: "[节点前缀]"
-      # additional-suffix: "[节点后缀]"
   
 # 锚点参数
 pg: &pg {type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
