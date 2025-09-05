@@ -317,7 +317,25 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "outbounds": [],
+      "exclude": "",
+      "include": "",
+      "providers": [
+      "provider1"
+      ]
+    }
+  ],
+  "providers": [
+    {
+      "tag": "provider1",
+      "type": "http",
+      "url": "https://url.to/provider.txt",
+      "interval": "24h",
+      "exclude": "",
+      "include": "",
+      "download_detour": "",
+      "disable_user_agent": false,
+      "cache_file": "provider.txt"
     }
   ],
   "route": {
