@@ -1,6 +1,9 @@
 mixed-port: 20577
 redir-port: 9797
 tproxy-port: 9898
+external-controller: 127.0.0.1:9090
+external-ui: dashboard
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
 mode: rule
 allow-lan: true
 bind-address: '*'
