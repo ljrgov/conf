@@ -20,7 +20,7 @@ tcp-concurrent: true
 mode: rule
 allow-lan: true
 bind-address: '*'
-log-level: info
+log-level: silent
 unified-delay: true
 ipv6: true
 global-client-fingerprint: chrome
