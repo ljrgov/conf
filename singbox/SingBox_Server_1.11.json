@@ -321,7 +321,8 @@
       "exclude": "",
       "include": "",
       "providers": [
-      "provider1"
+      "provider1",
+      "provider2"
       ]
     }
   ],
