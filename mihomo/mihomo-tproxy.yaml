@@ -7,10 +7,10 @@ bind-address: '*'
 log-level: silent
 unified-delay: true
 ipv6: true
-external_controller: "127.0.0.1:9090"
-external_ui: "dashboard"
-external_ui_download_url: "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
-secret: "***"
+external-controller: 127.0.0.1:9090
+external-ui: dashboard
+secret: '***'
+external-ui-url: https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
 global-client-fingerprint: chrome
 find-process-mode: strict
 geo-auto-update: true
@@ -23,7 +23,7 @@ geox-url:
   asn: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
 tcp-concurrent: true
 tun:
-  enable: true
+  enable: false
   mtu: 9000
   stack: mixed
   dns-hijack:
@@ -64,8 +64,8 @@ sniffer:
 dns:
   enable: true
   ipv6: false
-  enhanced-mode: fake-ip
-  listen: :1053
+  enhanced-mode: redir-host
+  listen: 1053
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter: ['*', '+.lan', '+.local', '+.direct', '+.msftconnecttest.com', '+.msftncsi.com']
   nameserver: [223.5.5.5, 119.29.29.29]
