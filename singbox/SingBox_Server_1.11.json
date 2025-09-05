@@ -327,20 +327,27 @@
   ],
   "providers": [
     {
+      "type": "remote",
       "tag": "provider1",
-      "type": "http",
-      "url": "https://url.to/provider.txt",
-      "interval": "24h",
+      "url": "",
       "exclude": "",
       "include": "",
+      "health_check": {
+        "enabled": false,
+        "url": "",
+        "interval": "",
+        "timeout": "",
+      },
+      "user_agent": "",
       "download_detour": "",
-      "disable_user_agent": false,
-      "cache_file": "provider.txt"
+      "update_interval": ""
     },
     {
       "type": "local",
-      "tag": "provider",
+      "tag": "provider2",
       "path": "provider.txt",
+      "exclude": "",
+      "include": "",
       "health_check": {
         "enabled": false,
         "url": "",
