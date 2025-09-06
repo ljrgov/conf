@@ -15,7 +15,7 @@ proxy-providers:
           - "ClashforWindows/0.19.23"
           - "clash.meta"
           - "mihomo"
-
+# 配置区
 mixed-port: 20577
 redir-port: 9797
 tproxy-port: 9898
