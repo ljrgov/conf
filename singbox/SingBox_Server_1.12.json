@@ -94,7 +94,7 @@
     "final": "cloudflare",
     "disable_cache": false,
     "disable_expire": false,
-    "strategy": "prefer_ipv4",
+    "strategy": "prefer_ipv6",
     "independent_cache": true
   },
   "inbounds": [
