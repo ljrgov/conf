@@ -19,7 +19,7 @@ function replaceYamlField(yamlObj, keyPath, value) {
 // ① 解析 YAML 并替换字段
 // ---------------------
 // 示例：替换 provider1 的 URL 和 health-check.enable
-replaceYamlField(yamlObj, 'proxy-providers.provider1.url', 'https://gist.githubusercontent.com/ljrgov/9aa4d4076f0e65cb3365b6a0aaac053f/raw/mihomo-sublink.list');
+replaceYamlField(yamlObj, 'proxy-providers.provider1.url', 'https://gist.githubusercontent.com/xxxxxxxxxxxxxxxxxxxxxxxxxxxxx.list');
 replaceYamlField(yamlObj, 'proxy-providers.provider1.health-check.enable', false);
 
 // 生成 YAML 文本
