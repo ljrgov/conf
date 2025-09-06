@@ -279,7 +279,7 @@
       "tag": "🇭🇰 香港节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
-      "tolerance": 50,
+      "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -288,7 +288,7 @@
       "tag": "🇨🇳 台湾节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
-      "tolerance": 50,
+      "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -297,7 +297,7 @@
       "tag": "🇯🇵 日本节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
-      "tolerance": 50,
+      "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -306,7 +306,7 @@
       "tag": "🇺🇸 美国节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
-      "tolerance": 50,
+      "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -315,7 +315,7 @@
       "tag": "🇸🇬 新加坡节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
-      "tolerance": 50,
+      "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
     }
