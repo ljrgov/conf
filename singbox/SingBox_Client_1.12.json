@@ -145,7 +145,7 @@
         "🇸🇬 新加坡节点",
         "COMPATIBLE"
       ],
-       "default": "🇭🇰 香港节点",
+       "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": true
     },
     {
