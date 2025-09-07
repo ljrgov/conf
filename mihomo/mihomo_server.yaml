@@ -14,9 +14,9 @@ proxy-providers:
           - "ClashforWindows/0.19.23"
           - "clash.meta"
           - "mihomo"
+tproxy-port: 9898
 mixed-port: 20577
 redir-port: 9797
-tproxy-port: 9898
 external-controller: 127.0.0.1:9090 # 外部控制
 external-ui: dashboard
 external-ui-url: "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
