@@ -298,7 +298,7 @@
       "tolerance": 30,
       "interrupt_exist_connections": true,
       "outbounds": []
-    }
+    },
     {
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
