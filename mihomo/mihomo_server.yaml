@@ -99,7 +99,7 @@ proxy-groups:
     type: select
     include-all: true
     proxies:
-      - 日本节点
+      - 日本节点    
       - 香港节点
       - 美国节点
       - 狮城节点
@@ -122,84 +122,84 @@ proxy-groups:
   - name: 国际媒体
     type: select
     proxies:
-      - 狮城节点
-      - 手动切换
+      - 狮城节点    
       - 香港节点
       - 美国节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
   - name: 苹果服务
     type: select
     proxies:
-      - 美国节点
+      - 美国节点    
       - 香港节点
       - 狮城节点
       - 日本节点
       - 台湾节点
-      - 手动切换
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_2.png
   - name: 微软服务
     type: select
     proxies:
-      - 手动切换
-      - 香港节点
+      - 香港节点    
       - 美国节点
       - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png
   - name: 谷歌服务
     type: select
     proxies:
-      - 手动切换
+      - 台湾节点    
       - 香港节点
       - 美国节点
       - 狮城节点
       - 日本节点
-      - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
   - name: 电报消息
     type: select
     proxies:
-      - 手动切换
+      - 狮城节点    
       - 香港节点
       - 美国节点
-      - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
   - name: 推特消息
     type: select
     proxies:
-      - 手动切换
+      - 日本节点    
       - 香港节点
       - 美国节点
       - 狮城节点
-      - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png
   - name: AI
     type: select
     proxies:
-      - 手动切换
+      - 美国节点    
       - 香港节点
-      - 美国节点
       - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png
@@ -218,12 +218,12 @@ proxy-groups:
   - name: Emby
     type: select
     proxies:
-      - 手动切换
+      - 狮城节点    
       - 香港节点
       - 美国节点
-      - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     include-all: true
     icon: >-
@@ -231,12 +231,12 @@ proxy-groups:
   - name: Spotify
     type: select
     proxies:
-      - 手动切换
+      - 狮城节点    
       - 香港节点
       - 美国节点
-      - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     include-all: true
     icon: >-
@@ -244,12 +244,12 @@ proxy-groups:
   - name: 兜底分流
     type: select
     proxies:
-      - 手动切换
       - 香港节点
       - 美国节点
       - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换      
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
