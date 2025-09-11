@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": true,
-    "level": "error",
+    "level": "silent",
     "output": "",
     "timestamp": true
   },
