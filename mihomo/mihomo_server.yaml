@@ -99,10 +99,10 @@ proxy-groups:
     type: select
     include-all: true
     proxies:
+      - 日本节点
       - 香港节点
       - 美国节点
       - 狮城节点
-      - 日本节点
       - 台湾节点
       - DIRECT
     icon: >-
@@ -122,10 +122,10 @@ proxy-groups:
   - name: 国际媒体
     type: select
     proxies:
+      - 狮城节点
       - 手动切换
       - 香港节点
       - 美国节点
-      - 狮城节点
       - 日本节点
       - 台湾节点
       - DIRECT
@@ -134,12 +134,12 @@ proxy-groups:
   - name: 苹果服务
     type: select
     proxies:
-      - 手动切换
-      - 香港节点
       - 美国节点
+      - 香港节点
       - 狮城节点
       - 日本节点
       - 台湾节点
+      - 手动切换
       - DIRECT
     icon: >-
       https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_2.png
