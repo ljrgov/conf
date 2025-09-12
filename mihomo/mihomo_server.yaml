@@ -11,7 +11,6 @@ proxy-providers:
         User-Agent:  # 使用注释法由上到下 默认使用第一个
           - "clash-verge/v2.4.2"
           - "ClashMetaForAndroid/2.11.16.Meta"
-          - "ClashforWindows/0.19.23"
           - "clash.meta"
           - "mihomo"
 tproxy-port: 9898
