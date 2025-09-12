@@ -97,17 +97,17 @@
   },
   "inbounds": [
     {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "127.0.0.1",
-      "listen_port": 20577,
-      "sniff": true
-    },
-    {
       "type": "tproxy",
       "tag": "tproxy-in",
       "listen": "::",
       "listen_port": 9898,
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 20577,
       "sniff": true
     }
   ],
