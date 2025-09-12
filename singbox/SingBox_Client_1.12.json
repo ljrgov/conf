@@ -307,6 +307,15 @@
     },
     {
       "type": "urltest",
+      "tag": "🇭🇰 香港节点",
+      "url": "https://1.1.1.1",
+      "interval": "1m0s",
+      "tolerance": 30,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
@@ -335,15 +344,6 @@
     {
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
-      "url": "https://1.1.1.1",
-      "interval": "1m0s",
-      "tolerance": 30,
-      "interrupt_exist_connections": true,
-      "outbounds": []
-    },
-    {
-      "type": "urltest",
-      "tag": "🇭🇰 香港节点",
       "url": "https://1.1.1.1",
       "interval": "1m0s",
       "tolerance": 30,
