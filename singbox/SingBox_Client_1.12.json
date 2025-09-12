@@ -2,7 +2,7 @@
   "log": {
     "disabled": false,
     "level": "panic",
-    "output": "logs/sing-box.log",
+    "output": "sing-box.log",
     "timestamp": true
   },
   "dns": {
