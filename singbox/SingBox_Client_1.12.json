@@ -179,9 +179,7 @@
     {
       "type": "selector",
       "tag": "🎮 游戏",
-      "outbounds": [
-        "COMPATIBLE"
-      ],
+      "outbounds": [],
       "interrupt_exist_connections": true
     },
     {
