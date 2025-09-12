@@ -97,14 +97,6 @@
   },
   "inbounds": [
     {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "127.0.0.1",
-      "listen_port": 20577,
-      "sniff": true,
-      "set_system_proxy": false
-    },
-    {
       "type": "tun",
       "tag": "tun-in",
       "interface_name": "tun0",
@@ -125,6 +117,15 @@
           "server_port": 20577
         }
       }
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 20577,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "set_system_proxy": false
     }
   ],
   "outbounds": [
