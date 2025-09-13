@@ -15,7 +15,8 @@
       {
         "type": "https",
         "tag": "cloudflare",
-        "server": "1.1.1.1"
+        "server": "1.1.1.1",
+        "detour": "🔍 手动选择"
       },
       {
         "type": "fakeip",
