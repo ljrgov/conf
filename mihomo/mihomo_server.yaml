@@ -98,9 +98,9 @@ proxy-groups:
     type: select
     include-all: true
     proxies:
+      - 美国节点
       - 日本节点    
       - 香港节点
-      - 美国节点
       - 狮城节点
       - 台湾节点
       - DIRECT
