@@ -276,6 +276,7 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🏳️‍🌈 其他节点",
+        "🎮 游戏",
         "🔍 手动选择"
       ],
       "interrupt_exist_connections": true
@@ -284,8 +285,8 @@
       "type": "urltest",
       "tag": "🏳️‍🌈 其他节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -293,8 +294,8 @@
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -302,8 +303,8 @@
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -311,8 +312,8 @@
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -320,8 +321,8 @@
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     },
@@ -329,8 +330,8 @@
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m0s",
-      "tolerance": 30,
+      "interval": "5m0s",
+      "tolerance": 0,
       "interrupt_exist_connections": true,
       "outbounds": []
     }
