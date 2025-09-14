@@ -563,14 +563,7 @@
     ],
     "rules": [
       {
-        "action": "sniff",
-        "sniffer": [
-          "http",
-          "tls",
-          "quic",
-          "dns"
-        ],
-        "timeout": "500ms"
+        "action": "sniff"
       },
       {
         "action": "hijack-dns",
@@ -584,11 +577,6 @@
             "protocol": "dns"
           }
         ]
-      },
-      {
-        "action": "route",
-        "protocol": "quic",
-        "action": "reject"
       },
       {
         "action": "route",
