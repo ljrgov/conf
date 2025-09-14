@@ -67,8 +67,9 @@
             ]
           }
         ],
-        "action":"reject",
-        "method":"default",         // drop丢弃请求
+//        "action":"reject",
+//        "method":"default",         // drop丢弃请求
+        "action": "route-options",
         "disable_cache": true
       },
       {
