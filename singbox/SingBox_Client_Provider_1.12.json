@@ -117,34 +117,7 @@
     {
       "type": "selector",
       "tag": "🔍 手动选择",
-      "outbounds": [
-        "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
-        "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)",
-        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
-        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
-        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
-        "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
-        "[bv] 🇭🇰 2香港-全网优化(AnyTLS)",
-        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)",
-        "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)",
-        "[bv] 🇩🇪 11德国-全网优化(AnyTLS)",
-        "[bv] 🇨🇦 33加拿大-全网优化(AnyTLS)",
-        "[bv] 🇫🇷 27法国-全网优化(AnyTLS)",
-        "[bv] 🇰🇷 7韩国春川集群-联通/移动(AnyTLS)",
-        "[bv] 🇦🇺 20澳洲-电信/移动(AnyTLS)",
-        "[bv] 🇧🇷 22巴西-联通/移动(AnyTLS)",
-        "[bv] 🇨🇭 34瑞士-全网优化(AnyTLS)",
-        "[bv] 🇨🇱 29智利-全网优化(AnyTLS)",
-        "[bv] 🇪🇸 36西班牙-电信/联通(AnyTLS)",
-        "[bv] 🇮🇳 13印度孟买-电信/联通(AnyTLS)",
-        "[bv] 🇮🇹 30意大利-全网优化(AnyTLS)",
-        "[bv] 🇳🇱 26荷兰-全网优化(AnyTLS)",
-        "[bv] 🇸🇪 31瑞典-电信/移动(AnyTLS)",
-        "[bv] 🇿🇦 32南非-约翰内斯堡(AnyTLS)"
-      ],
+      "outbounds": [],
       "interrupt_exist_connections": true
     },
     {
@@ -178,12 +151,7 @@
     {
       "type": "selector",
       "tag": "🎮 游戏",
-      "outbounds": [
-        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
-        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
-        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
-        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)"
-      ],
+      "outbounds": [],
       "interrupt_exist_connections": true
     },
     {
@@ -296,10 +264,7 @@
     {
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
-      "outbounds": [
-        "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
-        "[bv] 🇭🇰 2香港-全网优化(AnyTLS)"
-      ],
+      "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "interrupt_exist_connections": true
@@ -307,9 +272,7 @@
     {
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
-      "outbounds": [
-        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)"
-      ],
+      "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "interrupt_exist_connections": true
@@ -317,11 +280,7 @@
     {
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
-      "outbounds": [
-        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
-        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
-        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)"
-      ],
+      "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "interrupt_exist_connections": true
@@ -329,24 +288,15 @@
     {
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
-      "outbounds": [
-        "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
-        "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
-        "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)"
-      ],
+      "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
-      "exclude": "波特兰",
       "interrupt_exist_connections": true
     },
     {
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
-      "outbounds": [
-        "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)"
-      ],
+      "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "interrupt_exist_connections": true
@@ -361,422 +311,6 @@
       ],
       "include": "波特兰|🇭🇰|🇯🇵|🇸🇬|🇰🇷",
       "interrupt_exist_connections": true
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
-      "server": "5us.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "5us.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
-      "server": "6us.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "6us.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
-      "server": "16us.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "16us.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
-      "server": "28us.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "28us.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)",
-      "server": "38us.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "38us.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
-      "server": "9jp.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "9jp.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
-      "server": "18jp.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "18jp.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
-      "server": "19jp.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "19jp.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
-      "server": "1hk.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "1hk.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇭🇰 2香港-全网优化(AnyTLS)",
-      "server": "2hk.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "2hk.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)",
-      "server": "4tw.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "4tw.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)",
-      "server": "15sg.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "15sg.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇩🇪 11德国-全网优化(AnyTLS)",
-      "server": "11de.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "11de.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇨🇦 33加拿大-全网优化(AnyTLS)",
-      "server": "33ca.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "33ca.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇫🇷 27法国-全网优化(AnyTLS)",
-      "server": "27fr.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "27fr.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇰🇷 7韩国春川集群-联通/移动(AnyTLS)",
-      "server": "7kr.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "7kr.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇦🇺 20澳洲-电信/移动(AnyTLS)",
-      "server": "20au.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "20au.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇧🇷 22巴西-联通/移动(AnyTLS)",
-      "server": "22br.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "22br.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇨🇭 34瑞士-全网优化(AnyTLS)",
-      "server": "34ch.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "34ch.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇨🇱 29智利-全网优化(AnyTLS)",
-      "server": "29chi.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "29chi.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇪🇸 36西班牙-电信/联通(AnyTLS)",
-      "server": "36es.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "36es.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇮🇳 13印度孟买-电信/联通(AnyTLS)",
-      "server": "13in.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "13in.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇮🇹 30意大利-全网优化(AnyTLS)",
-      "server": "30it.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "30it.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇳🇱 26荷兰-全网优化(AnyTLS)",
-      "server": "26nl.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "26nl.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇸🇪 31瑞典-电信/移动(AnyTLS)",
-      "server": "31se.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "31se.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
-    },
-    {
-      "type": "anytls",
-      "tag": "[bv] 🇿🇦 32南非-约翰内斯堡(AnyTLS)",
-      "server": "32za.networklinkpro.net",
-      "server_port": 4430,
-      "tls": {
-        "enabled": true,
-        "server_name": "32za.networklinkpro.net",
-        "insecure": true,
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        }
-      },
-      "password": "6be0766c-b0af-40e3-985f-956a34408458"
     }
   ],
   "providers": [
