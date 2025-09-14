@@ -82,7 +82,7 @@
       {
         "rule_set": [
           "direct-fix",
-          "game@cn"
+          "game@cn",
           "ChinaDomain",
           "GeoIP-CN"
         ],
