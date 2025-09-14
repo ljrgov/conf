@@ -733,34 +733,30 @@
         "outbound": "COMPATIBLE"
       }
     ],
-    "auto_detect_interface": true,
-    "find_process": false, 
-    "final": "🐟 漏网之鱼",
-    "default_domain_resolver": {
-      "server": "ali"
-    }
+     "final": "🐟 漏网之鱼",
+//   "auto_detect_interface": true,
+//   "find_process": true, 
+     "default_domain_resolver": "ali"
   },
   "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "dashboard",
-      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/gh-pages.zip",
-      "external_ui_download_detour": "COMPATIBLE",
-      "secret": "***",
-      "default_mode": "规则分流",
-      "access_control_allow_origin": [
-        "*"
-      ],
-      "access_control_allow_private_network": false
-    },
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "cache_id": "",
       "store_fakeip": true,
       "store_rdrc": true,
-      "rdrc_timeout": "7d"
+      "rdrc_timeout": "168h0m0s"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "COMPATIBLE",
+      "secret": "***",
+      "default_mode": "规则分流",
+      "access_control_allow_origin": "*",
+      "access_control_allow_private_network": false
     }
   }
 }
+
   
