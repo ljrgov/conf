@@ -1,4 +1,3 @@
-# url 里填写自己的订阅,名称不能重复
 proxy-providers:
   provider1:
     url: ""
