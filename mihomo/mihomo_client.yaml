@@ -54,6 +54,7 @@ tun:
 profile:
   store-selected: true
   store-fake-ip: true
+  smart-collector-size: 50
 sniffer:
   enable: true
   force-dns-mapping: false
