@@ -10,13 +10,31 @@
       {
         "type": "https",
         "tag": "ali",
-        "server": "223.6.6.6"
+        "domain_resolver": "ali-resolver",
+        "server_port": 443,
+        "server": "223.5.5.5",
+        "path": "/dns-query"
       },
       {
-        "type": "https",
+        "type": "udp",
+        "tag": "ali-resolver",
+        "server_port": 53,
+        "server": "223.5.5.5"
+      },
+      {
+        "type": "tls",
         "tag": "cloudflare",
-        "server": "1.1.1.1",
-        "detour": "Proxy"
+        "detour": "Proxy",
+        "domain_resolver": "cloudflare-resolver",
+        "server_port": 853,
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "udp",
+        "tag": "cloudflare-resolver",
+        "detour": "Proxy",
+        "server_port": 53,
+        "server": "1.1.1.1"
       },
       {
         "type": "fakeip",
@@ -50,7 +68,7 @@
           }
         ],
         "action":"reject",
-        "method":"default",        // drop丢弃请求
+        "method":"default",         // drop丢弃请求
         "disable_cache": true
       },
       {
