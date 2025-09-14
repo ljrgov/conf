@@ -93,7 +93,7 @@
     "final": "cloudflare",
     "disable_cache": false,
     "disable_expire": false,
-    "strategy": "prefer_ipv6",
+    "strategy": "prefer_ipv4",
     "independent_cache": true
   },
   "inbounds": [
@@ -333,6 +333,195 @@
     }
   ],
   "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "action": "hijack-dns",
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 53
+          },
+          {
+            "protocol": "dns"
+          }
+        ]
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局直连",
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "action": "route",
+        "clash_mode": "全局代理",
+        "outbound": "🔍 手动选择"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "direct-fix"
+        ],
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "action": "reject",
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "规则-允许广告",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "Ads",
+              "Category-Ads"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "Google"
+            ]
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": "TikTok"
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "game@cn"
+        ],
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "AI"
+        ],
+        "outbound": "🤖 AI"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "YouTube",
+          "Google"
+        ],
+        "outbound": "🌐 谷歌"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "game-proxy",
+          "Epic",
+          "Steam"
+        ],
+        "outbound": "🎮 游戏"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Twitter"
+        ],
+        "outbound": "🐦 推特"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Apple-proxy"
+        ],
+        "outbound": "🍎 苹果"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Telegram"
+        ],
+        "outbound": "💬 电报"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Github"
+        ],
+        "outbound": "🐙 Github"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Microsoft",
+          "OneDrive"
+        ],
+        "outbound": "💻 微软"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Emby",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "TikTok"
+        ],
+        "outbound": "🎬 流媒体"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "Spotify"
+        ],
+        "outbound": "🎵 Spotify"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "GeoLocation-!CN"
+        ],
+        "outbound": "🔍 手动选择"
+      },
+      {
+        "action": "route",
+        "ip_is_private": true,
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "action": "route",
+        "rule_set": [
+          "ChinaDomain",
+          "GeoIP-CN",
+          "Apple-direct"
+        ],
+        "outbound": "COMPATIBLE"
+      }
+    ],
     "rule_set": [
       {
         "type": "remote",
@@ -559,222 +748,28 @@
         "update_interval": "240h0m0s"
       }
     ],
-    "rules": [
-      {
-        "action": "sniff"
-      },
-      {
-        "action": "hijack-dns",
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "port": 53
-          },
-          {
-            "protocol": "dns"
-          }
-        ]
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局直连",
-        "outbound": "COMPATIBLE"
-      },
-      {
-        "action": "route",
-        "clash_mode": "全局代理",
-        "outbound": "🔍 手动选择"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "direct-fix"
-        ],
-        "outbound": "COMPATIBLE"
-      },
-      {
-        "action": "reject",
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "clash_mode": "规则-允许广告",
-            "invert": true
-          },
-          {
-            "rule_set": [
-              "Ads",
-              "Category-Ads"
-            ]
-          }
-        ]
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "rule_set": [
-              "YouTube",
-              "Google"
-            ]
-          },
-          {
-            "protocol": "quic"
-          }
-        ],
-        "action": "reject"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "rule_set": "TikTok"
-          },
-          {
-            "protocol": "quic"
-          }
-        ],
-        "action": "reject"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "game@cn"
-        ],
-        "outbound": "COMPATIBLE"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "AI"
-        ],
-        "outbound": "🤖 AI"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "YouTube",
-          "Google"
-        ],
-        "outbound": "🌐 谷歌"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "game-proxy",
-          "Epic",
-          "Steam"
-        ],
-        "outbound": "🎮 游戏"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Twitter"
-        ],
-        "outbound": "🐦 推特"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Apple-proxy"
-        ],
-        "outbound": "🍎 苹果"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Telegram"
-        ],
-        "outbound": "💬 电报"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Github"
-        ],
-        "outbound": "🐙 Github"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Microsoft",
-          "OneDrive"
-        ],
-        "outbound": "💻 微软"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Emby",
-          "Bahamut",
-          "Netflix",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "TikTok"
-        ],
-        "outbound": "🎬 流媒体"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "Spotify"
-        ],
-        "outbound": "🎵 Spotify"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "GeoLocation-!CN"
-        ],
-        "outbound": "🔍 手动选择"
-      },
-      {
-        "action": "route",
-        "ip_is_private": true,
-        "outbound": "COMPATIBLE"
-      },
-      {
-        "action": "route",
-        "rule_set": [
-          "ChinaDomain",
-          "GeoIP-CN",
-          "Apple-direct"
-        ],
-        "outbound": "COMPATIBLE"
-      }
-    ],
-    "auto_detect_interface": true,
-    "find_process": true, 
-    "final": "🐟 漏网之鱼",
-    "default_domain_resolver": {
-      "server": "ali"
-    }
+     "final": "🐟 漏网之鱼",
+     "auto_detect_interface": true,
+     "find_process": true, 
+     "default_domain_resolver": "ali"
   },
   "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "dashboard",
-      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/gh-pages.zip",
-      "external_ui_download_detour": "COMPATIBLE",
-      "secret": "***",
-      "default_mode": "规则分流",
-      "access_control_allow_origin": [
-        "*"
-      ],
-      "access_control_allow_private_network": false
-    },
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "cache_id": "",
       "store_fakeip": true,
       "store_rdrc": true,
-      "rdrc_timeout": "7d"
+      "rdrc_timeout": "168h0m0s"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "COMPATIBLE",
+      "secret": "***",
+      "default_mode": "规则分流",
+      "access_control_allow_origin": "*",
+      "access_control_allow_private_network": false
     }
   }
 }
