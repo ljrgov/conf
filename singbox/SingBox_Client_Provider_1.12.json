@@ -327,7 +327,7 @@
     {
       "type": "remote",
       "tag": "p3",
-      "url": "https://gist.githubusercontent.com/ljrgov/9aa4d4076f0e65cb3365b6a0aaac053f/raw/singbox.list",
+      "url": "https://gist.githubusercontent.comfggghhhhhinj",
       "health_check": {
         "enabled": false,
         "url": "https://www.gstatic.com/generate_204",
