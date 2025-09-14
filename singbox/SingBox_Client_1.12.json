@@ -16,7 +16,7 @@
         "type": "https",
         "tag": "cloudflare",
         "server": "1.1.1.1",
-        "detour": "🔍 手动选择"
+        "detour": "Proxy"
       },
       {
         "type": "fakeip",
@@ -102,7 +102,9 @@
       "tag": "mixed-in",
       "listen": "127.0.0.1",
       "listen_port": 20577,
-      "sniff": true
+      "tcp_fast_open": false,          // 客户端一般不开
+      "udp_fragment": true,            // 可以开启
+      "sniff": true                    // 建议开启，不需要 override
     },
     {
       "type": "tun",
@@ -116,8 +118,9 @@
       "stack": "mixed",
       "auto_route": true,
       "strict_route": true,
-      "auto_redirect": true,
+// Windows不可用      "auto_redirect": true,
       "sniff": true,
+      "sniff_override_destination": false  // TUN 一般不需要开启
       "platform": {
         "http_proxy": {
           "enabled": true,
@@ -130,11 +133,11 @@
   "outbounds": [
     {
       "type": "direct",
-      "tag": "COMPATIBLE"
+      "tag": "direct"
     },
     {
       "type": "selector",
-      "tag": "🔍 手动选择",
+      "tag": "Proxy",
       "outbounds": [
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
@@ -154,7 +157,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇺🇸 美国节点",
       "interrupt_exist_connections": true
@@ -168,7 +171,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇨🇳 台湾节点",
       "interrupt_exist_connections": true
@@ -188,7 +191,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇭🇰 香港节点",
       "interrupt_exist_connections": true
@@ -197,12 +200,12 @@
       "type": "selector",
       "tag": "💻 微软",
       "outbounds": [
-        "COMPATIBLE",
+        "direct",
         "🇯🇵 日本节点",
         "🇭🇰 香港节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
-      "default": "COMPATIBLE",
+//      "default": "direct",
       "interrupt_exist_connections": true
     },
     {
@@ -211,7 +214,7 @@
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇺🇸 美国节点",
       "interrupt_exist_connections": true
@@ -225,7 +228,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
       "interrupt_exist_connections": true
@@ -239,7 +242,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": true
@@ -253,7 +256,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
       "interrupt_exist_connections": true
@@ -267,7 +270,7 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
       "interrupt_exist_connections": true
@@ -282,7 +285,7 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🎮 游戏",
-        "🔍 手动选择"
+        "Proxy"
       ],
       "interrupt_exist_connections": true
     },
@@ -353,19 +356,19 @@
       {
         "action": "route",
         "clash_mode": "全局直连",
-        "outbound": "COMPATIBLE"
+        "outbound": "direct"
       },
       {
         "action": "route",
         "clash_mode": "全局代理",
-        "outbound": "🔍 手动选择"
+        "outbound": "Proxy"
       },
       {
         "action": "route",
         "rule_set": [
           "direct-fix"
         ],
-        "outbound": "COMPATIBLE"
+        "outbound": "direct"
       },
       {
         "action": "reject",
@@ -418,7 +421,7 @@
         "rule_set": [
           "game@cn"
         ],
-        "outbound": "COMPATIBLE"
+        "outbound": "direct"
       },
       {
         "action": "route",
@@ -505,12 +508,12 @@
         "rule_set": [
           "GeoLocation-!CN"
         ],
-        "outbound": "🔍 手动选择"
+        "outbound": "Proxy"
       },
       {
         "action": "route",
         "ip_is_private": true,
-        "outbound": "COMPATIBLE"
+        "outbound": "direct"
       },
       {
         "action": "route",
@@ -519,7 +522,7 @@
           "GeoIP-CN",
           "Apple-direct"
         ],
-        "outbound": "COMPATIBLE"
+        "outbound": "direct"
       }
     ],
     "rule_set": [
@@ -528,7 +531,7 @@
         "tag": "direct-fix",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -536,7 +539,7 @@
         "tag": "Ads",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -544,7 +547,7 @@
         "tag": "Category-Ads",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -552,7 +555,7 @@
         "tag": "Telegram",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -560,7 +563,7 @@
         "tag": "YouTube",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -568,7 +571,7 @@
         "tag": "Google",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -576,7 +579,7 @@
         "tag": "Microsoft",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Microsoft.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -584,7 +587,7 @@
         "tag": "OneDrive",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/OneDrive.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -592,7 +595,7 @@
         "tag": "Github",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Github.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -600,7 +603,7 @@
         "tag": "Twitter",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -608,7 +611,7 @@
         "tag": "Apple-direct",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -616,7 +619,7 @@
         "tag": "Apple-proxy",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/AppleProxy.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -624,7 +627,7 @@
         "tag": "AI",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -632,7 +635,7 @@
         "tag": "game@cn",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -640,7 +643,7 @@
         "tag": "game-proxy",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game-proxy.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -648,7 +651,7 @@
         "tag": "Epic",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -656,7 +659,7 @@
         "tag": "Steam",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -664,7 +667,7 @@
         "tag": "Emby",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -672,7 +675,7 @@
         "tag": "Spotify",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Spotify.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -680,7 +683,7 @@
         "tag": "Bahamut",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -688,7 +691,7 @@
         "tag": "Netflix",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -696,7 +699,7 @@
         "tag": "Disney",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -704,7 +707,7 @@
         "tag": "PrimeVideo",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -712,7 +715,7 @@
         "tag": "HBO",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -720,7 +723,7 @@
         "tag": "TikTok",
         "format": "binary",
         "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/TikTok.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -728,7 +731,7 @@
         "tag": "GeoLocation-!CN",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -736,7 +739,7 @@
         "tag": "ChinaDomain",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
       {
@@ -744,7 +747,7 @@
         "tag": "GeoIP-CN",
         "format": "binary",
         "url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
-        "download_detour": "COMPATIBLE",
+        "download_detour": "direct",
         "update_interval": "240h0m0s"
       }
     ],
@@ -765,7 +768,7 @@
       "external_controller": "127.0.0.1:9090",
       "external_ui": "dashboard",
       "external_ui_download_url": "https://ghfast.top/https://github.com/Zephyruso/zashboard/archive/gh-pages.zip",
-      "external_ui_download_detour": "COMPATIBLE",
+      "external_ui_download_detour": "direct",
       "secret": "***",
       "default_mode": "规则分流",
       "access_control_allow_origin": "*",
