@@ -20,24 +20,27 @@ external-controller: 127.0.0.1:9090 # 外部控制
 external-ui: dashboard
 external-ui-url: "https://ghfast.top/github.com/Zephyruso/zashboard/archive/gh-pages.zip"
 secret: '***'
-tcp-concurrent: true
 mode: rule
+keep-alive-interval: 30
+tcp-concurrent: true
 allow-lan: true
 bind-address: '*'
 log-level: silent
 unified-delay: true
 ipv6: true
+find-process-mode: always
 global-client-fingerprint: chrome
-find-process-mode: strict
 geo-auto-update: true
 geo-update-interval: 24
 geodata-mode: true
-geodata-loader: memconservative
+geodata-loader: memconservative   # memconservative路由器或内存小的设备/standard（默认）
+geosite-matcher: mph      # succinct（省内存）
 geox-url:
-  geoip: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip.dat"
-  geosite: "https://ghfast.top/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
-  asn: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
+  geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
+  geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
+  mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
+  asn: https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
+global-ua: chrome
 tun:
   enable: true
   device: tun0
@@ -45,7 +48,6 @@ tun:
   stack: mixed
   dns-hijack:
     - any:53
-    - tcp://any:53
   auto-route: true
   strict-route: true
   auto-redirect: true
@@ -83,6 +85,34 @@ dns:
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter: ['*', '+.lan', '+.local', '+.direct', '+.msftconnecttest.com', '+.msftncsi.com']
   nameserver: [223.5.5.5, 119.29.29.29]
+
+  dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+  use-hosts: false
+  use-system-hosts: true
+  nameserver:
+    - tls://8.8.8.8#🚀 节点选择
+  proxy-server-nameserver:
+    - https://223.5.5.5/dns-query#🎯 全球直连
+  nameserver-policy:
+    rule-set:GEOSITE-CN: https://223.5.5.5/dns-query#🎯 全球直连
+    rule-set:geolocation-!cn: tls://8.8.8.8#🚀 节点选择
+  enhanced-mode: redir-host
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "*.lan"
+    - "*.localdomain"
+    - "*.example"
+    - "*.invalid"
+    - "*.localhost"
+    - "*.test"
+    - "*.local"
+    - "*.home.arpa"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
   
 # 锚点参数
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
