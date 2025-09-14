@@ -74,9 +74,9 @@
       {
         "rule_set": [
           "AI",
+          "game-proxy",
           "YouTube",
           "Google",
-          "game-proxy",
           "Epic",
           "Steam",
           "Twitter",
