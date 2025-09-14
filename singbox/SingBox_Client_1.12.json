@@ -10,13 +10,31 @@
       {
         "type": "https",
         "tag": "ali",
-        "server": "223.6.6.6"
+        "domain_resolver": "ali-resolver",
+        "server_port": 443,
+        "server": "223.5.5.5",
+        "path": "/dns-query"
       },
       {
-        "type": "https",
+        "type": "udp",
+        "tag": "ali-resolver",
+        "server_port": 53,
+        "server": "223.5.5.5"
+      },
+      {
+        "type": "tls",
         "tag": "cloudflare",
-        "server": "1.1.1.1",
-        "detour": "Proxy"
+        "detour": "Proxy",
+        "domain_resolver": "cloudflare-resolver",
+        "server_port": 853,
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "udp",
+        "tag": "cloudflare-resolver",
+        "detour": "Proxy",
+        "server_port": 53,
+        "server": "1.1.1.1"
       },
       {
         "type": "fakeip",
@@ -49,15 +67,27 @@
             ]
           }
         ],
+//        "action":"reject",
+//        "method":"default",         // drop丢弃请求
+//        "action": "predefined",
+//        "rcode": "REFUSED"
         "action": "route-options",
         "disable_cache": true
       },
       {
         "rule_set": [
+          "AI",
+          "game-proxy",
+          "GeoLocation-!CN"
+        ],
+        "server": "remote"
+      },
+      {
+        "rule_set": [
           "direct-fix",
+          "game@cn",
           "ChinaDomain",
-          "GeoIP-CN",
-          "game@cn"
+          "GeoIP-CN"
         ],
         "server": "ali"
       },
@@ -200,10 +230,10 @@
       "type": "selector",
       "tag": "💻 微软",
       "outbounds": [
-        "direct",
-        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
-        "Proxy"
+        "🇯🇵 日本节点",
+        "Proxy",
+        "direct"
       ],
 //      "default": "direct",
       "interrupt_exist_connections": true
@@ -285,7 +315,8 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🎮 游戏",
-        "Proxy"
+        "Proxy",
+        "direct"
       ],
       "interrupt_exist_connections": true
     },
