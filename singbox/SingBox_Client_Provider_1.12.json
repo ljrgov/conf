@@ -1,204 +1,811 @@
 {
   "log": {
-    "disabled": false,
-    "level": "info",
-    "output": "sing-box.log",
+    "level": "panic",
+    "output": "singbox.log",
     "timestamp": true
   },
   "dns": {
     "servers": [
       {
+        "type": "https",
+        "tag": "ali",
+        "server": "223.6.6.6"
+      },
+      {
+        "type": "https",
         "tag": "cloudflare",
-        "address": "https://1.1.1.1/dns-query",
-        "detour": "Proxy"
+        "detour": "🔍 手动选择",
+        "server": "1.1.1.1"
       },
       {
-        "tag": "local",
-        "address": "https://223.6.6.6/dns-query",
-        "detour": "direct"
-      },
-      {
+        "type": "fakeip",
         "tag": "remote",
-        "address": "fakeip"
-      },
-      {
-        "tag": "block",
-        "address": "rcode://success"
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
       {
-        "outbound": "any",
-        "server": "local"
+        "clash_mode": "全局直连",
+        "server": "ali"
       },
       {
-        "clash_mode": "Direct",
-        "server": "local"
+        "clash_mode": "全局代理",
+        "server": "remote"
       },
       {
-        "clash_mode": "Global",
-        "server":"cloudflare"
-      },
-      {
-        "rule_set": "AWAvenue-Ads",
-        "server": "block"
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "规则-允许广告",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "Ads",
+              "Category-Ads"
+            ]
+          }
+        ],
+        "action": "route-options",
+        "disable_cache": true
       },
       {
         "rule_set": [
-          "alibaba",
-          "category-games@cn",
-          "cn-domain"
+          "direct-fix",
+          "ChinaDomain",
+          "GeoIP-CN",
+          "game@cn"
         ],
-        "server": "local"
+        "server": "ali"
       },
       {
-        "query_type": [
-          "A",
-          "AAAA"
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "domain_suffix": [
+              ".lan",
+              ".localdomain",
+              ".example",
+              ".invalid",
+              ".localhost",
+              ".test",
+              ".local",
+              ".home.arpa",
+              ".msftconnecttest.com",
+              ".msftncsi.com"
+            ],
+            "invert": true
+          },
+          {
+            "query_type": [
+              "A",
+              "AAAA"
+            ]
+          }
         ],
         "server": "remote"
       }
     ],
-    "fakeip": {
-      "enabled": true,
-      "inet4_range": "198.18.0.0/15",
-      "inet6_range": "fc00::/18"
-    },
-    "independent_cache": true,
-    "strategy": "ipv4_only"
+    "final": "cloudflare",
+    "strategy": "prefer_ipv6",
+    "independent_cache": true
   },
   "inbounds": [
-    {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "::",
-      "listen_port": 7080,
-      "sniff": true,
-      "domain_strategy": "prefer_ipv4"
-    },
-//    {
-//      "type": "tun",
-//      "tag": "tun-in",
-//      "interface_name": "tun0",
-//      "inet4_address": "172.19.0.1/30",
-//      "inet6_address": "fdfe:dcba:9876::1/126",
-//      "stack": "system",
-//      "auto_route": true,
-//      "strict_route": true,
-//      "sniff": true
-//    },
-//    {
-//      "type": "redirect",
-//      "tag": "redirect-in",
-//      "listen": "::",
-//      "listen_port": 7891,
-//      "sniff": true
-//    },
     {
       "type": "tproxy",
       "tag": "tproxy-in",
       "listen": "::",
-      "listen_port": 1536,
+      "listen_port": 9898,
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 20577,
       "sniff": true
     }
   ],
   "outbounds": [
     {
       "type": "direct",
-      "tag": "direct"
-    },
-    {
-      "type": "block",
-      "tag": "block"
-    },
-    {
-      "type": "dns",
-      "tag": "dns-out"
+      "tag": "COMPATIBLE"
     },
     {
       "type": "selector",
-      "tag": "Proxy",
-      "outbounds": "direct",
-      "use_all_providers": true,
-      "default": "direct",
+      "tag": "🔍 手动选择",
+      "outbounds": [
+        "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
+        "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)",
+        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
+        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
+        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
+        "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
+        "[bv] 🇭🇰 2香港-全网优化(AnyTLS)",
+        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)",
+        "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)",
+        "[bv] 🇩🇪 11德国-全网优化(AnyTLS)",
+        "[bv] 🇨🇦 33加拿大-全网优化(AnyTLS)",
+        "[bv] 🇫🇷 27法国-全网优化(AnyTLS)",
+        "[bv] 🇰🇷 7韩国春川集群-联通/移动(AnyTLS)",
+        "[bv] 🇦🇺 20澳洲-电信/移动(AnyTLS)",
+        "[bv] 🇧🇷 22巴西-联通/移动(AnyTLS)",
+        "[bv] 🇨🇭 34瑞士-全网优化(AnyTLS)",
+        "[bv] 🇨🇱 29智利-全网优化(AnyTLS)",
+        "[bv] 🇪🇸 36西班牙-电信/联通(AnyTLS)",
+        "[bv] 🇮🇳 13印度孟买-电信/联通(AnyTLS)",
+        "[bv] 🇮🇹 30意大利-全网优化(AnyTLS)",
+        "[bv] 🇳🇱 26荷兰-全网优化(AnyTLS)",
+        "[bv] 🇸🇪 31瑞典-电信/移动(AnyTLS)",
+        "[bv] 🇿🇦 32南非-约翰内斯堡(AnyTLS)"
+      ],
       "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🤖 AI",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇺🇸 美国节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🌐 谷歌",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇨🇳 台湾节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎮 游戏",
+      "outbounds": [
+        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
+        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
+        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
+        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐙 Github",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇭🇰 香港节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "💻 微软",
+      "outbounds": [
+        "COMPATIBLE",
+        "🇯🇵 日本节点",
+        "🇭🇰 香港节点",
+        "🔍 手动选择"
+      ],
+      "default": "COMPATIBLE",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🍎 苹果",
+      "outbounds": [
+        "🇺🇸 美国节点",
+        "🇭🇰 香港节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇺🇸 美国节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "💬 电报",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐦 推特",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇯🇵 日本节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎵 Spotify",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎬 流媒体",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🔍 手动选择"
+      ],
+      "default": "🇸🇬 新加坡节点",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐟 漏网之鱼",
+      "outbounds": [
+        "🇭🇰 香港节点",
+        "🇯🇵 日本节点",
+        "🇨🇳 台湾节点",
+        "🇺🇸 美国节点",
+        "🇸🇬 新加坡节点",
+        "🎮 游戏",
+        "🔍 手动选择"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇭🇰 香港节点",
+      "outbounds": [
+        "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
+        "[bv] 🇭🇰 2香港-全网优化(AnyTLS)"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇨🇳 台湾节点",
+      "outbounds": [
+        "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇯🇵 日本节点",
+      "outbounds": [
+        "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
+        "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
+        "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇺🇸 美国节点",
+      "outbounds": [
+        "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
+        "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
+        "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "exclude": "波特兰",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇸🇬 新加坡节点",
+      "outbounds": [
+        "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "test",
+      "outbounds": null,
+      "providers": [
+        "p2",
+        "p3"
+      ],
+      "include": "波特兰|🇭🇰|🇯🇵|🇸🇬|🇰🇷",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇺🇸 5美国波特兰-全网优化(AnyTLS)",
+      "server": "5us.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "5us.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇺🇸 6美国圣何塞集群-全网优化(AnyTLS)",
+      "server": "6us.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "6us.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇺🇸 16美国凤凰城集群-联通优化(AnyTLS)",
+      "server": "16us.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "16us.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇺🇸 28美国东部-全网优化(AnyTLS)",
+      "server": "28us.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "28us.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇺🇸 38美国洛杉矶-全网优化(AnyTLS)",
+      "server": "38us.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "38us.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇯🇵 9日本大版集群-电信/移动(AnyTLS)",
+      "server": "9jp.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "9jp.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇯🇵 18日本东京集群-联通/移动(AnyTLS)",
+      "server": "18jp.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "18jp.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇯🇵 19日本东京-联通/移动(AnyTLS)",
+      "server": "19jp.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "19jp.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇭🇰 1香港集群-电信/联通(AnyTLS)",
+      "server": "1hk.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "1hk.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇭🇰 2香港-全网优化(AnyTLS)",
+      "server": "2hk.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "2hk.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇨🇳 4台湾-电信/联通(AnyTLS)",
+      "server": "4tw.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "4tw.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇸🇬 15新加坡集群-全网优化(AnyTLS)",
+      "server": "15sg.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "15sg.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇩🇪 11德国-全网优化(AnyTLS)",
+      "server": "11de.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "11de.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇨🇦 33加拿大-全网优化(AnyTLS)",
+      "server": "33ca.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "33ca.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇫🇷 27法国-全网优化(AnyTLS)",
+      "server": "27fr.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "27fr.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇰🇷 7韩国春川集群-联通/移动(AnyTLS)",
+      "server": "7kr.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "7kr.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇦🇺 20澳洲-电信/移动(AnyTLS)",
+      "server": "20au.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "20au.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇧🇷 22巴西-联通/移动(AnyTLS)",
+      "server": "22br.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "22br.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇨🇭 34瑞士-全网优化(AnyTLS)",
+      "server": "34ch.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "34ch.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇨🇱 29智利-全网优化(AnyTLS)",
+      "server": "29chi.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "29chi.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇪🇸 36西班牙-电信/联通(AnyTLS)",
+      "server": "36es.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "36es.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇮🇳 13印度孟买-电信/联通(AnyTLS)",
+      "server": "13in.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "13in.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇮🇹 30意大利-全网优化(AnyTLS)",
+      "server": "30it.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "30it.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇳🇱 26荷兰-全网优化(AnyTLS)",
+      "server": "26nl.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "26nl.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇸🇪 31瑞典-电信/移动(AnyTLS)",
+      "server": "31se.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "31se.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
+    },
+    {
+      "type": "anytls",
+      "tag": "[bv] 🇿🇦 32南非-约翰内斯堡(AnyTLS)",
+      "server": "32za.networklinkpro.net",
+      "server_port": 4430,
+      "tls": {
+        "enabled": true,
+        "server_name": "32za.networklinkpro.net",
+        "insecure": true,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "password": "6be0766c-b0af-40e3-985f-956a34408458"
     }
   ],
-  // outbound_providers 需要使用 https://github.com/PuerNya/sing-box/tree/building
-  "outbound_providers": [
+  "providers": [
     {
-      "type": "remote",
-      "tag": "Provider1",
-      "path": "./Provider1.json",
-      "download_url": "订阅链接1",
-      "healthcheck_interval": "24h",
-      "download_ua": "sing-box",
-      "download_interval": "24h",
-      "download_detour": "Proxy"
+      "type": "local",
+      "tag": "p2",
+      "path": "p2.yaml",
+      "health_check": {
+        "enabled": true,
+        "url": "https://www.gstatic.com/generate_204",
+        "interval": "10m0s"
+      }
     },
     {
       "type": "remote",
-      "tag": "Provider2",
-      "path": "./Provider2.yaml",
-      "download_url": "订阅链接2",
-      "healthcheck_interval": "24h",
-      "download_ua": "clash/meta/mihomo",
-      "download_interval": "24h",
-      "download_detour": "Proxy"
+      "tag": "p3",
+      "url": "https://gist.githubusercontent.com/ljrgov/9aa4d4076f0e65cb3365b6a0aaac053f/raw/singbox.list",
+      "health_check": {
+        "enabled": false,
+        "url": "https://www.gstatic.com/generate_204",
+        "interval": "10m0s"
+      }
     }
   ],
   "route": {
-    "rule_set": [
-      {
-        "type": "remote",
-        "tag": "AWAvenue-Ads",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "alibaba",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-alibaba.srs",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "category-games@cn",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-games@cn.srs",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "geolocation-!cn",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "cn-domain",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-cn.srs",
-        "download_detour": "Proxy",
-        "update_interval": "24h"
-      },
-      {
-        "type": "remote",
-        "tag": "cn-ip",
-        "format": "binary",
-        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/cn.srs",
-        "download_detour": "Proxy",
-        "update_interval": "30d"
-      }
-    ],
     "rules": [
+      {
+        "action": "sniff"
+      },
       {
         "type": "logical",
         "mode": "or",
@@ -210,59 +817,363 @@
             "protocol": "dns"
           }
         ],
-        "outbound": "dns-out"
+        "action": "hijack-dns"
       },
       {
-        "clash_mode": "Direct",
-        "outbound": "direct"
+        "clash_mode": "全局直连",
+        "outbound": "COMPATIBLE"
       },
       {
-        "clash_mode": "Global",
-        "outbound": "Proxy"
+        "clash_mode": "全局代理",
+        "outbound": "🔍 手动选择"
       },
       {
-        "rule_set": "AWAvenue-Ads",
-        "outbound": "block"
+        "rule_set": "direct-fix",
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "规则-允许广告",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "Ads",
+              "Category-Ads"
+            ]
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "Google"
+            ]
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": "TikTok"
+          },
+          {
+            "protocol": "quic"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": "game@cn",
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "rule_set": "AI",
+        "outbound": "🤖 AI"
       },
       {
         "rule_set": [
-          "alibaba",
-          "category-games@cn"
+          "YouTube",
+          "Google"
         ],
-        "outbound": "direct"
-      },
-      {
-        "rule_set": "geolocation-!cn",
-        "outbound": "Proxy"
+        "outbound": "🌐 谷歌"
       },
       {
         "rule_set": [
-          "cn-domain"
+          "game-proxy",
+          "Epic",
+          "Steam"
         ],
-        "outbound": "direct"
+        "outbound": "🎮 游戏"
       },
       {
-        "rule_set": "cn-ip",
-        "outbound": "direct"
+        "rule_set": "Twitter",
+        "outbound": "🐦 推特"
+      },
+      {
+        "rule_set": "Apple-proxy",
+        "outbound": "🍎 苹果"
+      },
+      {
+        "rule_set": "Telegram",
+        "outbound": "💬 电报"
+      },
+      {
+        "rule_set": "Github",
+        "outbound": "🐙 Github"
+      },
+      {
+        "rule_set": [
+          "Microsoft",
+          "OneDrive"
+        ],
+        "outbound": "💻 微软"
+      },
+      {
+        "rule_set": [
+          "Emby",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "TikTok"
+        ],
+        "outbound": "🎬 流媒体"
+      },
+      {
+        "rule_set": "Spotify",
+        "outbound": "🎵 Spotify"
+      },
+      {
+        "rule_set": "GeoLocation-!CN",
+        "outbound": "🔍 手动选择"
       },
       {
         "ip_is_private": true,
-        "outbound": "direct"
+        "outbound": "COMPATIBLE"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain",
+          "GeoIP-CN",
+          "Apple-direct"
+        ],
+        "outbound": "COMPATIBLE"
       }
     ],
-    "find_process": true,
-//    "auto_detect_interface": true,
-    "final": "Proxy"
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "direct-fix",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/direct-fix.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Ads",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Ads_SukkaW.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Category-Ads",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Telegram",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Telegram.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "YouTube",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/YouTube.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Google",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Google.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Microsoft",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Microsoft.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "OneDrive",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/OneDrive.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Github",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Github.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Twitter",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Apple-direct",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Apple-proxy",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/AppleProxy.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "AI",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "game@cn",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "game-proxy",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/singbox/rules/game-proxy.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Epic",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Steam",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Emby",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Spotify",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Spotify.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Bahamut",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Netflix",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Disney",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "PrimeVideo",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "HBO",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "TikTok",
+        "url": "https://ghfast.top/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/TikTok.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoLocation-!CN",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-geolocation-!cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "ChinaDomain",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoIP-CN",
+        "url": "https://ghfast.top/github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
+        "download_detour": "COMPATIBLE",
+        "update_interval": "240h0m0s"
+      }
+    ],
+    "final": "🐟 漏网之鱼",
+    "auto_detect_interface": true,
+    "default_domain_resolver": "ali"
   },
   "experimental": {
     "cache_file": {
       "enabled": true,
-      "store_fakeip": true
+      "path": "cache.db",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "168h0m0s"
     },
     "clash_api": {
-      "default_mode": "Rule",
-      "external_controller": "0.0.0.0:9999",
-      "external_ui": "ui"
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://ghfast.top/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "COMPATIBLE",
+      "secret": "***",
+      "default_mode": "规则分流",
+      "access_control_allow_origin": "*"
     }
   }
 }
