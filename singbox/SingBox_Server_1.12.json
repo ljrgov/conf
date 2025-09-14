@@ -73,10 +73,36 @@
       },
       {
         "rule_set": [
+          "AI",
+          "YouTube",
+          "Google",
+          "game-proxy",
+          "Epic",
+          "Steam",
+          "Twitter",
+          "Apple-proxy",
+          "Telegram",
+          "Github",
+          "Microsoft",
+          "OneDrive",
+          "Emby",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "TikTok"
+          "Spotify",
+          "GeoLocation-!CN"
+        ],
+        "server": "remote"
+      },
+      {
+        "rule_set": [
           "direct-fix",
-          "ChinaDomain",
-          "GeoIP-CN",
           "game@cn"
+          "ChinaDomain",
+          "GeoIP-CN"
         ],
         "server": "ali"
       },
