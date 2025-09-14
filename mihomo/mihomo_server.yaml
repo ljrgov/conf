@@ -78,8 +78,12 @@ sniffer:
   cache-algorithm: arc
   listen: 0.0.0.0:1053
   ipv6: true
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
   nameserver:
-    - tls://1.1.1.1#手动切换
+    - https://1.1.1.1#手动切换
+    - tls://8.8.8.8#手动切换
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query#DIRECT
   nameserver-policy:
