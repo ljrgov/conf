@@ -299,7 +299,8 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🎮 游戏",
-        "Proxy"
+        "Proxy",
+        "direct"
       ],
       "interrupt_exist_connections": true
     },
