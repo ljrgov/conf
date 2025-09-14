@@ -217,10 +217,10 @@
       "type": "selector",
       "tag": "💻 微软",
       "outbounds": [
-        "direct",
-        "🇯🇵 日本节点",
         "🇭🇰 香港节点",
-        "Proxy"
+        "🇯🇵 日本节点",
+        "Proxy",
+        "direct"
       ],
 //      "default": "direct",
       "interrupt_exist_connections": true
