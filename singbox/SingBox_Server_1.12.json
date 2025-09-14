@@ -75,24 +75,6 @@
         "rule_set": [
           "AI",
           "game-proxy",
-          "YouTube",
-          "Google",
-          "Epic",
-          "Steam",
-          "Twitter",
-          "Apple-proxy",
-          "Telegram",
-          "Github",
-          "Microsoft",
-          "OneDrive",
-          "Emby",
-          "Bahamut",
-          "Netflix",
-          "Disney",
-          "PrimeVideo",
-          "HBO",
-          "TikTok"
-          "Spotify",
           "GeoLocation-!CN"
         ],
         "server": "remote"
