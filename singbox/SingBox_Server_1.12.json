@@ -51,8 +51,14 @@
       },
       {
         "clash_mode": "全局代理",
-        "server": "remote"，
+        "server": "remote",
         "strategy":"prefer_ipv6"
+      },
+      {
+        "rule_set": [
+          "direct-fix"
+        ],
+        "server": "ali"
       },
       {
         "type": "logical",
@@ -80,16 +86,32 @@
         "rule_set": [
           "AI",
           "game-proxy",
+          "Telegram",
+          "YouTube",
+          "Google",
+          "Github",
+          "Twitter",
+          "TikTok",
+          "Apple-proxy",
+          "Epic",
+          "Steam",
+          "Emby",
+          "Spotify",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
           "GeoLocation-!CN"
         ],
         "server": "remote"
       },
       {
         "rule_set": [
-          "direct-fix",
-          "game@cn",
           "ChinaDomain",
-          "GeoIP-CN"
+          "GeoIP-CN",
+          "Apple-direct",
+          "game@cn"
         ],
         "server": "ali"
       },
