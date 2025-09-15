@@ -73,26 +73,31 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
-  dns:
+dns:
   enable: true
   cache-algorithm: arc
+  prefer-h3: false
+  use-hosts: true
+  use-system-hosts: true
+  respect-rules: true
   listen: 0.0.0.0:1053
   ipv6: true
-  use-hosts: true
+  default-nameserver:
+    - 'udp://223.5.5.5'
+    - 'udp://119.29.29.29'
   enhanced-mode: redir-host
   fake-ip-range: 198.18.0.1/16
-
-  default-nameserver:
-    - 1.1.1.1
-    - 8.8.8.8
   nameserver:
-    - https://1.1.1.1#手动切换
-    - tls://8.8.8.8#手动切换
-  proxy-server-nameserver:
-    - https://223.5.5.5/dns-query#DIRECT
+    - 'https://223.5.5.5/dns-query'
+    - 'https://doh.pub/dns-query'
   nameserver-policy:
-    rule-set:GEOSITE-CN: https://223.5.5.5/dns-query#DIRECT
-#    rule-set:geolocation-!cn: tls://1.1.1.1#手动切换
+    'rule-set:gfw,proxy':
+      - 'https://1.1.1.1/dns-query'
+      - 'tls://1.1.1.1'
+      - 'https://8.8.8.8/dns-query'
+  proxy-server-nameserver:
+    - 'https://1.1.1.1/dns-query'
+    - 'https://8.8.8.8/dns-query'
 
 # 锚点参数
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
