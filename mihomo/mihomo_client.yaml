@@ -103,7 +103,7 @@ dns:
     - 'https://223.5.5.5/dns-query'
     - 'https://doh.pub/dns-query'
   nameserver-policy:
-    'rule-set:gfw,proxy':
+    'rule-set:AppleProxy,Microsoft,OneDrive,Github,YouTube,Google,Telegram,Twitter,Steam,Epic,AI,Emby,Spotify,Bahamut,Netflix,Disney,PrimeVideo,HBO,TikTok,CDN,Proxy':
       - 'https://1.1.1.1/dns-query'
       - 'tls://1.1.1.1'
       - 'https://8.8.8.8/dns-query'
