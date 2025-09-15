@@ -83,10 +83,22 @@ dns:
   listen: 0.0.0.0:1053
   ipv6: true
   default-nameserver:
-    - 'udp://223.5.5.5'
-    - 'udp://119.29.29.29'
+    - 223.5.5.5
+    - 119.29.29.29
   enhanced-mode: redir-host
   fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - '*.lan'
+    - '*.localdomain'
+    - '*.example'
+    - '*.invalid'
+    - '*.localhost'
+    - '*.test'
+    - '*.local'
+    - '*.home.arpa'
+    - '*.msftconnecttest.com'
+    - '*.msftncsi.com'
   nameserver:
     - 'https://223.5.5.5/dns-query'
     - 'https://doh.pub/dns-query'
