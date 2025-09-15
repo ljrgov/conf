@@ -73,35 +73,34 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
-  dns:
-    enable: true
-    listen: 0.0.0.0:1053
-    ipv6: true
-    enhanced-mode: fake-ip
-    fake-ip-range: 198.18.0.0/15
-    fake-ip-filter-mode: blacklist
-    fake-ip-filter:
-      - "*.lan"
-      - "*.localdomain"
-      - "*.example"
-      - "*.invalid"
-      - "*.localhost"
-      - "*.test"
-      - "*.local"
-      - "*.home.arpa"
-      - "*.msftconnecttest.com"
-      - "*.msftncsi.com"
-default-nameserver:
-  - 223.5.5.5
-nameserver:
-  - 223.5.5.5
-nameserver-policy:
-  'rule-set:gfw,proxy': https://1.1.1.1/dns-query
-  'geosite:gfw': https://1.1.1.1/dns-query
-  'geosite:geolocation-!cn': https://1.1.1.1/dns-query
-proxy-server-nameserver:
-  - https://1.1.1.1/dns-query
-  - 8.8.8.8
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "*.lan"
+    - "*.localdomain"
+    - "*.example"
+    - "*.invalid"
+    - "*.localhost"
+    - "*.test"
+    - "*.local"
+    - "*.home.arpa"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+  default-nameserver:
+    - 223.5.5.5
+  nameserver:
+    - 223.5.5.5
+  nameserver-policy:
+    'rule-set:gfw,proxy': https://1.1.1.1/dns-query
+    'geosite:gfw': https://1.1.1.1/dns-query
+    'geosite:geolocation-!cn': https://1.1.1.1/dns-query
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
 # 锚点参数
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
 select: &select {type: select, include-all: true}
