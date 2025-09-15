@@ -74,31 +74,31 @@ sniffer:
     - "Mijia Cloud"
     - "+.push.apple.com"
   dns:
-  enable: true
-  listen: 0.0.0.0:1053
-  ipv6: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.0/15
-  fake-ip-filter-mode: blacklist
-  fake-ip-filter:
-    - "*.lan"
-    - "*.localdomain"
-    - "*.example"
-    - "*.invalid"
-    - "*.localhost"
-    - "*.test"
-    - "*.local"
-    - "*.home.arpa"
-    - "*.msftconnecttest.com"
-    - "*.msftncsi.com"
-  nameserver:
-    - tls://1.1.1.1#🚀 节点选择
-  proxy-server-nameserver:
-    - https://223.5.5.5/dns-query#🎯 全球直连
-  nameserver-policy:
-    rule-set:GEOSITE-CN: https://223.5.5.5/dns-query#🎯 全球直连
-    rule-set:geolocation-!cn: tls://1.1.1.1#🚀 节点选择
-  
+    enable: true
+    listen: 0.0.0.0:1053
+    ipv6: true
+    enhanced-mode: fake-ip
+    fake-ip-range: 198.18.0.0/15
+    fake-ip-filter-mode: blacklist
+    fake-ip-filter:
+      - "*.lan"
+      - "*.localdomain"
+      - "*.example"
+      - "*.invalid"
+      - "*.localhost"
+      - "*.test"
+      - "*.local"
+      - "*.home.arpa"
+      - "*.msftconnecttest.com"
+      - "*.msftncsi.com"
+    nameserver:
+      - tls://1.1.1.1#🚀 节点选择
+    proxy-server-nameserver:
+      - https://223.5.5.5/dns-query#🎯 全球直连
+    nameserver-policy:
+      rule-set:GEOSITE-CN:
+https://223.5.5.5/dns-query#🎯 全球直连
+      rule-set:geolocation-!cn: tls://1.1.1.1#🚀 节点选择
 # 锚点参数
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
 select: &select {type: select, include-all: true}
