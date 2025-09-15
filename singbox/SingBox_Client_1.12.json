@@ -418,21 +418,9 @@
           {
             "rule_set": [
               "YouTube",
-              "Google"
+              "Google",
+              "TikTok"
             ]
-          },
-          {
-            "protocol": "quic"
-          }
-        ],
-        "action": "reject"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "rule_set": "TikTok"
           },
           {
             "protocol": "quic"
