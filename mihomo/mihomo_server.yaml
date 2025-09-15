@@ -73,6 +73,7 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
+
 dns:
   enable: true
   cache-algorithm: arc
