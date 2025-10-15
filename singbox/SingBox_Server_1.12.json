@@ -46,13 +46,11 @@
     "rules": [
       {
         "clash_mode": "全局直连",
-        "server": "ali",
-        "strategy":"prefer_ipv6"
+        "server": "ali"
       },
       {
         "clash_mode": "全局代理",
-        "server": "remote",
-        "strategy":"prefer_ipv6"
+        "server": "remote"
       },
       {
         "rule_set": [
