@@ -3,7 +3,7 @@
   "rules": [
     {
       "port": [
-        23332
+        23332   //洛雪音乐
       ]
     },
     {
@@ -14,7 +14,13 @@
     {
       "domain_suffix": [
         "kelote.com",
-        "meizubl.com"
+        "ggpht.cn",
+        "iconarchive.com",
+        "meizubl.com",
+        "yyai8.com",
+        "ypojie.com",
+        "423down.com",
+        "mefcl.com"
       ]
     },
     {
