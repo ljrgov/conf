@@ -73,10 +73,6 @@
             ]
           }
         ],
-//        "action":"reject",
-//        "method":"default",         // drop丢弃请求
-//        "action": "predefined",
-//        "rcode": "REFUSED"
         "action": "route-options",
         "disable_cache": true
       },
