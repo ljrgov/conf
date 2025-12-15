@@ -806,8 +806,8 @@
       }
     ],
      "final": "🐟 漏网之鱼",
-//     "auto_detect_interface": true,
-//     "find_process": true, 
+     "auto_detect_interface": true,
+     "find_process": true, 
      "default_domain_resolver": "ali"
   },
   "experimental": {
