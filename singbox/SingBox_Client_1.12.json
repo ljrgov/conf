@@ -77,6 +77,23 @@
         "disable_cache": true
       },
       {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "TikTok"
+            ]
+          },
+          {
+            "network": "quic"
+          }
+        ],
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
+      {
         "rule_set": [
           "AI",
           "game-proxy",
