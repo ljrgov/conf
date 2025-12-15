@@ -419,7 +419,6 @@
         "outbound": "direct"
       },
       {
-        "action": "reject",
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -433,7 +432,9 @@
               "Category-Ads"
             ]
           }
-        ]
+        ],
+        "action": "reject",
+        "method": "drop"
       },
       {
         "type": "logical",
@@ -442,21 +443,22 @@
           {
             "rule_set": [
               "YouTube",
-              "Google",
               "TikTok"
             ]
           },
           {
-            "protocol": "quic"
+            "network": "quic"
           }
         ],
-        "action": "reject"
+        "action": "reject",
+        "method": "drop"
       },
       {
-        "action": "route",
-        "rule_set": [
-          "game@cn"
-        ],
+        "rule_set": "game@cn",
+        "outbound": "direct"
+      },
+      {
+        "ip_is_private": true,
         "outbound": "direct"
       },
       {
@@ -545,11 +547,6 @@
           "GeoLocation-!CN"
         ],
         "outbound": "Proxy"
-      },
-      {
-        "action": "route",
-        "ip_is_private": true,
-        "outbound": "direct"
       },
       {
         "action": "route",
