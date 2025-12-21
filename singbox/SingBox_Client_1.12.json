@@ -395,7 +395,6 @@
     "rules": [
       {
         "inbound": [
-//          "tproxy-in",
           "tun-in",
           "mixed-in"
         ],
