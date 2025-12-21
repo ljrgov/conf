@@ -339,6 +339,7 @@
     }
   ],
   "route": {
+    "rules": [
       {
         "inbound": [
           "tproxy-in",
