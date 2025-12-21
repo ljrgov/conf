@@ -162,7 +162,7 @@
       "type": "selector",
       "tag": "Proxy",
       "outbounds": [],
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -176,7 +176,7 @@
         "Proxy"
       ],
       "default": "🇺🇸 美国节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -190,27 +190,27 @@
         "Proxy"
       ],
       "default": "🇨🇳 台湾节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
       "tag": "🎮 游戏",
       "outbounds": [],
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
       "tag": "🐙 Github",
       "outbounds": [
+        "Proxy",
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
-        "🇸🇬 新加坡节点",
-        "Proxy"
+        "🇸🇬 新加坡节点"
       ],
-      "default": "🇭🇰 香港节点",
-      "interrupt_exist_connections": true
+      "default": "Proxy",
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -222,7 +222,7 @@
         "direct"
       ],
 //      "default": "direct",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -233,7 +233,7 @@
         "Proxy"
       ],
       "default": "🇺🇸 美国节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -247,7 +247,7 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -261,7 +261,7 @@
         "Proxy"
       ],
       "default": "🇯🇵 日本节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -275,7 +275,7 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -289,66 +289,67 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
       "tag": "🐟 漏网之鱼",
       "outbounds": [
+        "Proxy",
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🎮 游戏",
-        "Proxy",
         "direct"
       ],
-      "interrupt_exist_connections": true
+      "default": "Proxy",
+      "interrupt_exist_connections": false
     },
     {
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interval": "1m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interval": "1m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interval": "1m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interval": "1m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interval": "1m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": false,
       "outbounds": []
     }
   ],
