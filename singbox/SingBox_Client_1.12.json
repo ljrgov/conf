@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": false,
-    "level": "panic",
+    "level": "error",
     "output": "sing-box.log",
     "timestamp": true
   },
@@ -10,30 +10,12 @@
       {
         "type": "https",
         "tag": "ali",
-        "domain_resolver": "ali-resolver",
-        "server_port": 443,
-        "server": "223.5.5.5",
-        "path": "/dns-query"
-      },
-      {
-        "type": "udp",
-        "tag": "ali-resolver",
-        "server_port": 53,
         "server": "223.5.5.5"
       },
       {
-        "type": "tls",
+        "type": "https",
         "tag": "cloudflare",
         "detour": "Proxy",
-        "domain_resolver": "cloudflare-resolver",
-        "server_port": 853,
-        "server": "1.1.1.1"
-      },
-      {
-        "type": "udp",
-        "tag": "cloudflare-resolver",
-        "detour": "Proxy",
-        "server_port": 53,
         "server": "1.1.1.1"
       },
       {
@@ -127,30 +109,9 @@
         "server": "ali"
       },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "domain_suffix": [
-              ".lan",
-              ".localdomain",
-              ".example",
-              ".invalid",
-              ".localhost",
-              ".test",
-              ".local",
-              ".home.arpa",
-              ".msftconnecttest.com",
-              ".msftncsi.com"
-            ],
-            "invert": true
-          },
-          {
-            "query_type": [
-              "A",
-              "AAAA"
-            ]
-          }
+        "query_type": [
+          "A",
+          "AAAA"
         ],
         "server": "remote"
       }
