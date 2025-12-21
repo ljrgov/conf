@@ -392,6 +392,10 @@
         ],
         "outbound": "direct"
       },
+     ｛
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
       {
         "type": "logical",
         "mode": "and",
@@ -429,10 +433,6 @@
       },
       {
         "rule_set": "game@cn",
-        "outbound": "direct"
-      },
-      {
-        "ip_is_private": true,
         "outbound": "direct"
       },
       {
