@@ -130,7 +130,6 @@
       "listen_port": 9898,
       "sniff": true
     },
-//  tun 和 tproxy 模式不能同时启用
 //    {
 //      "type": "tun",
 //      "tag": "tun-in",
@@ -152,7 +151,7 @@
 //          "server_port": 20577
 //        }
 //      }
-//    },
+//    }, //  tun 和 tproxy 模式不能同时启用
     {
       "type": "mixed",
       "tag": "mixed-in",
