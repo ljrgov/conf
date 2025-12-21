@@ -147,7 +147,7 @@
       "type": "selector",
       "tag": "Proxy",
       "outbounds": [],
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -161,7 +161,7 @@
         "Proxy"
       ],
       "default": "🇺🇸 美国节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -175,13 +175,13 @@
         "Proxy"
       ],
       "default": "🇨🇳 台湾节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
       "tag": "🎮 游戏",
       "outbounds": [],
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -195,7 +195,7 @@
         "Proxy"
       ],
       "default": "🇭🇰 香港节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -207,7 +207,7 @@
         "direct"
       ],
 //      "default": "direct",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -218,7 +218,7 @@
         "Proxy"
       ],
       "default": "🇺🇸 美国节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -232,7 +232,7 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -246,7 +246,7 @@
         "Proxy"
       ],
       "default": "🇯🇵 日本节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -260,7 +260,7 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -274,7 +274,7 @@
         "Proxy"
       ],
       "default": "🇸🇬 新加坡节点",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "selector",
@@ -289,7 +289,7 @@
         "Proxy",
         "direct"
       ],
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "urltest",
@@ -297,7 +297,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -306,7 +306,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -315,7 +315,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -324,7 +324,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     },
     {
@@ -333,7 +333,7 @@
       "url": "https://www.gstatic.com/generate_204",
       "interval": "5m0s",
       "tolerance": 0,
-      "interrupt_exist_connections": true,
+      "interrupt_exist_connections": false,
       "outbounds": []
     }
   ],
