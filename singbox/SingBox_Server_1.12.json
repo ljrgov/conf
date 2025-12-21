@@ -280,13 +280,13 @@
       "type": "selector",
       "tag": "🐟 漏网之鱼",
       "outbounds": [
+        "Proxy",
         "🇭🇰 香港节点",
         "🇯🇵 日本节点",
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
         "🎮 游戏",
-        "Proxy",
         "direct"
       ],
       "interrupt_exist_connections": false
@@ -295,8 +295,8 @@
       "type": "urltest",
       "tag": "🇭🇰 香港节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": false,
       "outbounds": []
     },
@@ -304,8 +304,8 @@
       "type": "urltest",
       "tag": "🇨🇳 台湾节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": false,
       "outbounds": []
     },
@@ -313,8 +313,8 @@
       "type": "urltest",
       "tag": "🇯🇵 日本节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": false,
       "outbounds": []
     },
@@ -322,8 +322,8 @@
       "type": "urltest",
       "tag": "🇺🇸 美国节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": false,
       "outbounds": []
     },
@@ -331,15 +331,18 @@
       "type": "urltest",
       "tag": "🇸🇬 新加坡节点",
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "5m0s",
-      "tolerance": 0,
+      "interval": "1m0s",
+      "tolerance": 50,
       "interrupt_exist_connections": false,
       "outbounds": []
     }
   ],
   "route": {
-    "rules": [
       {
+        "inbound": [
+          "tproxy-in",
+          "mixed-in"
+        ],
         "action": "sniff"
       },
       {
@@ -370,6 +373,10 @@
         "rule_set": [
           "direct-fix"
         ],
+        "outbound": "direct"
+      },
+     ｛
+        "ip_is_private": true,
         "outbound": "direct"
       },
       {
@@ -409,10 +416,6 @@
       },
       {
         "rule_set": "game@cn",
-        "outbound": "direct"
-      },
-      {
-        "ip_is_private": true,
         "outbound": "direct"
       },
       {
