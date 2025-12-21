@@ -206,7 +206,7 @@
         "Proxy",
         "direct"
       ],
-//      "default": "direct",
+      "default": "direct",
       "interrupt_exist_connections": false
     },
     {
@@ -376,7 +376,7 @@
         ],
         "outbound": "direct"
       },
-     ｛
+      {
         "ip_is_private": true,
         "outbound": "direct"
       },
