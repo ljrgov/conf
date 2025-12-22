@@ -394,10 +394,6 @@
         "outbound": "direct"
       },
       {
-        "ip_is_private": true,
-        "outbound": "direct"
-      },
-      {
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -522,6 +518,10 @@
           "GeoLocation-!CN"
         ],
         "outbound": "Proxy"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
       },
       {
         "action": "route",
