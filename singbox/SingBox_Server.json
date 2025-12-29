@@ -120,6 +120,7 @@
     "disable_cache": false,
     "disable_expire": false,
     "strategy": "prefer_ipv6",
+    "reverse_mapping": true,
     "independent_cache": true
   },
   "inbounds": [
