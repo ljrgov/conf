@@ -120,6 +120,7 @@
     "disable_cache": false,
     "disable_expire": false,
     "strategy": "prefer_ipv6",
+    "reverse_mapping": true,
     "independent_cache": true
   },
   "inbounds": [
@@ -128,7 +129,7 @@
       "tag": "tun-in",
       "interface_name": "sing",
       "address": [
-        "172.19.0.1/30",
+        "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
       "mtu": 9000,
