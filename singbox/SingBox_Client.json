@@ -136,9 +136,8 @@
       "stack": "mixed",
       "auto_route": true,
       "strict_route": true,
-//Windows 不可用      "auto_redirect": true,
+//      "auto_redirect": true,  //tproxy 建议开启
       "sniff": true,
-      "sniff_override_destination": true,
       "platform": {
         "http_proxy": {
           "enabled": true,
