@@ -176,7 +176,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇺🇸 美国节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": false
     },
     {
@@ -190,7 +190,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇨🇳 台湾节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": false
     },
     {
@@ -247,7 +247,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇸🇬 新加坡节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": false
     },
     {
@@ -275,7 +275,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇸🇬 新加坡节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": false
     },
     {
@@ -289,7 +289,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇸🇬 新加坡节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": false
     },
     {
