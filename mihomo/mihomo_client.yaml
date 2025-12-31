@@ -34,6 +34,13 @@ log-level: silent
 unified-delay: true
 find-process-mode: always
 global-client-fingerprint: chrome
+experimental:
+  http-headers:
+    request:
+      - name: "User-Agent"
+        value: "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36"
+      - name: "Accept-Language"
+        value: "en-US,en;q=0.9"
 geo-auto-update: true
 geo-update-interval: 24
 geodata-mode: true
@@ -116,7 +123,24 @@ dns:
     - "+.3gppnetwork.org"
     - "+.xtracloud.net"
     - "+.market.xiaomi.com"
-  nameserver: [223.5.5.5, 119.29.29.29]
+  default-nameserver:
+    - 223.5.5.5
+    - 1.12.12.12
+    - 8.8.8.8
+    - 1.0.0.1
+  direct-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  nameserver-policy:
+    "RULE-SET:CN_域":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+  nameserver:
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
 
 # 锚点参数
 url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
@@ -124,6 +148,11 @@ select: &select {type: select, include-all: true}
 fallback: &fallback {type: fallback, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
 load-balance: &load-balance {type: load-balance, strategy: consistent-hashing, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
 c: &c {type: http, behavior: classical, format: text, interval: 86400}
+
+# 节点记忆
+profile:
+  store-selected: true
+  store-fake-ip: true
 
 proxies:
   - {name: DIRECT, type: direct, udp: true}
