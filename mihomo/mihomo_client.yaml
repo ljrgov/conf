@@ -90,17 +90,17 @@ tun:
 #    - com.sec.epdg
 #    - com.sec.imsservice # 三星专供 ↑ 范围
 # —————————
-
+# DNS模块
 dns:
   enable: true
   cache-algorithm: arc
   prefer-h3: false
-  use-hosts: true
-  use-system-hosts: true
+  use-hosts: false
+  use-system-hosts: false
   listen: 0.0.0.0:1053
   ipv6: true
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
+  fake-ip-range: 172.20.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - '*.lan'
@@ -113,6 +113,9 @@ dns:
     - '*.home.arpa'
     - '*.msftconnecttest.com'
     - '*.msftncsi.com'
+    - "+.3gppnetwork.org"
+    - "+.xtracloud.net"
+    - "+.market.xiaomi.com"
   nameserver: [223.5.5.5, 119.29.29.29]
 
 # 锚点参数
@@ -121,6 +124,11 @@ select: &select {type: select, include-all: true}
 fallback: &fallback {type: fallback, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
 load-balance: &load-balance {type: load-balance, strategy: consistent-hashing, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
 c: &c {type: http, behavior: classical, format: text, interval: 86400}
+
+proxies:
+  - {name: DIRECT, type: direct, udp: true}
+  - {name: REJECT, type: reject}
+  - {name: DNS_Hijack, type: dns}
 
 proxy-groups:
   - name: 手动切换
@@ -316,6 +324,7 @@ rule-providers:
   Proxy: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Proxy.list}
 
 rules:
+  - DST-PORT,53,DNS_Hijack
   - DOMAIN-SUFFIX, lms.kelote.com, DIRECT
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Reject,REJECT
