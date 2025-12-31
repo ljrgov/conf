@@ -1,3 +1,5 @@
+# —————————
+# 订阅管理
 proxy-providers:
   provider1:
     url: ""
@@ -13,6 +15,8 @@ proxy-providers:
         - "ClashMetaForAndroid/2.11.21.Meta"
         - "clash.meta"
         - "mihomo"
+# —————————
+# 基础设置
 mixed-port: 20577
 tproxy-port: 9898
 redir-port: 9797
@@ -40,6 +44,8 @@ geox-url:
   geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
   mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
   asn: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
+# —————————
+# 虚拟网卡和DNS
 tun:
   enable: true
   device: tun0
