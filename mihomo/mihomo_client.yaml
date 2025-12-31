@@ -9,8 +9,8 @@ proxy-providers:
       additional-suffix: ""
     header:
       User-Agent:  # 使用注释法由上到下 默认使用第一个
-        - "clash-verge/v2.4.3"
-        - "ClashMetaForAndroid/2.11.16.Meta"
+        - "clash-verge/v2.4.4"
+        - "ClashMetaForAndroid/2.11.21.Meta"
         - "clash.meta"
         - "mihomo"
 mixed-port: 20577
@@ -20,15 +20,15 @@ external-controller: 127.0.0.1:9090 # 外部控制
 external-ui: dashboard
 external-ui-url: "https://ghfast.top/github.com/Zephyruso/zashboard/archive/gh-pages.zip"
 secret: '***'
-mode: rule
-keep-alive-interval: 30
+ipv6: true
+mode: Rule
+disable-keep-alive: true
 tcp-concurrent: true
 allow-lan: true
 bind-address: '*'
 log-level: silent
 unified-delay: true
-ipv6: true
-find-process-mode: strict
+find-process-mode: always
 global-client-fingerprint: chrome
 geo-auto-update: true
 geo-update-interval: 24
@@ -39,7 +39,7 @@ geox-url:
   geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
   geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
   mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
-  asn: https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
+  asn: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
 tun:
   enable: true
   device: tun0
