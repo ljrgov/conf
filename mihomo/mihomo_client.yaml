@@ -96,7 +96,7 @@ sniffer:
 tun:
   enable: true
   device: Meta
-  stack: gvisor
+  stack: mixed
   dns-hijack:
     - any:53
     - tcp://any:53
