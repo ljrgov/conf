@@ -335,7 +335,6 @@ rule-providers:
   Proxy: {<<: *c, url: https://github.com/Repcz/Tool/raw/X/mihomo/Rules/Proxy.list}
 
 rules:
-  - DST-PORT,53,DNS_Hijack
   - DOMAIN-SUFFIX, lms.kelote.com, DIRECT
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Reject,REJECT
