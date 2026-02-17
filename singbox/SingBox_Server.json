@@ -152,12 +152,6 @@
     },
     {
       "type": "selector",
-      "tag": "bv机场",
-      "outbounds": [],
-      "interrupt_exist_connections": true
-    },
-    {
-      "type": "selector",
       "tag": "🤖 AI",
       "outbounds": [
         "🇭🇰 香港节点",
@@ -165,10 +159,9 @@
         "🇨🇳 台湾节点",
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点",
-        "bv机场",
         "Proxy"
       ],
-      "default": "bv机场",
+      "default": "🇨🇳 台湾节点",
       "interrupt_exist_connections": true
     },
     {
