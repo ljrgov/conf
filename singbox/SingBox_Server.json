@@ -168,7 +168,7 @@
         "bv机场",
         "Proxy"
       ],
-      "default": ""bv机场",
+      "default": "bv机场",
       "interrupt_exist_connections": true
     },
     {
