@@ -152,6 +152,12 @@
     },
     {
       "type": "selector",
+      "tag": "bv机场",
+      "outbounds": [],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
       "tag": "🤖 AI",
       "outbounds": [
         "🇭🇰 香港节点",
