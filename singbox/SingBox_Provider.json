@@ -319,7 +319,11 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "providers": [
+        "sub1"
+      ],
+      "include": "港|hk|hongkong|kong kong|🇭🇰",
+      "exclude": ""
     },
     {
       "type": "urltest",
@@ -328,7 +332,11 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "providers": [
+        "sub1"
+      ],
+      "include": "台|tw|taiwan|🇹🇼|🇨🇳",
+      "exclude": "dj"
     },
     {
       "type": "urltest",
@@ -337,7 +345,11 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "providers": [
+        "sub1"
+      ],
+      "include": "日本|jp|japan|🇯🇵",
+      "exclude": "bv"
     },
     {
       "type": "urltest",
@@ -346,7 +358,11 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "providers": [
+        "sub1"
+      ],
+      "include": "美|us|unitedstates|united states|🇺🇸",
+      "exclude": "dj"
     },
     {
       "type": "urltest",
@@ -355,7 +371,11 @@
       "interval": "1m0s",
       "tolerance": 50,
       "interrupt_exist_connections": true,
-      "outbounds": []
+      "providers": [
+        "sub1"
+      ],
+      "include": "新|sg|singapore|🇸🇬",
+      "exclude": "bv"
     }
   ],
   "route": {
