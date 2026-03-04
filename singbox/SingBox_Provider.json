@@ -5,6 +5,18 @@
     "output": "sing-box.log",
     "timestamp": true
   },
+  "providers": [
+      {
+          "type": "remote",
+          "tag": "sub",
+          "url": "订阅地址",
+          "download_detour": "direct",
+          "health_check": {
+              "enabled": true,
+              "url": "https://www.gstatic.com/generate_204"
+          }
+      }
+  ],
   "dns": {
     "servers": [
       {
@@ -152,12 +164,6 @@
     },
     {
       "type": "selector",
-      "tag": "bv机场",
-      "outbounds": [],
-      "interrupt_exist_connections": true
-    },
-    {
-      "type": "selector",
       "tag": "🤖 AI",
       "outbounds": [
         "🇭🇰 香港节点",
@@ -167,7 +173,7 @@
         "🇸🇬 新加坡节点",
         "Proxy"
       ],
-      "default": "🇯🇵 日本节点",
+      "default": "🇨🇳 台湾节点",
       "interrupt_exist_connections": true
     },
     {
@@ -201,7 +207,7 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点"
       ],
-      "default": "Proxy",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": true
     },
     {
@@ -222,7 +228,8 @@
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "Proxy"
+        "Proxy",
+        "direct"
       ],
       "default": "🇺🇸 美国节点",
       "interrupt_exist_connections": true
