@@ -195,7 +195,7 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点"
       ],
-      "default": 🇯🇵 日本节点",
+      "default": "🇯🇵 日本节点",
       "interrupt_exist_connections": true
     },
     {
