@@ -6,16 +6,16 @@
     "timestamp": true
   },
   "providers": [
-      {
-          "type": "remote",
-          "tag": "sub",
-          "url": "订阅地址",
-          "download_detour": "direct",
-          "health_check": {
-              "enabled": true,
-              "url": "https://www.gstatic.com/generate_204"
-          }
+    {
+      "type": "remote",
+      "tag": "sub1",
+      "url": "订阅地址",
+      "download_detour": "direct",
+      "health_check": {
+        "enabled": true,
+        "url": "https://www.gstatic.com/generate_204"
       }
+    }
   ],
   "dns": {
     "servers": [
