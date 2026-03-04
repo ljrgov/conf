@@ -195,7 +195,7 @@
         "🇺🇸 美国节点",
         "🇸🇬 新加坡节点"
       ],
-      "default": "Proxy",
+      "default": 🇯🇵 日本节点",
       "interrupt_exist_connections": true
     },
     {
@@ -216,9 +216,10 @@
       "outbounds": [
         "🇺🇸 美国节点",
         "🇭🇰 香港节点",
-        "Proxy"
+        "Proxy",
+        "direct"
       ],
-      "default": "🇺🇸 美国节点",
+      "default": "direct",
       "interrupt_exist_connections": true
     },
     {
