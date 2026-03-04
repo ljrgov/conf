@@ -159,7 +159,9 @@
     {
       "type": "selector",
       "tag": "Proxy",
-      "outbounds": [],
+      "providers": [
+        "sub1"
+      ],
       "interrupt_exist_connections": true
     },
     {
@@ -193,7 +195,11 @@
     {
       "type": "selector",
       "tag": "🎮 游戏",
-      "outbounds": [],
+      "providers": [
+        "sub1"
+      ],
+      "include": "台|tw|taiwan|🇹🇼|🇨🇳|日本|jp|japan|🇯🇵",
+      "exclude": "dj",
       "interrupt_exist_connections": true
     },
     {
