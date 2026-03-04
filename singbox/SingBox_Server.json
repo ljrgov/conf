@@ -219,7 +219,7 @@
         "Proxy",
         "direct"
       ],
-      "default": "direct",
+      "default": "🇺🇸 美国节点",
       "interrupt_exist_connections": true
     },
     {
