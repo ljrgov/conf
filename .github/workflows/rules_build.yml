@@ -1,0 +1,165 @@
+name: rules_build
+
+on:
+  push:
+    paths:
+      - 'rules/**.txt'    # 当 rules 文件夹下的 txt 文件发生变动时触发
+  workflow_dispatch:      # 支持在 GitHub 页面手动点击运行
+  schedule:
+    - cron: "0 22 * * *"  # 定时触发：北京时间每日凌晨 06:00 (UTC 22:00)
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    env:
+      TZ: "Asia/Shanghai" # 设置时区为上海
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0    # 获取完整提交历史，以便后续进行强制推送和清理
+
+    - name: Install Tools
+      run: |
+        # --- 动态安装 sing-box ---
+        SB_VER=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r .tag_name | sed 's/v//')
+        curl -L -o sing-box.tar.gz "https://github.com/SagerNet/sing-box/releases/download/v${SB_VER}/sing-box-${SB_VER}-linux-amd64.tar.gz"
+        tar -xzf sing-box.tar.gz
+        sudo mv sing-box-*/sing-box /usr/local/bin/
+        
+        # --- 动态安装 mihomo (原 Clash Meta) ---
+        MH_VER=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | jq -r .tag_name)
+        curl -Lo mh.tar.gz "https://github.com/MetaCubeX/mihomo/releases/download/$MH_VER/mihomo-linux-amd64-$MH_VER.tar.gz"
+        tar -xzf mh.tar.gz && sudo mv mihomo /usr/local/bin/mihomo && sudo chmod +x /usr/local/bin/mihomo
+
+    - name: Professional Rules Processing
+      run: |
+        # 创建各平台对应的输出目录（统一小写）
+        mkdir -p mihomo/rules sing-box/rules surge/rules temp_rules
+        
+        # 遍历 rules 目录下的所有 txt 源文件
+        for file in rules/*.txt; do
+          [ -e "$file" ] || continue
+          filename=$(basename "$file" .txt)
+          src="temp_rules/${filename}.src"
+          echo "正在处理: $filename..."
+
+          # --- 第一阶段：智能洗白 & 标准化 ---
+          # 目的：将各种乱七八糟的输入（纯IP、点号域名等）统一转为带前缀的中间格式
+          while IFS= read -r line || [ -n "$line" ]; do
+            # 去除首尾空格、移除 no-resolve 后缀、移除行内注释
+            line=$(echo "$line" | xargs | sed 's/,no-resolve//g; s| //.*||')
+            # 跳过空行和以 # 或 ; 开头的注释行
+            [[ -z "$line" || "$line" == "#"* || "$line" == ";"* ]] && continue
+
+            if [[ "$line" =~ ^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD), ]]; then
+              echo "$line" >> "$src"
+            elif [[ "$line" =~ ^(IP-CIDR|IP-CIDR6), ]]; then
+              echo "$line" >> "$src"
+            elif [[ "$line" =~ ^(PORT|DEST-PORT), ]]; then
+              # 统一转为内部格式 PORT
+              echo "$line" | sed 's/DEST-PORT/PORT/g' >> "$src"
+            elif [[ "$line" =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}(/[0-9]+)?$ ]]; then
+              # 匹配纯 IP 地址 (1.1.1.1)，自动补全 /32
+              [[ "$line" != *"/"* ]] && line="${line}/32"
+              echo "IP-CIDR,$line" >> "$src"
+            elif [[ "$line" =~ ^[0-9]+$ ]] && [ "$line" -le 65535 ]; then
+              # 匹配纯数字 (80)，识别为端口
+              echo "PORT,$line" >> "$src"
+            elif [[ "$line" == "."* ]]; then
+              # 匹配以点开头的域名 (.google.com)
+              echo "DOMAIN-SUFFIX,${line#.}" >> "$src"
+            elif [[ "$line" =~ \.[a-z]{2,}$ ]]; then
+              # 匹配普通域名 (google.com)
+              echo "DOMAIN,$line" >> "$src"
+            else
+              # 其余无法精确识别的字符串归类为关键词
+              echo "DOMAIN-KEYWORD,$line" >> "$src"
+            fi
+          done < "$file"
+
+          # --- 第二阶段：分发转换至 Surge ---
+          # 规则：域名在前，IP带no-resolve在中，DEST-PORT在最后
+          target_surge="surge/rules/${filename}.list"
+          grep "^DOMAIN," "$src" | sort -u > "$target_surge" || true
+          grep "^DOMAIN-SUFFIX," "$src" | sort -u >> "$target_surge" || true
+          grep "^DOMAIN-KEYWORD," "$src" | sort -u >> "$target_surge" || true
+          grep -E "^IP-CIDR|^IP-CIDR6" "$src" | sort -u | sed 's/$/,no-resolve/' >> "$target_surge" || true
+          grep "^PORT," "$src" | sort -u | sed 's/PORT/DEST-PORT/' >> "$target_surge" || true
+
+          # --- 第三阶段：分发转换至 Mihomo ---
+          # 规则：格式纯净不带后缀，IP在前，PORT在最后
+          target_mihomo="mihomo/rules/${filename}.list"
+          grep "^DOMAIN," "$src" | sort -u > "$target_mihomo" || true
+          grep "^DOMAIN-SUFFIX," "$src" | sort -u >> "$target_mihomo" || true
+          grep "^DOMAIN-KEYWORD," "$src" | sort -u >> "$target_mihomo" || true
+          grep -E "^IP-CIDR|^IP-CIDR6" "$src" | sort -u >> "$target_mihomo" || true
+          grep "^PORT," "$src" | sort -u >> "$target_mihomo" || true
+          # 编译成 Mihomo 专用二进制 MRS
+          mihomo rule-set convert binary "$target_mihomo" "mihomo/rules/${filename}.mrs"
+
+          # --- 第四阶段：分发转换至 sing-box ---
+          # 规则：独立 JSON 块结构，端口在最后
+          json_file="sing-box/rules/${filename}.json"
+          echo '{"version": 2, "rules": [' > "$json_file"
+          process_sb_block() {
+            local prefix=$1; local key=$2; local is_num=$3
+            local items=$(grep "^${prefix}," "$src" | cut -d, -f2 | sort -u)
+            if [ -n "$items" ]; then
+              echo "    { \"$key\": [" >> "$json_file"
+              if [ "$is_num" = true ]; then
+                # 处理数字型数组（端口）
+                echo "$items" | jq -R . | jq -s -c . | sed 's/^\[//;s/\]$//; s/"//g' | sed 's/,/, /g' >> "$json_file"
+              else
+                # 处理字符串型数组（域名、IP）
+                echo "$items" | jq -R . | jq -s . | sed 's/^\[//;s/\]$//' >> "$json_file"
+              fi
+              # IP 规则块自动补全 no_resolve 参数
+              [[ "$prefix" == "IP-CIDR"* ]] && echo "    ], \"no_resolve\": true }," || echo "    }]," >> "$json_file"
+            fi
+          }
+          process_sb_block "DOMAIN" "domain" false
+          process_sb_block "DOMAIN-SUFFIX" "domain_suffix" false
+          process_sb_block "DOMAIN-KEYWORD" "domain_keyword" false
+          process_sb_block "IP-CIDR" "ip_cidr" false
+          process_sb_block "IP-CIDR6" "ip_cidr" false
+          process_sb_block "PORT" "port" true
+          # 修正最后一个对象的逗号，闭合 JSON
+          sed -i '$ s/},/}/' "$json_file"
+          echo '  ] }' >> "$json_file"
+          # 编译成 sing-box 专用二进制 SRS
+          sing-box rule-set compile "$json_file" -o "sing-box/rules/${filename}.srs"
+        done
+
+    - name: Push Changes & History Cleanup
+      run: |
+        # 配置 Git 用户信息
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        git add mihomo/rules sing-box/rules surge/rules
+        
+        # 只有在有变动时才提交
+        if git diff --staged --quiet; then
+          echo "没有检测到规则变动，跳过推送。"
+          exit 0
+        fi
+
+        # --- 清理提交历史逻辑 ---
+        # 1. 创建孤立分支，切断旧历史
+        git checkout --orphan latest_branch
+        # 2. 提交所有生成文件
+        git add -A
+        git commit -m "规则自动构建: $(date +'%Y-%m-%d %H:%M')"
+        # 3. 删除旧分支，重命名新分支，强制覆盖远程历史
+        git branch -D $BRANCH_NAME || true
+        git branch -m $BRANCH_NAME
+        git push -f origin $BRANCH_NAME
+
+    - name: Delete Workflow Runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 0          # 不保留历史运行记录
+        keep_minimum_runs: 2    # 最少保留 2 条，防止列表全空
