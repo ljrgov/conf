@@ -1,0 +1,41 @@
+# 自定义走直连规则
+# —————加速镜像—————
+ghproxy.net
+v6.gh-proxy.org
+git.repcz.link
+
+# —————直连修复—————
+.kelote.com
+.ggpht.cn
+.iconarchive.com
+.meizubl.com
+.yyai8.com
+.ypojie.com
+.423down.com
+.mefcl.com
+.daxiaamu.com
+eset
+
+# —————解决谷歌下载问题—————
+.googleapis.cn
+.xn--ngstr-lra8j.com
+.xn--ngstr-cn-8za9o.com
+
+# —————影视相关域—————
+api.gudvxty.com
+2xiaopan.fun
+
+# —————机场—————
+.mitce.net
+
+# —————ntp—————
+cn.pool.ntp.org
+1.cn.pool.ntp.org
+0.cn.pool.ntp.org
+
+# —————ip地址—————
+
+# —————端口—————
+23323
+
+

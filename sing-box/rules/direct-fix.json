@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "0.cn.pool.ntp.org",
+        "1.cn.pool.ntp.org",
+        "2xiaopan.fun",
+        "api.gudvxty.com",
+        "cn.pool.ntp.org",
+        "ghproxy.net",
+        "git.repcz.link",
+        "v6.gh-proxy.org"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "423down.com",
+        "daxiaamu.com",
+        "ggpht.cn",
+        "googleapis.cn",
+        "iconarchive.com",
+        "kelote.com",
+        "mefcl.com",
+        "meizubl.com",
+        "mitce.net",
+        "xn--ngstr-cn-8za9o.com",
+        "xn--ngstr-lra8j.com",
+        "ypojie.com",
+        "yyai8.com"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "eset"
+      ]
+    },
+    {
+      "port": [
+        23323
+      ]
+    }
+  ]
+}
