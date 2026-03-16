@@ -54,8 +54,7 @@
       },
       {
         "query_type": [
-          "HTTPS",
-          "SVCB"
+          "HTTPS"
         ],
         "action": "predefined",
         "rcode": "NXDOMAIN"
