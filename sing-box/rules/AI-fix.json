@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "crisp.chatai.ac",
+        "csdn.zeroai.chat"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "crisp.chat"
+      ]
+    }
+  ]
+}

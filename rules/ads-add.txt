@@ -1,0 +1,3 @@
+# ————此处用于添加自定义拦截规则————— #
+pagead.js$domain=adblock.turtlecute.org/widget/ads.
+.adbox.banner_ads.adsbox

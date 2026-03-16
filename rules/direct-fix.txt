@@ -1,0 +1,51 @@
+# 自定义走直连规则
+# —————加速镜像—————
+ghproxy.net
+v6.gh-proxy.org
+git.repcz.link
+testingcf.jsdelivr.net
+
+# —————直连修复—————
+.kelote.com
+.ggpht.cn
+.iconarchive.com
+.meizubl.com
+.yyai8.com
+.ypojie.com
+.423down.com
+.mefcl.com
+.daxiaamu.com
+eset
+ksdapp.ksdao.com
+
+  # 微软网络探测
+.msftconnecttest.com
+.msftncsi.com
+
+# —————机场—————
+.mitce.net
+vp0.org
+.vp1.link
+.vp1.pw
+frontpage.invitebv.vip
+xn--mes358a9urctx.com
+.pronetwork.top
+login.djjc.cfd
+login.vp2.biz
+.bv3.org
+www.vp2.biz
+bitbucket.org/obest/bv
+
+# —————影视相关域—————
+api.gudvxty.com
+2xiaopan.fun
+
+# —————ntp—————
+.cn.pool.ntp.org
+
+# —————ip地址—————
+
+# —————端口—————
+23323
+
+

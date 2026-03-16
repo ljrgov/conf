@@ -1,0 +1,13 @@
+DOMAIN-SUFFIX,corp
+DOMAIN-SUFFIX,example
+DOMAIN-SUFFIX,home.arpa
+DOMAIN-SUFFIX,internal
+DOMAIN-SUFFIX,intranet
+DOMAIN-SUFFIX,invalid
+DOMAIN-SUFFIX,lan
+DOMAIN-SUFFIX,local
+DOMAIN-SUFFIX,localdomain
+DOMAIN-SUFFIX,localhost
+DOMAIN-SUFFIX,msftconnecttest.com
+DOMAIN-SUFFIX,msftncsi.com
+DOMAIN-SUFFIX,test

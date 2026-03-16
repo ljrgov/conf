@@ -1,0 +1,206 @@
+name: rules_build
+
+on:
+  push:
+    paths:
+      - 'rules/**.txt'
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "0 22 * * *"
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    env:
+      TZ: "Asia/Shanghai"
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install & Cache Tools (script/)
+      run: |
+        mkdir -p script
+
+        # ── sing-box ──────────────────────────────────────────────
+        SB_FALLBACK_URL="https://github.com/SagerNet/sing-box/releases/download/v1.13.0/sing-box-1.13.0-linux-amd64-glibc.tar.gz"
+
+        SB_API=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest)
+        LATEST_SB=$(echo "$SB_API" | jq -r '.tag_name // empty' | sed 's/^v//')
+        if [ -z "$LATEST_SB" ]; then
+          echo "警告：无法获取 sing-box 最新版本，跳过更新"
+          if [ ! -f ./script/sing-box ]; then
+            echo "本地无缓存，使用硬编码链接下载..."
+            curl -Lo /tmp/sing-box.tar.gz "$SB_FALLBACK_URL"
+            tar -xzf /tmp/sing-box.tar.gz -C /tmp
+            mv /tmp/sing-box-*/sing-box script/sing-box
+            chmod +x script/sing-box
+          else
+            echo "使用本地缓存版本"
+          fi
+        else
+          CURRENT_SB=$([ -f ./script/sing-box ] && ./script/sing-box version 2>/dev/null | awk 'NR==1{print $3}' | sed 's/^v//' || echo "none")
+          echo "sing-box 当前: $CURRENT_SB，最新: $LATEST_SB"
+          if [ "$LATEST_SB" != "$CURRENT_SB" ]; then
+            echo "更新 sing-box: $CURRENT_SB → $LATEST_SB"
+            SB_URL=$(echo "$SB_API" | jq -r '.assets[] | select(.name | test("linux-amd64") and test("tar.gz")) | .browser_download_url' | head -n 1)
+            curl -Lo /tmp/sing-box.tar.gz "$SB_URL"
+            tar -xzf /tmp/sing-box.tar.gz -C /tmp
+            mv /tmp/sing-box-*/sing-box script/sing-box
+            chmod +x script/sing-box
+          else
+            echo "sing-box 已是最新: $CURRENT_SB，跳过下载"
+          fi
+        fi
+        sudo ln -sf "$PWD/script/sing-box" /usr/local/bin/sing-box
+        sing-box version
+
+        # ── 提交 script/ 到仓库（若有变化）─────────────────────────
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add script/
+        if ! git diff --staged --quiet; then
+          git commit -m "chore: 更新工具链 script/ $(date +'%Y-%m-%d')"
+          git push
+        fi
+
+    - name: Professional Rules Processing
+      run: |
+        mkdir -p mihomo/rules sing-box/rules surge/rules temp_rules
+
+        for file in rules/*.txt; do
+          [ -e "$file" ] || continue
+          filename=$(basename "$file" .txt)
+          src="temp_rules/${filename}.src"
+          echo "==============================="
+          echo "正在处理: $filename"
+
+          # ── 第一阶段：标准化输入 + 生成 sing-box JSON（一次 Python 调用）──
+          json_file="sing-box/rules/${filename}.json"
+          python3 script/rules_processor.py "$file" "$src" "$json_file"
+
+          # ── 第二阶段：生成 Surge list ────────────────────────────
+          # DOMAIN-WILDCARD 直接输出；URL-REGEX 直接输出
+          # IP-CIDR/IP-CIDR6 已在 .src 中含 ,no-resolve，直接输出
+          # DST-PORT → DEST-PORT；SRC-PORT 直接输出
+          # PROCESS-NAME 直接输出（含通配符，仅 Mac 生效）
+          # IP-ASN / GEOIP 直接输出；SRC-IP-CIDR → SRC-IP（,no-resolve 随 sed 保留）
+          # 不支持：IP-SUFFIX / SRC-IP-SUFFIX / SRC-IP-ASN / SRC-GEOIP
+          #         IN-TYPE / IN-USER / IN-NAME / UID / DSCP
+          #         PROCESS-PATH* / PROCESS-NAME-REGEX / GEOSITE
+          target_surge="surge/rules/${filename}.list"
+          {
+            grep "^DOMAIN,"          "$src" | sort -u || true
+            grep "^DOMAIN-SUFFIX,"   "$src" | sort -u || true
+            grep "^DOMAIN-KEYWORD,"  "$src" | sort -u || true
+            grep "^DOMAIN-WILDCARD," "$src" | sort -u || true
+            grep "^DOMAIN-REGEX,"    "$src" | sort -u || true
+            grep -E "^IP-CIDR6?,"    "$src" | sort -u || true
+            grep "^IP-ASN,"          "$src" | sort -u || true
+            grep "^GEOIP,"           "$src" | sort -u || true
+            grep "^SRC-IP-CIDR,"     "$src" | sort -u | sed 's/^SRC-IP-CIDR,/SRC-IP,/' || true
+            grep "^DST-PORT,"        "$src" | sort -u | sed 's/^DST-PORT,/DEST-PORT,/' || true
+            grep "^SRC-PORT,"        "$src" | sort -u || true
+            grep "^IN-PORT,"         "$src" | sort -u || true
+            grep -E "^PROCESS-NAME(-WILDCARD)?," "$src" | sort -u | while IFS= read -r pline; do
+              val="${pline#*,}"
+              echo "PROCESS-NAME,${val}"
+            done || true
+            grep "^URL-REGEX,"       "$src" | sort -u || true
+          } > "$target_surge"
+
+          # ── 第三阶段：生成 Mihomo classical list ────────────────
+          # DOMAIN-WILDCARD → DOMAIN-REGEX（* 转 .*, ? 转 .）
+          # URL-REGEX → 跳过（路径规则 Mihomo 无对应）
+          # IP-CIDR/IP-CIDR6/IP-SUFFIX/SRC-IP-CIDR 已在 .src 中含 ,no-resolve，直接输出
+          # DST-PORT/SRC-PORT 直接输出
+          # PROCESS-* 直接输出
+          target_mihomo="mihomo/rules/${filename}.list"
+          {
+            grep "^DOMAIN,"          "$src" | sort -u || true
+            grep "^DOMAIN-SUFFIX,"   "$src" | sort -u || true
+            grep "^DOMAIN-KEYWORD,"  "$src" | sort -u || true
+            grep "^DOMAIN-REGEX,"    "$src" | sort -u || true
+            grep "^GEOSITE,"         "$src" | sort -u || true
+            grep "^GEOIP,"           "$src" | sort -u || true
+
+            # 通配符 → DOMAIN-REGEX
+            grep "^DOMAIN-WILDCARD," "$src" | sort -u | while IFS= read -r wline; do
+              pattern="${wline#DOMAIN-WILDCARD,}"
+              # * → .*   ? → .   并转义其他正则元字符（除 . 保留为已知）
+              regex=$(echo "$pattern" | sed \
+                's/\./DOTPLACEHOLDER/g;
+                 s/\*/\.\*/g;
+                 s/?/\./g;
+                 s/DOTPLACEHOLDER/\\./g')
+              echo "DOMAIN-REGEX,${regex}"
+            done || true
+
+            grep -E "^IP-CIDR6?,"   "$src" | sort -u || true
+            grep "^IP-SUFFIX,"       "$src" | sort -u || true
+            grep "^IP-ASN,"          "$src" | sort -u || true
+            grep "^SRC-IP-CIDR,"     "$src" | sort -u || true
+            grep "^SRC-IP-CIDR6,"    "$src" | sort -u || true
+            grep "^SRC-IP-SUFFIX,"   "$src" | sort -u || true
+            grep "^SRC-IP-ASN,"      "$src" | sort -u || true
+            grep "^SRC-GEOIP,"       "$src" | sort -u || true
+
+            grep "^DST-PORT,"        "$src" | sort -u || true
+            grep "^SRC-PORT,"        "$src" | sort -u || true
+
+            grep "^IN-PORT,"         "$src" | sort -u || true
+            grep "^IN-TYPE,"         "$src" | sort -u || true
+            grep "^IN-USER,"         "$src" | sort -u || true
+            grep "^IN-NAME,"         "$src" | sort -u || true
+
+            grep -E "^PROCESS-(NAME|NAME-WILDCARD|NAME-REGEX|PATH|PATH-WILDCARD|PATH-REGEX)," \
+                                     "$src" | sort -u || true
+            grep "^UID,"             "$src" | sort -u || true
+            grep "^NETWORK,"         "$src" | sort -u || true
+            grep "^DSCP,"            "$src" | sort -u || true
+            # URL-REGEX 不输出
+          } > "$target_mihomo"
+
+          # 校验 JSON 合法性再编译
+          if python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$json_file" 2>/dev/null; then
+            echo "  ✓ JSON 校验通过"
+            sing-box rule-set compile "$json_file" -o "sing-box/rules/${filename}.srs" \
+              && echo "  ✓ SRS 编译成功" \
+              || echo "  ✗ SRS 编译失败"
+          else
+            echo "  ✗ JSON 校验失败，跳过 SRS 编译"
+            cat "$json_file"
+          fi
+
+        done
+
+        # ── 清理临时文件，保持仓库整洁 ───────────────────────────
+        rm -rf temp_rules
+
+    - name: Push Changes & History Cleanup
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        git add mihomo/rules sing-box/rules surge/rules
+
+        if git diff --staged --quiet; then
+          echo "没有检测到规则变动，跳过推送。"
+          exit 0
+        fi
+
+        git checkout --orphan latest_branch
+        git add -A
+        git commit -m "规则自动构建: $(date +'%Y-%m-%d %H:%M')"
+        git branch -D "$BRANCH_NAME" || true
+        git branch -m "$BRANCH_NAME"
+        git push -f origin "$BRANCH_NAME"
+
+    - name: Delete Workflow Runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 0
+        keep_minimum_runs: 2

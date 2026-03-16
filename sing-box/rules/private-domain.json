@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain_suffix": [
+        "corp",
+        "example",
+        "home.arpa",
+        "internal",
+        "intranet",
+        "invalid",
+        "lan",
+        "local",
+        "localdomain",
+        "localhost",
+        "msftconnecttest.com",
+        "msftncsi.com",
+        "test"
+      ]
+    }
+  ]
+}

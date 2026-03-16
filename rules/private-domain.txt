@@ -1,0 +1,13 @@
+.lan
+.localdomain
+.example
+.invalid
+.localhost
+.test
+.local
+.home.arpa
+.msftconnecttest.com
+.msftncsi.com
+.internal
+.intranet
+.corp

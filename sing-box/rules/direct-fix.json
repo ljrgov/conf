@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "2xiaopan.fun",
+        "api.gudvxty.com",
+        "frontpage.invitebv.vip",
+        "ghproxy.net",
+        "git.repcz.link",
+        "ksdapp.ksdao.com",
+        "login.djjc.cfd",
+        "login.vp2.biz",
+        "testingcf.jsdelivr.net",
+        "v6.gh-proxy.org",
+        "vp0.org",
+        "www.vp2.biz",
+        "xn--mes358a9urctx.com"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "423down.com",
+        "bv3.org",
+        "cn.pool.ntp.org",
+        "daxiaamu.com",
+        "ggpht.cn",
+        "iconarchive.com",
+        "kelote.com",
+        "mefcl.com",
+        "meizubl.com",
+        "mitce.net",
+        "msftconnecttest.com",
+        "msftncsi.com",
+        "pronetwork.top",
+        "vp1.link",
+        "vp1.pw",
+        "ypojie.com",
+        "yyai8.com"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "bitbucket.org/obest/bv",
+        "eset"
+      ]
+    },
+    {
+      "port": [
+        23323
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain_suffix": [
+        "adbox.banner_ads.adsbox"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "pagead.js$domain=adblock.turtlecute.org/widget/ads."
+      ]
+    }
+  ]
+}
