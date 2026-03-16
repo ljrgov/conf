@@ -41,8 +41,7 @@
     "rules": [
       {
         "rule_set": [
-          "private-domain",
-          "private-ip",
+          "private-domain"
           "direct-fix"
         ],
         "server": "ali"
@@ -103,8 +102,7 @@
       {
         "rule_set": [
           "Apple-direct",
-          "ChinaDomain",
-          "GeoIP-CN"
+          "ChinaDomain"
         ],
         "action": "route",
         "server": "ali"
