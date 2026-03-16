@@ -390,7 +390,10 @@
         "outbound": "📦 手动选择"
       },
       {
-        "rule_set": "AI",
+        "rule_set": [
+          "AI",
+          "AI-fix"
+        ]
         "outbound": "🤖 AI"
       },
       {
@@ -486,6 +489,14 @@
         "tag": "wechat",
         "format": "binary",
         "url": "https://raw.githubusercontent.com/Repcz/Tool/refs/heads/X/sing-box/Rules/WeChat.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "AI-fix",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/AI-fix.srs",
         "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
