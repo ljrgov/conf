@@ -449,6 +449,13 @@
       },
       {
         "rule_set": [
+          "Apple-direct",
+          "ChinaDomain"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
           "AI",
           "AI-fix"
         ],
@@ -482,10 +489,6 @@
         "outbound": "🐙 Github"
       },
       {
-        "rule_set": "Apple-proxy",
-        "outbound": "🍎 苹果"
-      },
-      {
         "rule_set": [
           "Microsoft",
           "OneDrive"
@@ -510,11 +513,13 @@
       },
       {
         "rule_set": [
-          "Apple-direct",
-          "ChinaDomain",
           "GeoIP-CN"
         ],
         "outbound": "direct"
+      },
+      {
+        "rule_set": "Apple-proxy",
+        "outbound": "🍎 苹果"
       }
     ],
     "rule_set": [
