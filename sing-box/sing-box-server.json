@@ -57,7 +57,7 @@
           "HTTPS"
         ],
         "action": "predefined",
-        "rcode": "NXDOMAIN"
+        "rcode": "NOERROR"
       },
       {
         "rule_set": [
@@ -77,6 +77,13 @@
         "server": "fakeip"
       },
       {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "action": "route",
+        "server": "ali"
+      },
+      {
         "query_type": [
           "A",
           "AAAA"
@@ -84,14 +91,6 @@
         "action": "route",
         "server": "fakeip",
         "rewrite_ttl": 1
-      },
-      {
-        "rule_set": [
-          "Apple-direct",
-          "ChinaDomain"
-        ],
-        "action": "route",
-        "server": "ali"
       }
     ],
     "final": "cloudflare",
@@ -391,13 +390,6 @@
       },
       {
         "rule_set": [
-          "Apple-direct",
-          "ChinaDomain"
-        ],
-        "outbound": "direct"
-      },
-      {
-        "rule_set": [
           "AI",
           "AI-fix"
         ],
@@ -452,6 +444,12 @@
       {
         "rule_set": "Spotify",
         "outbound": "🎵 Spotify"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "outbound": "direct"
       },
       {
         "rule_set": [
@@ -582,14 +580,6 @@
         "tag": "Twitter",
         "format": "binary",
         "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Twitter.srs",
-        "download_detour": "direct",
-        "update_interval": "24h0m0s"
-      },
-      {
-        "type": "remote",
-        "tag": "Apple-direct",
-        "format": "binary",
-        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Apple.srs",
         "download_detour": "direct",
         "update_interval": "24h0m0s"
       },
