@@ -90,13 +90,6 @@
         "server": "fakeip"
       },
       {
-        "rule_set": [
-          "ChinaDomain"
-        ],
-        "action": "route",
-        "server": "ali"
-      }
-      {
         "query_type": [
           "A",
           "AAAA"
@@ -104,6 +97,13 @@
         "action": "route",
         "server": "fakeip",
         "rewrite_ttl": 1
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "action": "route",
+        "server": "ali"
       }
     ],
     "final": "cloudflare",
