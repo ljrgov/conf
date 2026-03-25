@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'rules/**.txt' # 如果你手动修改了 rules/ 里的 txt，也会触发构建
+      - 'rules/**.txt' # 手动修改了 rules/ 里的 txt，也会触发构建
 
 env:
   # --- 我的仓库: conf规则配置目录
