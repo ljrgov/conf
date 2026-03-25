@@ -1,0 +1,4 @@
+script/sing-box
+__pycache__/
+*.pyc
+.venv/
