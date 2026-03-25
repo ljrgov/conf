@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -93,21 +93,38 @@ jobs:
           rm -rf source_repcz
 
       # ── 第二步：安装/更新工具链 (sing-box) ─────────────────────────
-      - name: Install & Cache Tools
+      - name: Get Latest sing-box Version
+        id: sb-version
+        run: |
+          LATEST_SB=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name')
+          echo "version=${LATEST_SB}" >> $GITHUB_OUTPUT
+
+      - name: Cache sing-box Binary
+        id: cache-sb
+        uses: actions/cache@v4
+        with:
+          path: script/sing-box
+          # 缓存的 Key 绑定版本号，一旦版本号变了，缓存自动失效并触发重新下载
+          key: ${{ runner.os }}-sb-${{ steps.sb-version.outputs.version }}
+
+      - name: Install & Update sing-box
+        # 如果缓存命中了（steps.cache-sb.outputs.cache-hit 为 true），则跳过下载步骤
+        if: steps.cache-sb.outputs.cache-hit != 'true'
         run: |
           mkdir -p script
           SB_API=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest)
-          LATEST_SB=$(echo "$SB_API" | jq -r '.tag_name // empty' | sed 's/^v//')
-          CURRENT_SB=$([ -f ./script/sing-box ] && ./script/sing-box version 2>/dev/null | awk 'NR==1{print $3}' | sed 's/^v//' || echo "none")
-          
-          if [ "$LATEST_SB" != "$CURRENT_SB" ] && [ -n "$LATEST_SB" ]; then
-            SB_URL=$(echo "$SB_API" | jq -r '.assets[] | select(.name | test("linux-amd64") and test("tar.gz")) | .browser_download_url' | head -n 1)
-            curl -Lo /tmp/sing-box.tar.gz "$SB_URL"
-            tar -xzf /tmp/sing-box.tar.gz -C /tmp
-            mv /tmp/sing-box-*/sing-box script/sing-box
-            chmod +x script/sing-box
-          fi
+          SB_URL=$(echo "$SB_API" | jq -r '.assets[] | select(.name | test("linux-amd64") and test("tar.gz")) | .browser_download_url' | head -n 1)
+          curl -Lo /tmp/sing-box.tar.gz "$SB_URL"
+          tar -xzf /tmp/sing-box.tar.gz -C /tmp
+          mv /tmp/sing-box-*/sing-box script/sing-box
+          chmod +x script/sing-box
+
+      - name: Setup Binary Link
+        run: |
+          # 无论是否命中缓存，都要建立软链接，确保系统命令可用
           sudo ln -sf "$PWD/script/sing-box" /usr/local/bin/sing-box
+          sing-box version
+
 
       # ── 第三步：执行专业规则构建 (重构版：全自动化分发) ─────────────
       - name: Professional Rules Processing
