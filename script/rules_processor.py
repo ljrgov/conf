@@ -1,4 +1,4 @@
-# 规则集格式化（sing-box、surge、mihomo）
+# 用于规则集格式化（sing-box、surge、mihomo）
 import sys
 import re
 import json
