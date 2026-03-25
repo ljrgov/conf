@@ -57,12 +57,9 @@ jobs:
           for folder in "${ADDR[@]}"; do
             SRC_PATH="source_blackmatrix7/${{ env.BLACK_PATH }}/$folder"
             [ -d "$SRC_PATH" ] || continue
-            
             # 只处理与文件夹名称完全匹配的 .list 文件
             target_file="${folder}.list"
             src_file="$SRC_PATH/$target_file"
-            
-            # 如果文件存在，则重命名为小写并转换为 .txt 后缀
             if [ -f "$src_file" ]; then
               cp -f "$src_file" "${{ env.DEST_DIR }}/${folder,,}.txt"
             fi
