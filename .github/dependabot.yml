@@ -1,15 +1,19 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
+  # 监控 GitHub Actions 插件版本
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
       timezone: "Asia/Shanghai"
       time: "08:00"
-    pull-request-branch-name:
-      separator: "-"
+    open-pull-requests-limit: 3 # 限制同时开启的 PR 数量，防止刷屏
+
+  # 监控 Python 依赖包 (如 requirements.txt)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      timezone: "Asia/Shanghai"
+      time: "09:00"
+    open-pull-requests-limit: 3
