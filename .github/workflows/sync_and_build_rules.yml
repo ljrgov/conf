@@ -33,7 +33,7 @@ env:
   REPCZ_TARGETS: "Ads_SukkaW Facebook Instagram TikTok" 
   # 格式：文件名:域名1,域名2（空格分隔多个文件配置）
   REPCZ_INCLUDE_MAP: ""
-  REPCZ_EXCLUDE_MAP: "Ads_SukkaW:pr.nss.netease.com"
+  REPCZ_EXCLUDE_MAP: "Ads_SukkaW:pr.nss.netease.com,.adjust.com"
 
   # ───────────────────────────
 
