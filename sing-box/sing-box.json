@@ -1,0 +1,946 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "warn",
+    "output": "sing-box.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "https",
+        "tag": "ali",
+        "server": "223.5.5.5"
+      },
+      {
+        "type": "https",
+        "tag": "Cloudflare",
+        "detour": "🎯 All-Proxy",
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "fakeip",
+        "tag": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      }
+    ],
+    "rules": [
+      {
+        "query_type": "HTTPS",
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
+      {
+        "clash_mode": "全局直连",
+        "server": "ali"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "TikTok",
+              "Instagram"
+            ]
+          },
+          {
+            "network": "quic"
+          }
+        ],
+        "action": "predefined",
+        "rcode": "NOERROR"
+      },
+      {
+        "clash_mode": "全局代理",
+        "server": "Cloudflare"
+      },
+      {
+        "rule_set": [
+          "Direct_fix"
+        ],
+        "server": "ali"
+      },
+      {
+        "rule_set": [
+          "WeChat"
+        ],
+        "server": "ali"
+      },
+      {
+        "rule_set": [
+          "game@cn"
+        ],
+        "server": "ali"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "ChinaDomain",
+        "server": "ali"
+      }
+    ],
+    "final": "Cloudflare",
+    "strategy": "prefer_ipv4",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tproxy",
+      "tag": "tproxy-in",
+      "listen": "::",
+      "listen_port": 9898
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "sing",
+      "address": [
+        "172.19.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "mtu": 9000,
+      "stack": "mixed",
+      "auto_route": true,
+      "strict_route": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
+        }
+      },
+      "route_exclude_address": [
+        "::1/128",
+        "fe80::/10"
+      ]
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 7890,
+      "set_system_proxy": false
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "🎯 All-Proxy",
+      "outbounds": [],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🤖 AI",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇨🇳 TW",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🍿 YouTube",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇯🇵 JP",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🪩 Google",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "📠 WhatsApp",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇨🇳 TW",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "📘 Facebook",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇨🇳 TW",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "✈️ Telegram",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐈‍⬛ GitHub",
+      "outbounds": [
+        "🎯 All-Proxy",
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🐦 Twitter",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🪟 Microsoft",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🍏 Apple",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🏦 PayPal",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy",
+        "direct"
+      ],
+      "default": "🇺🇸 US",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "💰 Binance",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy",
+        "direct"
+      ],
+      "default": "🇭🇰 HK",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎬 Media",
+      "outbounds": [
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "🇯🇵 JP",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🎮 Game",
+      "outbounds": [],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "📡 GoogleFCM",
+      "outbounds": [
+        "direct",
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎯 All-Proxy"
+      ],
+      "default": "direct",
+      "interrupt_exist_connections": true
+    },
+    {
+       "type":"selector",
+      "tag":"🚫 广告|Webrtc",
+      "interrupt_exist_connections":true,
+      "outbounds":[
+        "block",
+        "direct"
+      ],
+      "default": "block",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "selector",
+      "tag": "🐟 漏网之鱼",
+      "outbounds": [
+        "🎯 All-Proxy",
+        "🇭🇰 HK",
+        "🇯🇵 JP",
+        "🇨🇳 TW",
+        "🇺🇸 US",
+        "🇸🇬 SG",
+        "🎮 Game",
+        "direct"
+      ],
+      "default": "🎯 All-Proxy",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🇭🇰 HK",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "urltest",
+      "tag": "🇨🇳 TW",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "urltest",
+      "tag": "🇯🇵 JP",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "urltest",
+      "tag": "🇺🇸 US",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    },
+    {
+      "type": "urltest",
+      "tag": "🇸🇬 SG",
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "2m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true,
+      "outbounds": []
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff",
+        "sniffer": [
+          "http",
+          "tls",
+          "quic",
+          "dns"
+        ],
+        "timeout": "300ms"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 53
+          },
+          {
+            "protocol": "dns"
+          }
+        ],
+        "action": "hijack-dns"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "Lan",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "全局直连",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "Ads_SukkaW",
+          "Ads_fix",
+          "Webrtc"
+        ],
+        "outbound": "🚫 广告|Webrtc"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "YouTube",
+              "TikTok",
+              "Instagram"
+            ]
+          },
+          {
+            "network": "quic"
+          }
+        ],
+        "action": "reject",
+        "method": "drop"
+      },
+      {
+        "clash_mode": "全局代理",
+        "outbound": "🎯 All-Proxy"
+      },
+      {
+        "rule_set": [
+          "Direct_fix"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "NTPService",
+        "outbound": "📡 GoogleFCM"
+      },
+      {
+        "rule_set": "GoogleFCM",
+        "outbound": "📡 GoogleFCM"
+      },
+      {
+        "rule_set": "WeChat",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "game@cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "Game_Proxy",
+          "Epic",
+          "Steam"
+        ],
+        "outbound": "🎮 Game"
+      },
+      {
+        "rule_set": [
+          "Gemini",
+          "OpenAI",
+          "Copilot",
+          "AI_fix"
+        ],
+        "outbound": "🤖 AI"
+      },
+      {
+        "rule_set": "YouTube",
+        "outbound": "🍿 YouTube"
+      },
+      {
+        "rule_set": "Google",
+        "outbound": "🪩 Google"
+      },
+      {
+        "rule_set": "WhatsApp",
+        "outbound": "📠 WhatsApp"
+      },
+      {
+        "rule_set": "Facebook",
+        "outbound": "📘 Facebook"
+      },
+      {
+        "rule_set": "Telegram",
+        "outbound": "✈️ Telegram"
+      },
+      {
+        "rule_set": "Twitter",
+        "outbound": "🐦 Twitter"
+      },
+      {
+        "rule_set": [
+          "GitHub",
+          "Cloudflare"
+        ],
+        "outbound": "🐈‍⬛ GitHub"
+      },
+      {
+        "rule_set": "PayPal",
+        "outbound": "🏦 PayPal"
+      },
+      {
+        "rule_set": "Binance",
+        "outbound": "💰 Binance"
+      },
+      {
+        "rule_set": "Microsoft",
+        "outbound": "🪟 Microsoft"
+      },
+      {
+        "rule_set": [
+          "MEGA",
+          "Emby",
+          "Instagram",
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "TikTok"
+        ],
+        "outbound": "🎬 Media"
+      },
+      {
+        "rule_set": "ChinaDomain",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "GeoIP-CN",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "AppleProxy",
+        "outbound": "🍏 Apple"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "Webrtc",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Webrtc.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Ads_SukkaW",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Ads_SukkaW.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Ads_fix",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Ads_fix.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Direct_fix",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Direct_fix.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Lan",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Lan.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "NTPService",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/NTPService.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Binance",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Binance.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "PayPal",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/PayPal.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "WeChat",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/WeChat.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "AI_fix",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/AI_fix.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "OpenAI",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/OpenAI.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Gemini",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Gemini.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Copilot",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Copilot.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Telegram",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Telegram.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "YouTube",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/YouTube.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GoogleFCM",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/GoogleFCM.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Google",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Google.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Microsoft",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Microsoft.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GitHub",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/GitHub.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Cloudflare",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Cloudflare.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "WhatsApp",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Whatsapp.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Facebook",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Facebook.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Instagram",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Instagram.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Twitter",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Twitter.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "AppleProxy",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/AppleProxy.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "game@cn",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-game-platforms-download@cn.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Game_Proxy",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/Game_Proxy.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Epic",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Epic.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Steam",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Steam.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "MEGA",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/MEGA.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Emby",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Emby.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Bahamut",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Bahamut.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Netflix",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Netflix.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "Disney",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Disney.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "PrimeVideo",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/PrimeVideo.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "HBO",
+        "format": "binary",
+        "url": "https://github.com/Repcz/Tool/raw/X/sing-box/Rules/HBO.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "TikTok",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/rules/TikTok.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "ChinaDomain",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+        "download_detour": "direct",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoIP-CN",
+        "format": "binary",
+        "url": "https://github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs",
+        "download_detour": "direct",
+        "update_interval": "240h0m0s"
+      }
+    ],
+    "final": "🐟 漏网之鱼",
+    "default_domain_resolver": "ali",
+    "auto_detect_interface": true,
+    "find_process": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "cache_id": "ID_7520",
+      "store_fakeip": true,
+      "store_rdrc": true,
+      "rdrc_timeout": "168h0m0s"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "WebUI",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip",
+      "external_ui_download_detour": "direct",
+      "secret": "",
+      "default_mode": "规则分流",
+      "access_control_allow_origin": "*",
+      "access_control_allow_private_network": true
+    }
+  }
+}

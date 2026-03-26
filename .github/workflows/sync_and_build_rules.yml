@@ -1,0 +1,222 @@
+name: Auto Sync and Build Rules
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # 每天 UTC 15:00 (北京时间 23:00)
+  workflow_dispatch:
+  push:
+    paths:
+      - 'rules/**.txt' # 修改了 rules/ 里的 txt，也会触发构建
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: "Asia/Shanghai"
+  # --- 我的仓库: conf规则配置目录
+  DEST_DIR: "rules"
+  # ───────────────────────────
+  # --- 仓库 1: blackmatrix7
+  BLACK_REPO: "https://github.com/blackmatrix7/ios_rule_script.git"
+  BLACK_PATH: "rule/Surge"
+  # 指定目录文件夹名，空格隔开
+  TARGETS: "AppleProxy Binance Cloudflare Google YouTube Gemini GitHub Lan Microsoft Copilot MEGA NTPService OpenAI PayPal Telegram Twitter Whatsapp WeChat"
+  # 格式：文件夹名:域名1,域名2（空格分隔多个文件配置）
+  BLACK_INCLUDE_MAP: "YouTube:sponsor.ajay.app Telegram:capoo.nekogram.app"
+  BLACK_EXCLUDE_MAP: "" 
+
+  # ───────────────────────────
+  # --- 仓库 2: Repcz
+  REPCZ_REPO: "https://github.com/Repcz/Tool.git"
+  REPCZ_PATH: "Surge/Rules"
+  # 直接指定文件名，空格隔开
+  REPCZ_TARGETS: "Ads_SukkaW Facebook Instagram TikTok" 
+  # 格式：文件名:域名1,域名2（空格分隔多个文件配置）
+  REPCZ_INCLUDE_MAP: ""
+  REPCZ_EXCLUDE_MAP: "Ads_SukkaW:pr.nss.netease.com"
+
+  # ───────────────────────────
+
+jobs:
+  Sync-and-Build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write 
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # ── 第一步：同步远程规则 ──────────────────────────────────────
+      - name: Sync Remote Rules
+        run: |
+          # 1. 同步 blackmatrix7 (按需精准剔除 & 增加)
+          git clone --depth=1 --filter=blob:none --sparse ${{ env.BLACK_REPO }} source_blackmatrix7
+          read -ra ADDR <<< "${{ env.TARGETS }}"
+          SPARSE_PATHS=()
+          for folder in "${ADDR[@]}"; do SPARSE_PATHS+=("${{ env.BLACK_PATH }}/$folder"); done
+          cd source_blackmatrix7 && git sparse-checkout set "${SPARSE_PATHS[@]}" && cd ..
+
+          mkdir -p "${{ env.DEST_DIR }}"
+          for folder in "${ADDR[@]}"; do
+            SRC_PATH="source_blackmatrix7/${{ env.BLACK_PATH }}/$folder"
+            [ -d "$SRC_PATH" ] || continue
+            
+            target_file="${folder}.list"
+            src_file="$SRC_PATH/$target_file"
+
+            # folder后加上,,为小写，如: folder,,
+            dest_file="${{ env.DEST_DIR }}/${folder}.txt"
+
+            if [ -f "$src_file" ]; then
+              cp -f "$src_file" "$dest_file"
+              
+              # --- 逻辑 A: 剔除域名 (Exclude) ---
+              if echo "${{ env.BLACK_EXCLUDE_MAP }}" | grep -q "${folder}:"; then
+                  config_ex=$(echo "${{ env.BLACK_EXCLUDE_MAP }}" | tr ' ' '\n' | grep "^${folder}:")
+                  domains_ex=$(echo "$config_ex" | cut -d':' -f2 | tr ',' ' ')                
+                  for domain in $domains_ex; do
+                      echo "正在从 BlackMatrix7/$folder 中剔除: $domain"
+                      sed -i "/$domain/d" "$dest_file"
+                  done
+              fi
+
+              # --- 逻辑 B: 增加域名 (Include) ---
+              if echo "${{ env.BLACK_INCLUDE_MAP }}" | grep -q "${folder}:"; then
+                  config_in=$(echo "${{ env.BLACK_INCLUDE_MAP }}" | tr ' ' '\n' | grep "^${folder}:")
+                  domains_in=$(echo "$config_in" | cut -d':' -f2 | tr ',' ' ')
+                  for domain in $domains_in; do
+                      if ! grep -q "$domain" "$dest_file"; then
+                          echo "正在向 BlackMatrix7/$folder 中增加: $domain"
+                          # 可添加前缀精确匹配 DOMAIN或其他格式，比如：DOMAIN,$domain
+                          echo "$domain" >> "$dest_file"
+                      fi
+                  done
+              fi
+            fi
+          done
+          rm -rf source_blackmatrix7
+
+          # 2. 同步 Repcz (按需精准剔除 & 增加)
+          git clone --depth=1 --filter=blob:none --sparse ${{ env.REPCZ_REPO }} source_repcz
+          cd source_repcz && git sparse-checkout set "${{ env.REPCZ_PATH }}" && cd ..
+          
+          read -ra REPCZ_FILES <<< "${{ env.REPCZ_TARGETS }}"
+          for file_name in "${REPCZ_FILES[@]}"; do
+            src_file="source_repcz/${{ env.REPCZ_PATH }}/${file_name}.list"
+            [ -f "$src_file" ] || continue
+
+            # file_name后加上,,为小写，如: file_name,,
+            dest_file="${{ env.DEST_DIR }}/${file_name}.txt"
+            cp -f "$src_file" "$dest_file"
+
+            # --- 逻辑 A: 剔除域名 (Exclude) ---
+            if echo "${{ env.REPCZ_EXCLUDE_MAP }}" | grep -q "${file_name}:"; then
+                config_ex=$(echo "${{ env.REPCZ_EXCLUDE_MAP }}" | tr ' ' '\n' | grep "^${file_name}:")
+                domains_ex=$(echo "$config_ex" | cut -d':' -f2 | tr ',' ' ')                
+                for domain in $domains_ex; do
+                    echo "正在从 $file_name 中剔除: $domain"
+                    sed -i "/$domain/d" "$dest_file"
+                done
+            fi
+
+            # --- 逻辑 B: 增加域名 (Include) ---
+            if echo "${{ env.REPCZ_INCLUDE_MAP }}" | grep -q "${file_name}:"; then
+                config_in=$(echo "${{ env.REPCZ_INCLUDE_MAP }}" | tr ' ' '\n' | grep "^${file_name}:")
+                domains_in=$(echo "$config_in" | cut -d':' -f2 | tr ',' ' ')
+                for domain in $domains_in; do
+                    # 检查文件中是否已经存在该域名，不存在才添加
+                    if ! grep -q "$domain" "$dest_file"; then
+                        echo "正在向 $file_name 中追加: $domain"
+                        # 可添加前缀精确匹配 DOMAIN或其他格式，比如：DOMAIN,$domain
+                        echo "$domain" >> "$dest_file"
+                    else
+                        echo "跳过已存在的域名: $domain"
+                    fi
+                done
+            fi
+          done
+          rm -rf source_repcz
+
+      # ── 第二步：安装/更新工具链 (sing-box) ─────────────────────────
+      - name: Get Latest sing-box Version
+        id: sb-version
+        run: |
+          LATEST_SB=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name')
+          echo "version=${LATEST_SB}" >> $GITHUB_OUTPUT
+
+      - name: Cache sing-box Binary
+        id: cache-sb
+        uses: actions/cache@v5
+        with:
+          path: script/sing-box
+          # 缓存的 Key 绑定版本号，一旦版本号变了，缓存自动失效并触发重新下载
+          key: ${{ runner.os }}-sb-${{ steps.sb-version.outputs.version }}
+
+      - name: Install & Update sing-box
+        # 如果缓存命中了（steps.cache-sb.outputs.cache-hit 为 true），则跳过下载步骤
+        if: steps.cache-sb.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p script
+          SB_API=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest)
+          SB_URL=$(echo "$SB_API" | jq -r '.assets[] | select(.name | test("linux-amd64") and test("tar.gz")) | .browser_download_url' | head -n 1)
+          curl -Lo /tmp/sing-box.tar.gz "$SB_URL"
+          tar -xzf /tmp/sing-box.tar.gz -C /tmp
+          mv /tmp/sing-box-*/sing-box script/sing-box
+          chmod +x script/sing-box
+
+      - name: Setup Binary Link
+        run: |
+          # 无论是否命中缓存，都要建立软链接，确保系统命令可用
+          sudo ln -sf "$PWD/script/sing-box" /usr/local/bin/sing-box
+          sing-box version
+
+
+      # ── 第三步：执行专业规则构建 (全自动化分发) ─────────────
+      - name: Professional Rules Processing
+        run: |
+          # 1. 预先建立好存放目录
+          mkdir -p mihomo/rules sing-box/rules surge/rules
+          
+          # 2. 遍历 rules 文件夹中的所有 txt 文件
+          for file in rules/*.txt; do
+            [ -e "$file" ] || continue
+            echo "Processing: $file"
+            
+            # 只需要这一行，Python 脚本内部会自动解析并生成到对应目录
+            python3 script/rules_processor.py "$file"
+          done
+          
+          # 3. 提示：Python 脚本内已包含 subprocess 编译，此处无需额外 compile 命令
+
+      # ── 第四步：强制推送更新 (Orphan Branch) ──────────────────────
+      - name: Push Changes & History Cleanup
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 检查是否有任何改动（包括 rules, mihomo, sing-box, surge, script）
+          git add rules/ mihomo/ sing-box/ surge/ script/
+          
+          if git diff --staged --quiet; then
+            echo "没有检测到任何变动，跳过推送。"
+          else
+            # 这里的逻辑会保持你的仓库只有一个提交历史，非常干净
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            git checkout --orphan latest_branch
+            git add -A
+            git commit -m "自动构建: $(date +'%Y-%m-%d %H:%M')"
+            git branch -D "$CURRENT_BRANCH" || true
+            git branch -m "$CURRENT_BRANCH"
+            git push -f origin "$CURRENT_BRANCH"
+          fi
+
+      - name: Delete Workflow Runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 0
+          keep_minimum_runs: 2

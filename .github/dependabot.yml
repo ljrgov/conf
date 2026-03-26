@@ -1,0 +1,11 @@
+version: 2
+updates:
+  # 监控并自动升级 GitHub Actions 插件 (如 checkout, cache, setup-python)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"     # 每周检查一次即可，不打扰日常工作
+      day: "sunday"         # 选在周日上午，避开规则同步高峰期
+      timezone: "Asia/Shanghai"
+      time: "09:00"
+    open-pull-requests-limit: 2 # 限制 PR 数量，保持仓库干净

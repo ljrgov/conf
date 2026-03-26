@@ -1,0 +1,18 @@
+# 过滤列表
+script/sing-box
+__pycache__/
+*.pyc
+.venv/
+*.pem
+*.crt
+*.key
+*.p12
+*.pfx
+.env         
+secrets.json
+.DS_Store   
+Thumbs.db   
+*.log     
+*.bak    
+/tmp/
+bgp_table.jsonl
