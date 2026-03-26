@@ -1,11 +1,23 @@
-version: 4
+version: 2
 updates:
-  # 监控并自动升级 GitHub Actions 插件 (如 checkout, cache, setup-python)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"     # 每周检查一次即可，不打扰日常工作
-      day: "sunday"         # 选在周日上午，避开规则同步高峰期
+      interval: "weekly"
+      day: "sunday"
       timezone: "Asia/Shanghai"
       time: "09:00"
-    open-pull-requests-limit: 2 # 限制 PR 数量，保持仓库干净
+    
+    # 【新增】将所有 Actions 更新合并为一个 PR，防止 PR 刷屏
+    groups:
+      github-actions-group:
+        patterns:
+          - "*"
+
+    # 限制 PR 数量（配合 groups 后，通常只会保持 1 个 group PR）
+    open-pull-requests-limit: 2
+    
+    # 自动打标签，方便管理
+    labels:
+      - "dependencies"
+      - "github-actions"
