@@ -1,4 +1,4 @@
-version: 2
+version: 4
 updates:
   # 监控并自动升级 GitHub Actions 插件 (如 checkout, cache, setup-python)
   - package-ecosystem: "github-actions"
