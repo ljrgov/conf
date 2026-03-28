@@ -1,0 +1,83 @@
+name: Project Self-Healing & Check
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      # 新增：修改规则文件时也触发审计
+      - "script/**.py"
+      - ".github/workflows/*.yml"
+      - ".github/dependabot.yml"
+      - "sing-box/*.json"  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # 轨道 A：Python 语法审计与修复
+  python-repair:
+    name: Python Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Fix and Format
+        run: |
+          ruff check --fix .
+          ruff format .
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          if ! git diff --staged --quiet; then
+            git commit -m "style: 🤖 自动修复代码格式与规范 [skip ci]"
+            git push
+          else
+            echo "代码格式完美，无需修复。"
+          fi
+
+  # 轨道 B：YAML 语法审计
+  yaml-audit:
+    name: YAML Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check Syntax
+        uses: reviewdog/action-actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+  # 轨道 C：JSON 语法审计 
+  json-audit:
+    name: JSON Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate Specific JSON Files
+        run: |
+          
+          FILES=(sing-box/*.json)
+          
+          for file in "${FILES[@]}"; do
+            # 如果文件夹下没有匹配的文件，FILES 会保留原样，所以这里需要 -f 检查
+            if [ -f "$file" ]; then
+              echo "Checking JSON syntax: $file"
+              python3 -m json.tool "$file" /dev/null
+            else
+              echo "⚠️ Info: $file - No matching JSON files found in this path."
+            fi
+          done

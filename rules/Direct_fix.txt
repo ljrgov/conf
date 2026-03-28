@@ -1,0 +1,44 @@
+2xiaopan.fun
+api.gudvxty.com
+frontpage.invitebv.vip
+ksdapp.ksdao.com
+DOlogin.djjc.cfd
+login.vp2.biz
+vp0.org
+www.vp2.biz
+bitbucket.org
+eset
+.xn--mes358a9urctx.com
+.423down.com
+.bv3.org
+.cn.pool.ntp.org
+.daxiaamu.com
+.iconarchive.com
+.kelote.com
+.mefcl.com
+.meizubl.com
+.mitce.net
+.pronetwork.top
+.vp1.link
+login.djjc.cfd
+node.zyfx6.xyz
+.vp1.pw
+.ypojie.com
+.yyai8.com
+.snssdk.com
+pkg,com.ss.android.ugc.aweme
+
+# 加速镜像
+ghproxy.net
+git.repcz.link
+testingcf.jsdelivr.net
+v6.gh-proxy.org
+ghfast.top
+
+# Windows网络检查
+.msftconnecttest.com
+.msftncsi.com
+
+# 洛雪音乐
+23323
+
