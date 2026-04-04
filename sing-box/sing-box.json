@@ -14,17 +14,6 @@
       },
       {
         "type": "https",
-        "tag": "tx",
-        "server": "1.12.12.12"
-      },
-      {
-        "type": "https",
-        "tag": "google_dns",
-        "detour": "⚡ 自动选择",
-        "server": "8.8.8.8"
-      },
-      {
-        "type": "https",
         "tag": "cloudflare_dns",
         "detour": "⚡ 自动选择",
         "server": "1.1.1.1"
@@ -69,19 +58,27 @@
         "server": "ali"
       },
       {
+        "rule_set": "Lan",
+        "server": "ali"
+      },
+      {
+        "clash_mode": "全局直连",
+        "server": "ali"
+      },
+      {
+        "clash_mode": "全局代理",
+        "server": "fakeip"
+      },      
+      {
         "rule_set": [
-          "Lan",
           "NTPService",
           "GoogleFCM"
         ],
         "server": "ali"
       },
       {
-        "rule_set": "Tencent",
-        "server": "tx"
-      },
-      {
         "rule_set": [
+          "Tencent",
           "AliPay",
           "DouYin"
         ],
@@ -98,15 +95,7 @@
           "clients.l.google.com",
           "play.googleapis.com"
         ],
-        "server": "google_dns"
-      },
-      {
-        "clash_mode": "全局直连",
-        "server": "ali"
-      },
-      {
-        "clash_mode": "全局代理",
-        "server": "google_dns"
+        "server": "cloudflare_dns"
       },
       {
         "query_type": [
@@ -122,23 +111,6 @@
           "ChinaDomain"
         ],
         "server": "ali"
-      },          
-      {
-        "rule_set": [
-          "Google",
-          "YouTube",
-          "Gemini",
-          "OpenAI",
-          "Copilot",
-          "AI_fix",
-          "PayPal",
-          "Binance",
-          "Microsoft",
-          "Game_Proxy",
-          "Epic",
-          "Steam"
-        ],
-        "server": "google_dns"
       }
     ],
     "final": "cloudflare_dns",
