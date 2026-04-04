@@ -570,24 +570,6 @@
         "outbound": "direct"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "rule_set": "NTPService"
-          },
-          {
-            "network": "udp",
-            "port": 123
-          }
-        ],
-        "outbound": "direct"
-      },
-      {
-        "rule_set": "GoogleFCM",
-        "outbound": "direct"
-      },
-      {
         "domain": [
           "广告域名放行测试1",
           "广告域名放行测试2"
@@ -628,16 +610,34 @@
         "method": "drop"
       },
       {
-        "rule_set": "Tencent",
-        "outbound": "direct"
-      },
-      {
         "clash_mode": "全局直连",
         "outbound": "direct"
-      },
+      },      
       {
         "clash_mode": "全局代理",
         "outbound": "📦 手动选择"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "rule_set": "NTPService"
+          },
+          {
+            "network": "udp",
+            "port": 123
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "GoogleFCM",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "Tencent",
+        "outbound": "direct"
       },
       {
         "rule_set": [
@@ -735,7 +735,7 @@
           "ChinaIP"
         ],
         "outbound": "direct"
-      } 
+      }
     ],
     "rule_set": [
       {
