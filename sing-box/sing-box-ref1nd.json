@@ -657,8 +657,8 @@
       },
       {
         "rule_set": [
-          "GitHub",
-          "Cloudflare"
+          "Cloudflare",
+          "GitHub"
         ],
         "outbound": "👨‍💻 GitHub"
       },
