@@ -153,9 +153,7 @@
         "http_proxy": {
           "enabled": true,
           "server": "127.0.0.1",
-          "server_port": 7890,
-          "bypass_domain": [],
-          "match_domain": []
+          "server_port": 7890
         }
       },
       "route_exclude_address": [
@@ -174,14 +172,7 @@
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 7890,
-      "users": [
-        {
-          "username": "",
-          "password": ""
-        }
-    ],
-    "set_system_proxy": false
+      "listen_port": 7890
     }
   ],
   "outbounds": [
