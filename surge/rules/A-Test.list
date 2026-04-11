@@ -1,0 +1,22 @@
+DOMAIN,ad.com
+DOMAIN-SUFFIX,google.com
+DOMAIN-KEYWORD,google
+DOMAIN-WILDCARD,*.google.com
+PROCESS-NAME,SRC-IP-CIDR,192.168.1.201/32
+PROCESS-NAME,SRC-IP-SUFFIX,192.168.1.201/8
+PROCESS-NAME,IN-TYPE,SOCKS/HTTP
+PROCESS-NAME,/usr/bin/wget
+PROCESS-NAME,C:\Program Files\Google\Chrome\Application\chrome.exe
+PROCESS-NAME,/usr/*/wget
+PROCESS-NAME,curl
+PROCESS-NAME,chrome.exe
+PROCESS-NAME,com.termux
+IP-CIDR,127.0.0.0/8,no-resolve
+IP-CIDR,8.8.8.8/24,no-resolve
+IP-CIDR6,2620:0:2d0:200::7/32,no-resolve
+IP-ASN,13335,no-resolve
+IP-ASN,351454,no-resolve
+SRC-PORT,7777,no-resolve
+OR,((NETWORK,UDP),(DOMAIN,baidu.com))
+AND,((DOMAIN,baidu.com),(NETWORK,UDP))
+NOT,((DOMAIN,baidu.com))
