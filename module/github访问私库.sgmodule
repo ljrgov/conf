@@ -1,0 +1,29 @@
+#!name=GitHub访问私库
+#!desc=支持访问 GitHub API、Raw 文件、Gist、Releases 等，包括私有仓库
+#!category=📘功能模块
+#!arguments=USERNAME:GITHUB_USERNAME,TOKEN:GITHUB_TOKEN
+#!arguments-desc=[参数设置]\nUSERNAME: 填入 GitHub 的用户名\nTOKEN: 填入 GitHub 生成的 Token\n\n[Token 获取方式]\n头像菜单 -> Settings -> Developer settings -> Personal access tokens -> Generate new token -> 选择 repo 和 gist 权限
+#------------------------------#
+#建议创建本地模块形式#
+
+[Header Rewrite]
+# GitHub API 访问（私有仓库文件内容）
+http-request ^https?:\/\/api\.github\.com\/repos\/{{{USERNAME}}}\/.*\/contents\/.* header-del Authorization
+http-request ^https?:\/\/api\.github\.com\/repos\/{{{USERNAME}}}\/.*\/contents\/.* header-add Authorization "token {{{TOKEN}}}"
+
+# Raw 文件访问（私有仓库）
+http-request ^https?:\/\/raw\.githubusercontent\.com\/{{{USERNAME}}}\/.* header-del Authorization
+http-request ^https?:\/\/raw\.githubusercontent\.com\/{{{USERNAME}}}\/.* header-add Authorization "token {{{TOKEN}}}"
+
+# Gist 访问（私有 Gist 文件）
+http-request ^https?:\/\/gist\.github\.com\/{{{USERNAME}}}\/.* header-del Authorization
+http-request ^https?:\/\/gist\.github\.com\/{{{USERNAME}}}\/.* header-add Authorization "token {{{TOKEN}}}"
+http-request ^https?:\/\/gist\.githubusercontent\.com\/{{{USERNAME}}}\/.* header-del Authorization
+http-request ^https?:\/\/gist\.githubusercontent\.com\/{{{USERNAME}}}\/.* header-add Authorization "token {{{TOKEN}}}"
+
+# Releases 访问（私有仓库的下载链接）
+http-request ^https?:\/\/github\.com\/{{{USERNAME}}}\/.*\/releases\/download\/.* header-del Authorization
+http-request ^https?:\/\/github\.com\/{{{USERNAME}}}\/.*\/releases\/download\/.* header-add Authorization "token {{{TOKEN}}}"
+
+[MITM]
+hostname = %APPEND% raw.githubusercontent.com, gist.githubusercontent.com, api.github.com, github.com

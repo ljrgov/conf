@@ -1,0 +1,255 @@
+{
+  "name": "图标集",
+  "icons": [
+    {
+      "name": "AD_reject.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/AD_reject.png",
+      "comment": "禁广告图标"
+    },
+    {
+      "name": "apple_gray.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/apple_gray.png",
+      "comment": "苹果灰色图标"
+    },
+    {
+      "name": "apple_rainbow.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/apple_rainbow.png",
+      "comment": "苹果彩虹图标"
+    },
+    {
+      "name": "bestvpn.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/bestvpn.png",
+      "comment": "bestvpn机场图标"
+    },
+    {
+      "name": "doudifenliu.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/doudifenliu.png",
+      "comment": "兜底分流图标"
+    },
+    {
+      "name": "download.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/download.png",
+      "comment": "下载图标"
+    },
+    {
+      "name": "emby.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/emby.png",
+      "comment": "emby图标"
+    },
+    {
+      "name": "facebook.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/facebook.png",
+      "comment": "Facebook图标"
+    },
+    {
+      "name": "flag_ca.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_ca.png",
+      "comment": "加拿大图标"
+    },
+    {
+      "name": "flag_china.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_china.png",
+      "comment": "中国图标"
+    },
+    {
+      "name": "flag_de.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_de.png",
+      "comment": "德国图标"
+    },
+    {
+      "name": "flag_fr.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_fr.png",
+      "comment": "法国图标"
+    },
+    {
+      "name": "flag_hand.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_hand.png",
+      "comment": "打招呼图标"
+    },
+    {
+      "name": "flag_hk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_hk.png",
+      "comment": "香港图标"
+    },
+    {
+      "name": "flag_jp.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_jp.png",
+      "comment": "日本图标"
+    },
+    {
+      "name": "flag_kr.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_kr.png",
+      "comment": "韩国图标"
+    },
+    {
+      "name": "flag_mo.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_mo.png",
+      "comment": "澳门图标"
+    },
+    {
+      "name": "flag_rainbow.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_rainbow.png",
+      "comment": "彩虹旗图标"
+    },
+    {
+      "name": "flag_ru.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_ru.png",
+      "comment": "俄罗斯图标"
+    },
+    {
+      "name": "flag_sg.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_sg.png",
+      "comment": "新加坡图标"
+    },
+    {
+      "name": "flag_tk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_tk.png",
+      "comment": "土耳其图标"
+    },
+    {
+      "name": "flag_uk.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_uk.png",
+      "comment": "英国图标"
+    },
+    {
+      "name": "flag_us.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/flag_us.png",
+      "comment": "美国图标"
+    },
+    {
+      "name": "game.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/game.png",
+      "comment": "游戏图标"
+    },
+    {
+      "name": "github.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/github.png",
+      "comment": "github图标"
+    },
+    {
+      "name": "global.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/global.png",
+      "comment": "全球图标"
+    },
+    {
+      "name": "globalmedia.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/globalmedia.png",
+      "comment": "全球媒体图标"
+    },
+    {
+      "name": "google.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/google.png",
+      "comment": "谷歌图标"
+    },
+    {
+      "name": "map_africa.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_africa.png",
+      "comment": "非洲地图图标"
+    },
+    {
+      "name": "map_america.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_america.png",
+      "comment": "美洲地图图标"
+    },
+    {
+      "name": "map_asia.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_asia.png",
+      "comment": "亚洲地图图标"
+    },
+    {
+      "name": "map_au.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_au.png",
+      "comment": "澳洲地图图标"
+    },
+    {
+      "name": "map_china.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_china.png",
+      "comment": "中国地图图标"
+    },
+    {
+      "name": "map_eu.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_eu.png",
+      "comment": "欧洲地图图标"
+    },
+    {
+      "name": "map_global.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_global.png",
+      "comment": "全球地图图标"
+    },
+    {
+      "name": "map_s_america.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_s_america.png",
+      "comment": "南美地图图标"
+    },
+    {
+      "name": "map_us.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/map_us.png",
+      "comment": "北美地图图标"
+    },
+    {
+      "name": "microsoft.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/microsoft.png",
+      "comment": "微软图标"
+    },
+    {
+      "name": "naxi.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/naixi.png",
+      "comment": "奶昔机场图标"
+    },
+    {
+      "name": "nieflix.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/nieflix.png",
+      "comment": "奈飞图标"
+    },
+    {
+      "name": "openAI.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/openAI.png",
+      "comment": "AI图标"
+    },
+    {
+      "name": "paypal.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/paypal.png",
+      "comment": "PayPal图标"
+    },
+    {
+      "name": "surge_blue.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_blue.png",
+      "comment": "surge图标蓝色"
+    },
+    {
+      "name": "surge_orange.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_orange.png",
+      "comment": "surge图标橘色"
+    },
+    {
+      "name": "surge_purple.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/surge_purple.png",
+      "comment": "surge图标紫色"
+    },
+    {
+      "name": "telegram.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/telegram.png",
+      "comment": "电报图标"
+    },
+    {
+      "name": "tiktok.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/tiktok.png",
+      "comment": "TikTok图标"
+    },
+    {
+      "name": "twitter.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/twitter.png",
+      "comment": "推特图标"
+    },
+    {
+      "name": "youtube.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/youtube.png",
+      "comment": "YouTube图标"
+    },
+    {
+      "name": "twitter_x.png",
+      "url": "https://raw.githubusercontent.com/ljrgov/conf/main/icon/twitter_x.png",
+      "comment": "推特X图标"
+    }
+  ]
+}
