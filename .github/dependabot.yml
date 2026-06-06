@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      timezone: "Asia/Shanghai"
+      time: "09:00"
+    groups:
+      github-actions-group:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 1 # 合并了，1 个足矣
+    labels:
+      - "dependencies"
+      - "github-actions"
