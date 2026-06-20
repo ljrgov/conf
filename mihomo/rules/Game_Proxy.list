@@ -1,0 +1,13 @@
+DOMAIN,security.dksecsg.com
+DOMAIN,avatar-akm.mc.mproject.skystone.games
+DOMAIN-SUFFIX,moontontech.com
+DOMAIN-SUFFIX,moonton.com
+DOMAIN-SUFFIX,mobilelegends.net
+DOMAIN-SUFFIX,magicchessgogo.com
+DOMAIN-SUFFIX,viztagames.com
+DOMAIN-SUFFIX,youngjoygame.com
+DOMAIN-KEYWORD,mobilechess
+PROCESS-NAME,com.mobilechess.gp
+IP-CIDR,47.236.118.106/32,no-resolve
+IP-CIDR,150.5.166.178/32,no-resolve
+IP-CIDR,8.219.207.158/32,no-resolve
