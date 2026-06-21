@@ -21,7 +21,7 @@ jobs:
     name: Python Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -55,7 +55,7 @@ jobs:
     name: YAML Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Check Syntax
         uses: reviewdog/action-actionlint@v1
         with:
@@ -67,7 +67,7 @@ jobs:
     name: JSON Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Validate Specific JSON Files
         run: |
           
