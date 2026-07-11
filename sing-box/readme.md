@@ -10,21 +10,21 @@
 **适配逻辑**：自动移除 `tproxy`，关闭自动重定向，保留 `platform` 代理设置。
 
 ```
-https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=win&mirror=https://v6.gh-proxy.org/&download_detour=direct&secret=***&url=订阅链接
+https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=win&mirror=https://v6.gh-proxy.org/&secret=***&url=订阅链接
 ```
 
 ### 📱 安卓 (Root 模式)
 **适配逻辑**：保留 `tproxy`，开启 `tun` 自动重定向，自动移除 `platform`。
 
 ```
-https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=root&port=7890&listen=::&output=/data/adb/box/run/sing-box.log&mirror=https://v6.gh-proxy.org/&download_detour=direct&external_ui=dashboard&secret=***&url=订阅链接
+https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=root&port=7890&listen=::&output=/data/adb/box/run/sing-box.log&mirror=https://v6.gh-proxy.org/&external_ui=dashboard&secret=***&url=订阅链接
 ```
 
 ### 🖥️ 服务端 (Linux / Server)
 **适配逻辑**：最精简配置。保留 `tproxy`，自动移除 `platform` 及所有 Android 专属字段（如 UID/包名过滤）。
 
 ```
-https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=server&port=7890&listen=::&output=sing-box.log&mirror=https://v6.gh-proxy.org/&download_detour=direct&secret=***&url=订阅链接
+https://v6.gh-proxy.org/https://raw.githubusercontent.com/ljrgov/conf/refs/heads/main/sing-box/cfg_for_sub_store.js#device=server&port=7890&listen=::&output=sing-box.log&mirror=https://v6.gh-proxy.org/&secret=***&url=订阅链接
 ```
 
 ---
