@@ -1092,11 +1092,10 @@
     }
   ],
   "services": [
-    {
-      "tag": "dashboard",    
+    {  
       "type": "api",
       "listen": "127.0.0.1",
-      "listen_port": 9999,
+      "listen_port": 9091,
       "secret": "",
       "dashboard": true
     }
@@ -1113,10 +1112,6 @@
       "external_ui": "dashboard",
       "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip",
       "secret": "",
-      "access_control_allow_origin": [
-        "http://sing-box-dashboard.sagernet.org",
-        "http://dash.sing-box.app"
-      ],
       "access_control_allow_private_network": true
     }
   }
