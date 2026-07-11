@@ -83,9 +83,8 @@ async function execute() {
 
         // --- 4. Services (服务) ---
         if (config.services && config.services[0]) {
-            // 只要参数里传入了 secret（即使是空字符串），就直接赋值
-            if (args.secret !== undefined) {
-        config.services[0].secret = args.secret;
+            if (secret) {
+        config.services[0].secret = secret;
              }
         }
 
