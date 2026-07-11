@@ -598,9 +598,9 @@
       "tag": "subs",
       "url": "此处填写订阅",
       "user_agent": "sing-box",
-      "download_detour": "direct",
       "exclude": "(?i)(邀请|到期|流量|更新|验证|剩余|频道|长期|推广|分享|周期|异常|官网)",
-      "update_interval": "24h0m0s"
+      "update_interval": "24h0m0s",
+      "health_check": {"enabled":true,"url":"https://www.gstatic.com/generate_204","interval":"30m","timeout":"3s"}
     }
   ],  
   "route": {
