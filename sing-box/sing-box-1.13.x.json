@@ -986,6 +986,15 @@
     "auto_detect_interface": true,
     "find_process": true
   },
+  "services": [
+    {
+      "type": "api",
+      "listen": "127.0.0.1",
+      "listen_port": 9091,
+      "secret": "",
+      "dashboard": true
+    }
+  ],
   "experimental": {
     "cache_file": {
       "enabled": true,
