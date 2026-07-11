@@ -990,7 +990,6 @@
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "cache_id": "ID_752057202750",
       "store_fakeip": true,
       "store_rdrc": true
     },
@@ -1001,8 +1000,11 @@
       "external_ui_download_detour": "direct",
       "secret": "",
       "default_mode": "规则-拦截广告",
-      "access_control_allow_origin": "*",
-      "access_control_allow_private_network": false
-    }
+      "access_control_allow_origin": [
+        "http://sing-box-dashboard.sagernet.org",
+        "http://dash.sing-box.app"
+      ],
+      "access_control_allow_private_network": true
+    }
   }
 }
