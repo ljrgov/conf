@@ -9,7 +9,7 @@ async function execute() {
         const args = $arguments || {};
         const device = (args.device || "").toLowerCase();
         const mirror = args.mirror;
-        const download_detour = args.download_detour;
+        // const download_detour = args.download_detour;
         const external_ui = args.external_ui;
         const secret = args.secret;
         const listen = args.listen;
@@ -27,9 +27,6 @@ async function execute() {
                 let targetUrl = args[`url${index + 1}`] || (index === 0 ? args.url : null);
                 if (targetUrl && provider.type === "remote") {
                     provider.url = targetUrl;
-                }
-                if (download_detour && provider.type === "remote") {
-                    provider.download_detour = download_detour;
                 }
             });
         }
@@ -85,19 +82,18 @@ async function execute() {
         }
 
         // --- 4. Route (路由及规则集) ---
-        if (config.route && Array.isArray(config.route.rule_set)) {
-            config.route.rule_set.forEach(item => {
-                if (download_detour && item.type === "remote") {
-                    item.download_detour = download_detour;
-                }
-            });
-        }
+        // if (config.route && Array.isArray(config.route.rule_set)) {
+            // config.route.rule_set.forEach(item => {
+                // if (download_detour && item.type === "remote") {
+                    // item.download_detour = download_detour;
+                // }
+            // });
+        // }
 
         // --- 5. Experimental (Clash API) ---
         if (config.experimental?.clash_api) {
             if (external_ui) config.experimental.clash_api.external_ui = external_ui;
             if (secret) config.experimental.clash_api.secret = secret;
-            if (download_detour) config.experimental.clash_api.external_ui_download_detour = download_detour;
         }
 
         // --- 6. 全局镜像替换 (精准防套娃逻辑) ---
