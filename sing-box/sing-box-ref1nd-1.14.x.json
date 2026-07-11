@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": false,
-    "level": "panic",
+    "level": "error",
     "output": "sing-box.log",
     "timestamp": true
   },
