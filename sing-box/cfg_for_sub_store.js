@@ -81,14 +81,13 @@ async function execute() {
             });
         }
 
-        // --- 4. Route (路由及规则集) ---
-        // if (config.route && Array.isArray(config.route.rule_set)) {
-            // config.route.rule_set.forEach(item => {
-                // if (download_detour && item.type === "remote") {
-                    // item.download_detour = download_detour;
-                // }
-            // });
-        // }
+        // --- 4. Services (服务) ---
+        if (config.services && config.services[0]) {
+            // 只要参数里传入了 secret（即使是空字符串），就直接赋值
+            if (args.secret !== undefined) {
+        config.services[0].secret = args.secret;
+             }
+        }
 
         // --- 5. Experimental (Clash API) ---
         if (config.experimental?.clash_api) {
