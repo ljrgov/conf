@@ -1097,14 +1097,15 @@
       "listen": "127.0.0.1",
       "listen_port": 9091,
       "secret": "",
-      "dashboard": true
+      "dashboard": false
     }
   ],
   "experimental": {
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "store_fakeip": true
+      "store_fakeip": true,
+      "store_dns": true
     },
     "clash_api": {
       "default_mode": "规则-拦截广告",    
