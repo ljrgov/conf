@@ -1,0 +1,43 @@
+# 小青
+.opinstallinit.com
+.qing2000.com
+
+# 加速镜像
+ghproxy.net
+git.repcz.link
+testingcf.jsdelivr.net
+v6.gh-proxy.org
+# ghfast.top
+
+# Windows网络检查
+.msftconnecttest.com
+.msftncsi.com
+
+pool.ntp.org
+
+# 杂七杂八
+2xiaopan.fun
+api.gudvxty.com
+frontpage.invitebv.vip
+ksdapp.ksdao.com
+login.vp2.biz
+vp0.org
+www.vp2.biz
+bitbucket.org
+eset
+.423down.com
+.daxiaamu.com
+.iconarchive.com
+.kelote.com
+.mefcl.com
+.meizubl.com
+.pronetwork.top
+.vp1.link
+node.zyfx6.xyz
+.vp1.pw
+.ypojie.com
+.yyai8.com
+pkg,com.ss.android.ugc.aweme
+
+
+
