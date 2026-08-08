@@ -1,0 +1,37 @@
+# ok影视
+.wogg.live
+.xxooo.cf
+23.224.122.234
+
+# 小青
+.opinstallinit.com
+.qing2000.com
+
+# 加速镜像
+# ghproxy.net
+# git.repcz.link
+# testingcf.jsdelivr.net
+# v6.gh-proxy.org
+
+# Windows网络检查
+.msftconnecttest.com
+.msftncsi.com
+pool.ntp.org
+
+# emby
+emby.daddy.indevs.in
+
+# 兴业
+ksdapp.ksdao.com
+
+# 杂七杂八
+bitbucket.org
+.423down.com
+.daxiaamu.com
+.kelote.com
+.mefcl.com
+.meizubl.com
+.ypojie.com
+
+
+

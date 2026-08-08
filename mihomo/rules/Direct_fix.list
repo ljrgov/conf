@@ -1,0 +1,17 @@
+DOMAIN,pool.ntp.org
+DOMAIN,emby.daddy.indevs.in
+DOMAIN,ksdapp.ksdao.com
+DOMAIN,bitbucket.org
+DOMAIN-SUFFIX,wogg.live
+DOMAIN-SUFFIX,xxooo.cf
+DOMAIN-SUFFIX,opinstallinit.com
+DOMAIN-SUFFIX,qing2000.com
+DOMAIN-SUFFIX,msftconnecttest.com
+DOMAIN-SUFFIX,msftncsi.com
+DOMAIN-SUFFIX,423down.com
+DOMAIN-SUFFIX,daxiaamu.com
+DOMAIN-SUFFIX,kelote.com
+DOMAIN-SUFFIX,mefcl.com
+DOMAIN-SUFFIX,meizubl.com
+DOMAIN-SUFFIX,ypojie.com
+IP-CIDR,23.224.122.234/32,no-resolve
