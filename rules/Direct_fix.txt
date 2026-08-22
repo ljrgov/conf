@@ -1,0 +1,41 @@
+# ok影视
+.wogg.live
+.xxooo.cf
+
+# 谷歌下载(直连)
+domain_regex: ^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$
+
+
+# 小青
+.opinstallinit.com
+.qing2000.com
+
+# 加速镜像
+# ghproxy.net
+# git.repcz.link
+# testingcf.jsdelivr.net
+# v6.gh-proxy.org
+
+# Windows网络检查
+.msftconnecttest.com
+.msftncsi.com
+pool.ntp.org
+
+# emby
+
+
+# 兴业
+ksdapp.ksdao.com
+
+# 杂七杂八
+aweme.snssdk.com
+bitbucket.org
+.423down.com
+.daxiaamu.com
+.kelote.com
+.mefcl.com
+.meizubl.com
+.ypojie.com
+
+
+

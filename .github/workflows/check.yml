@@ -1,0 +1,158 @@
+name: Project Self-Healing & Check
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      # 新增：修改规则文件时也触发审计
+      # - "script/**.py"
+      - ".github /**.py"
+      - ".github/workflows/*.yml"
+      - ".github/dependabot.yml"
+      - "sing-box/*.json"  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # 轨道 A：Python 语法审计与修复
+  python-repair:
+    name: Python Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Fix and Format
+        run: |
+          # 加上 --unsafe-fixes，让 Ruff 在 CI 里能自动修复类似 set(...) -> {...} 的问题
+          ruff check --fix --unsafe-fixes .
+          ruff format .
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          if ! git diff --staged --quiet; then
+            git commit -m "style: 🤖 自动修复代码格式与规范 [skip ci]"
+            git push
+          else
+            echo "代码格式完美，无需修复。"
+          fi
+
+  # 轨道 B：YAML 语法审计
+  yaml-audit:
+    name: YAML Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check Syntax
+        uses: reviewdog/action-actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+  # 轨道 C：JSON 语法审计（支持 // 和 /* */ 注释，并自动清理注释导致的尾随逗号）
+  json-audit:
+    name: JSON Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate Specific JSON Files (comments-aware)
+        run: |
+          cat > /tmp/strip_json_comments.py << 'PYEOF'
+          import sys
+          import json
+          import re
+
+          def strip_json_comments(text: str) -> str:
+              result = []
+              in_string = False
+              in_single_comment = False
+              in_multi_comment = False
+              escape_next = False
+              i = 0
+              n = len(text)
+              while i < n:
+                  c = text[i]
+                  nxt = text[i + 1] if i + 1 < n else ''
+
+                  if in_single_comment:
+                      if c == '\n':
+                          in_single_comment = False
+                          result.append(c)
+                      i += 1
+                      continue
+                  if in_multi_comment:
+                      if c == '*' and nxt == '/':
+                          in_multi_comment = False
+                          i += 2
+                          continue
+                      i += 1
+                      continue
+                  if in_string:
+                      result.append(c)
+                      if escape_next:
+                          escape_next = False
+                      elif c == '\\':
+                          escape_next = True
+                      elif c == '"':
+                          in_string = False
+                      i += 1
+                      continue
+
+                  if c == '"':
+                      in_string = True
+                      result.append(c)
+                      i += 1
+                      continue
+                  if c == '/' and nxt == '/':
+                      in_single_comment = True
+                      i += 2
+                      continue
+                  if c == '/' and nxt == '*':
+                      in_multi_comment = True
+                      i += 2
+                      continue
+
+                  result.append(c)
+                  i += 1
+
+              cleaned = ''.join(result)
+              # 清理注释后可能残留的尾随逗号（例如末项被注释掉，前一项变成新末项但仍带逗号）
+              cleaned = re.sub(r',(\s*[}\]])', r'\1', cleaned)
+              return cleaned
+
+          if __name__ == "__main__":
+              path = sys.argv[1]
+              with open(path, "r", encoding="utf-8") as f:
+                  raw = f.read()
+              cleaned = strip_json_comments(raw)
+              json.loads(cleaned)  # 校验失败会抛异常，非零退出
+          PYEOF
+
+          FILES=(sing-box/*.json)
+
+          for file in "${FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "Checking JSON syntax (comments-aware): $file"
+              python3 /tmp/strip_json_comments.py "$file"
+              if [ $? -ne 0 ]; then
+                echo "❌ JSON syntax error in: $file"
+                exit 1
+              fi
+            else
+              echo "⚠️ Info: $file - No matching JSON files found in this path."
+            fi
+          done

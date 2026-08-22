@@ -1,0 +1,34 @@
+{
+  "version": 4,
+  "rules": [
+    {
+      "domain": [
+        "aweme.snssdk.com",
+        "bitbucket.org",
+        "ksdapp.ksdao.com",
+        "pool.ntp.org"
+      ]
+    },
+    {
+      "domain_suffix": [
+        "423down.com",
+        "daxiaamu.com",
+        "kelote.com",
+        "mefcl.com",
+        "meizubl.com",
+        "msftconnecttest.com",
+        "msftncsi.com",
+        "opinstallinit.com",
+        "qing2000.com",
+        "wogg.live",
+        "xxooo.cf",
+        "ypojie.com"
+      ]
+    },
+    {
+      "domain_regex": [
+        "^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$"
+      ]
+    }
+  ]
+}
