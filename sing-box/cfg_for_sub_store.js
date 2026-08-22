@@ -99,7 +99,7 @@ async function execute() {
 
             config.inbounds.forEach(inbound => {
                 if (inbound.type === "tun") {
-                    inbound.auto_redirect = !isClient; 
+                    inbound.auto_redirect = isRoot || isServer;
 
                     const fieldsToDelete = new Set();
 
